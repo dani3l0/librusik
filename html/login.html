@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Log in - Librusik</title>
+	<meta charset="utf-8">
+	<meta name="theme-color" content="#222">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	<link href="img/icon.png" rel="icon">
+	<link rel="stylesheet" type="text/css" href="css/styles.css">
+	<script type="text/javascript" src="js/core.js"></script>
+</head>
+<body onload="loginpage(); listeners();">
+	<div class="top">
+		<h1>Librusik</h1>
+		<button class="gotoapp" onclick="agou('panel')">Panel</button><br>
+		<div class="subh1">Chrzanimy oświatę</div>
+	</div>
+	<br><br>
+	<center>
+		<div class="loginbox" id="login">
+			<div class="method">Log in</div>
+			<input oninput="usernameit('user')" type="text" id="user" placeholder="Username"><br>
+			<input type="password" id="passwd" placeholder="Password"><br><br>
+			<button onclick="showdiv('login', 'register')">Create account</button>
+			<button id="loginbutton" class="highlighted" onclick="login()">Log in</button><br>
+			<button class="android-app" onclick="showdiv('login', 'app')">Mobile app</button>
+		</div>
+		<div class="loginbox hidden" id="register" style="display: none">
+			<div class="method">Create account</div>
+			<input oninput="usernameit('nuser')" type="text" id="nuser" placeholder="Username (4-16 characters)" maxlength="16"><br>
+			<input type="password" id="npasswd" placeholder="Password (4-32 characters)" maxlength="32"><br>
+			<input type="password" id="npasswdc" placeholder="Password (again)" maxlength="32"><br>
+			<input type="text" id="l_user" placeholder="Synergia login" maxlength="16"><br>
+			<input type="password" id="l_passwd" placeholder="Synergia password" maxlength="32"><br><br>
+			<button onclick="showdiv('register', 'login', true)">Log in</button>
+			<button id="registerbutton" onclick="register()" class="highlighted">Create account</button>
+		</div>
+		<div class="loginbox hidden" id="app" style="display: none">
+			<button class="back" onclick="showdiv('app', 'login', true)"></button>
+			<div class="method">Mobile app</div>
+			<b><div class="subheader">v%s<code> | </code>%s</div></b>
+			<div class="box">
+				<svg enable-background="new 0 0 24 24" viewBox="0 0 24 24"><g><path d="M0,0h24v24H0V0z" fill="none"/></g><g><g><path d="M17.6,9.48l1.84-3.18c0.16-0.31,0.04-0.69-0.26-0.85c-0.29-0.15-0.65-0.06-0.83,0.22l-1.88,3.24 c-2.86-1.21-6.08-1.21-8.94,0L5.65,5.67c-0.19-0.29-0.58-0.38-0.87-0.2C4.5,5.65,4.41,6.01,4.56,6.3L6.4,9.48 C3.3,11.25,1.28,14.44,1,18h22C22.72,14.44,20.7,11.25,17.6,9.48z M7,15.25c-0.69,0-1.25-0.56-1.25-1.25 c0-0.69,0.56-1.25,1.25-1.25S8.25,13.31,8.25,14C8.25,14.69,7.69,15.25,7,15.25z M17,15.25c-0.69,0-1.25-0.56-1.25-1.25 c0-0.69,0.56-1.25,1.25-1.25s1.25,0.56,1.25,1.25C18.25,14.69,17.69,15.25,17,15.25z"/></g></g></svg>
+				<div>5.0+</div>
+			</div>
+			<div class="box">
+				<svg viewBox="0 0 24 24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M18 4v16H6V8.83L10.83 4H18m0-2h-8L4 8v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM9 7h2v4H9zm3 0h2v4h-2zm3 0h2v4h-2z"/></svg>
+				<div><2 MB</div>
+			</div><br>
+			<a style="padding: 0" href="app/Librusik-v%s.apk" download><button class="highlighted" style="margin-top: 16px;">Download</button></a>
+		</div>
+		<div class="hidden" id="err" style="display:none">
+			<svg class="svge" viewBox="0 0 24 24"><path d="M11 15h2v2h-2v-2zm0-8h2v6h-2V7zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/></svg>
+			<div class="error" id="errname"></div>
+			<div class="suggestion" id="errdesc"></div>
+			<button id="errbtn" class="highlighted">Try again</button>
+		</div>
+		<div class="hidden" id="succ" style="display:none">
+			<svg class="ssvg" viewBox="0 0 24 24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z"/></svg>
+			<div class="success" id="succname"></div>
+			<div class="suggestion" id="succdesc"></div>
+			<button id="succbtn" style="display: none"></button>
+		</div>
+	</center>
+</body>
+<style type="text/css">
+	.box {
+		width: 96px;
+		display: inline-block;
+		border: 1px solid #333;
+		padding: 12px;
+		margin: 4px;
+		border-radius: 6px;
+	}
+	.box > svg {
+		width: 72px;
+		height: 72px;
+		fill: #666;
+	}
+	.box > div {
+		font-weight: bold;
+		font-size: 15px;
+		color: #AAA;
+	}
+</style>
+<script type="text/javascript">
+	function listeners() {
+		document.getElementById("user").addEventListener("keypress", function(e) { if (e.key === "Enter") document.getElementById("passwd").focus(); });
+		document.getElementById("passwd").addEventListener("keypress", function(e) { if (e.key === "Enter") login(); });
+		document.getElementById("nuser").addEventListener("keypress", function(e) { if (e.key === "Enter") document.getElementById("npasswd").focus(); });
+		document.getElementById("npasswd").addEventListener("keypress", function(e) { if (e.key === "Enter") document.getElementById("npasswdc").focus(); });
+		document.getElementById("npasswdc").addEventListener("keypress", function(e) { if (e.key === "Enter") document.getElementById("l_user").focus(); });
+		 document.getElementById("l_user").addEventListener("keypress", function(e) { if (e.key === "Enter") document.getElementById("l_passwd").focus(); });
+		document.getElementById("l_passwd").addEventListener("keypress", function(e) { if (e.key === "Enter") register(); });
+	}
+</script>
+</html>

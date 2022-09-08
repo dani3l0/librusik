@@ -1,0 +1,11 @@
+{
+    "max_users": 8,
+    "name": "admin",
+    "passwd": "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918",
+    "port": 7777,
+    "subdirectory": "/",
+    "isKonfeti": false,
+    "ssl": false,
+    "pubkey": "/etc/letsencrypt/live/my.domain.com/fullchain.pem",
+    "privkey": "/etc/letsencrypt/live/my.domain.com/privkey.pem"
+}

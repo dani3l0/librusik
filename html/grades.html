@@ -1,0 +1,27 @@
+<div id="main">
+	<button onclick="showdiv('main', 'averages')" class="bubble highlighted">
+		<div class="name">Average</div>
+		<div class="value">%s</div>
+	</button>
+	<button onclick="showdiv('main', 'recent')" class="bubble highlighted">
+		<div class="name">Grades</div>
+		<div class="value">%s</div>
+	</button>
+	<br><br>
+	%s
+</div>
+<div id="averages" class="hidden" style="display:none">
+	<button class="back" onclick="showdiv('averages', 'main', true)"></button>
+	<div class="header">Average: <div style="display: inline" id="avg">%s</div></div>
+	<div class="subheader">Edit grades to calculate the new average!</div>
+	<div class="subheader"><div class="inline">%s</div> subjects<code> | </code>Score: <div class="inline">%s</div></div>
+	%s
+</div>
+<div id="recent" class="hidden" style="display:none">
+	<button class="back" onclick="showdiv('recent', 'main', true)"></button>
+	<div class="header">Recent grades</div>
+	<div class="subheader">%s entries</div>
+	%s
+</div>
+%s
+<br><br>
