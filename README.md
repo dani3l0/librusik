@@ -2,6 +2,10 @@
 
 Simple, fast, dark-themed Librus web client with some cool features.
 
+Runnable even on RPi 1B.
+
+
+-----
 
 ### Features
 
@@ -40,36 +44,51 @@ Simple, fast, dark-themed Librus web client with some cool features.
 
 - _Something happens at papieżowa_
 
+-----
 
 ### Installation
 
 This app __will not run on Windows__. And no support for it, ever.
-I used Debian 11 (and previously 10) for a couple of years and it was pretty stable.
+I used Debian 11 (and previously 10) for a couple of years and everything was pretty fine.
 
-1. Install python3 dependencies (via pip or distro packages):
+__1. Install python3 dependencies (multiple ways to do it):__
+
+- via pip:
 ```
-bs4 aiohttp cryptography
+pip install bs4 aiohttp cryptography
 ```
 
-2. Clone the repo:
+- or via distro packages:
+```
+apt install python3-bs4 python3-aiohttp python3-cryptography
+```
+
+
+__2. Clone the repo:__
 ```
 git clone https://gitlab.com/dani3l0/librusik Librusik
 cd Librusik
 ```
 
-3. And, finally run it:
+__3. And, finally run it:__
 ```
 python3 librusik.py
 ```
 
-4. Done! Librusik is now running at localhost:7777.
+__4. Done! Librusik is now running at [localhost:7777](http://localhost:7777).__
 
+-----
 
 ### Configuration
 
 Edit `config.json` file and adjust your preferences.
 
-Also, check localhost:7777 to manage your Librusik instance. Default user is `admin` and password is `admin` too.
+Also, check [localhost:7777/panel](http://localhost:7777/panel) to manage your Librusik instance. Default user is `admin` and password is `admin` too.
 
+-----
 
+### Some other words
 
+Because this was my first app written in Python, code quality is quite meh. Don't expect code to be super readable and flexible.
+
+_It just works_
