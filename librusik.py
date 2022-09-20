@@ -400,7 +400,7 @@ async def grades(request):
 				for s in result:
 					notshowempty = database[data["username"]]["grades_cleanup"] and result[s] == []
 					if notshowempty:
-						break
+						continue
 					savgarr = []
 					savg = ""
 					page += """<button class="bubble" onclick="showdiv('main', '%s')"><div class="name">%s</div><div class="value"><code>""" % (s.lower(), s)
