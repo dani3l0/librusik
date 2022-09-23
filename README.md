@@ -4,12 +4,13 @@ Simple, fast, dark-themed Librus web client with some cool features.
 
 Runnable even on RPi 1B.
 
+![screenshot](https://gitlab.com/dani3l0/librusik/-/raw/stable/screenshots/librusik-2.png)
 
 -----
 
-### Features
+## Features
 
-##### Librus:
+### Librus:
 
 - Grades (with Librus-independent average calculation)
 
@@ -30,7 +31,7 @@ Runnable even on RPi 1B.
 - About school
 
 
-##### Client:
+### Client:
 
 - Dark theme
 
@@ -46,7 +47,7 @@ Runnable even on RPi 1B.
 
 -----
 
-### Installation
+## Installation
 
 This app __will not run on Windows__. And no support for it, ever.
 I used Debian 11 (and previously 10) for a couple of years and everything was pretty fine.
@@ -79,7 +80,7 @@ __4. Done! Librusik is now running at [localhost:7777](http://localhost:7777).__
 
 -----
 
-### Configuration
+## Configuration
 
 Edit `config.json` file and adjust your preferences.
 
@@ -87,7 +88,7 @@ Also, check [localhost:7777/panel](http://localhost:7777/panel) to manage your L
 
 -----
 
-### Some other words
+## Some other words
 
 Because this was my first app written in Python, code quality is quite meh. Don't expect code to be super readable and flexible.
 
