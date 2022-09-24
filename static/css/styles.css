@@ -110,8 +110,8 @@ button.highlighted.danger {
 	border-color: #F33;
 }
 button.highlighted.warning {
-	background: #FB0 !important;
-	border-color: #FB0;
+	background: #F60 !important;
+	border-color: #F60;
 }
 button.highlighted:hover {
 	opacity: 0.7;
@@ -817,6 +817,9 @@ svg {
 .option.checkbox > .check.ed::after {
 	transform: translate(-50%, -50%);
 }
+.option.checkbox > svg {
+	margin: 0 14px 0 10px;
+}
 .progress {
 	max-width: 360px;
 	display: flex;
@@ -868,7 +871,7 @@ svg {
 	min-width: 4px;
 }
 .bubble.prog > .warning > div {
-	background: #FB0;
+	background: #F60;
 }
 .bubble.prog > .danger > div {
 	background: #F33;

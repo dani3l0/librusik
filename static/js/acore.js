@@ -97,6 +97,15 @@ function buttons(state) {
 		}
 	}
 }
+function last_seen(seconds) {
+	if (seconds == -1) return "Not seen in this session";
+	let now = Math.round(Date.now() / 1000);
+	let diff = now - seconds;
+	if (diff < 120) return `Last seen seconds ago`;
+	else if (diff < (120 * 60)) return `Last seen ${Math.floor(diff / 60)} minutes ago`;
+	else if (diff < (120 * 60 * 60)) return `Last seen ${Math.floor(diff / 60 / 60)} hours ago`;
+	return `Last seen ${Math.floor(diff / 60 / 60 / 24)} days ago`;
+}
 function rminputs() {
 	var inputs = document.getElementsByTagName("input");
 	for (let i = 0; i < inputs.length; i++) {
@@ -186,17 +195,9 @@ function refresh() {
 			accountnum.innerText = resp.userscount + " in total";
 			var accounts = "";
 			for (var i = 0; i < resp.userscount; i++) {
-				accounts += '<div class="user">' + resp.users[i].first_name + ' ' + resp.users[i].last_name + '<div class="username">' + resp.users[i].username + '</div><button onclick="deluser(\'' + resp.users[i].username + '\', \'' + resp.users[i].first_name + ' ' + resp.users[i].last_name + '\')">Delete</button><button onclick="resetpass(\'' + resp.users[i].username + '\', \'' + resp.users[i].first_name + ' ' + resp.users[i].last_name + '\')">Reset password</button></div>';
+				accounts += '<div class="user">' + resp.users[i].first_name + ' ' + resp.users[i].last_name + '<div class="username">' + resp.users[i].username + '</div><p class="last_seen">' + last_seen(resp.users[i].last_seen) + '</p><p class="joined">Joined ' + resp.users[i].joined + '</p><button onclick="deluser(\'' + resp.users[i].username + '\', \'' + resp.users[i].first_name + ' ' + resp.users[i].last_name + '\')">Delete</button><button onclick="resetpass(\'' + resp.users[i].username + '\', \'' + resp.users[i].first_name + ' ' + resp.users[i].last_name + '\')">Reset password</button></div>';
 			}
-			if (accounts != accountlist.innerHTML) {
-				accountlist.classList.add("hidden");
-				setTimeout(function() {
-					accountlist.innerHTML = accounts;
-					setTimeout(function() {
-						accountlist.classList.remove("hidden");
-					}, 450);
-				}, 450);
-			}
+			if (accounts != accountlist.innerHTML) accountlist.innerHTML = accounts;
 			maxusers = resp.max_users;
 			if (donottouch) {
 				donottouch = false;

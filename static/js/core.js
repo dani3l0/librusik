@@ -57,6 +57,14 @@ function indexpage() {
 	document.body.style.opacity = 1;
 	setCookie(cokie["username"], cokie["password"]);
 	goto('home', 0, true);
+	post("api", {
+		"username": cokie["username"],
+		"password": cokie["password"],
+		"method": "get_me"
+	}, function(data) {
+		let resp = JSON.parse(data.responseText);
+		if (resp.confetti) konfeti();
+	});
 }
 function loginpage() {
 	rminputs();
@@ -70,12 +78,8 @@ function loginpage() {
 		"username": cokie["username"],
 		"password": cokie["password"]
 	}, function(data) {
-		if (data.status == 200) {
-			gou(".");
-		}
-		else {
-			document.body.style.opacity = 1;
-		}
+		if (data.status == 200) gou(".");
+		else document.body.style.opacity = 1;
 		buttons();
 	});
 }
@@ -649,31 +653,18 @@ setInterval(function() {
 	}
 }, 1000);
 
-let timout = null;
+let timout = {};
 function checkbox(elem) {
 	elem = elem.getElementsByClassName("check")[0];
 	elem.classList.toggle("ed");
 }
-function grades_cleanup(elem) {
+function featureTile(elem, action) {
 	var cokie = getCookie();
 	checkbox(elem);
-	clearTimeout(timout);
-	timout = setTimeout(function() {
+	clearTimeout(timout[action]);
+	timout[action] = setTimeout(function() {
 		post("api", {
-			"method": "grades_cleanup",
-			"username": cokie["username"],
-			"password": cokie["password"],
-			"value": elem.getElementsByClassName("check")[0].classList.contains("ed")
-		}, function(data) {});
-	}, 1500);
-}
-function attendances_cleanup(elem) {
-	var cokie = getCookie();
-	checkbox(elem);
-	clearTimeout(timout);
-	timout = setTimeout(function() {
-		post("api", {
-			"method": "attendances_cleanup",
+			"method": action,
 			"username": cokie["username"],
 			"password": cokie["password"],
 			"value": elem.getElementsByClassName("check")[0].classList.contains("ed")

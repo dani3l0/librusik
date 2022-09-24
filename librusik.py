@@ -27,6 +27,7 @@ greetings = ["How are you doing?", "Good to see you again.", "How are things?", 
 welcome = random.choice(welcomes)
 greeting = random.choice(greetings)
 
+LAST_SEEN_PEPS = {}
 database = json.loads(open("database.json", "r").read())
 config = json.loads(open("config.json", "r").read())
 
@@ -44,7 +45,7 @@ asyncio.gather(updatetitles())
 
 frt = Fernet(b"47hltIVR5xK4H44tog6vI7EaGgBzWB7H_Ufvwx4n7dw=")  # Use your own Fernet key to increase security
 resources = {
-	"index": open("html/index.html", "r").read() % (config["subdirectory"], "konfeti()" if config["isKonfeti"] else ""),
+	"index": open("html/index.html", "r").read() % (config["subdirectory"]),
 	"home": open("html/home.html", "r").read(),
 	"grades": open("html/grades.html", "r").read(),
 	"more": open("html/more.html", "r").read(),
@@ -200,6 +201,8 @@ async def mkaccount(data):
 		database[data["username"]]["custom_pic"] = None
 		database[data["username"]]["grades_cleanup"] = False
 		database[data["username"]]["attendances_cleanup"] = False
+		database[data["username"]]["confetti"] = False
+		database[data["username"]]["joined"] = datetime.now().strftime('%d %b %Y')
 		timgs = glob("static/img/profile/*")
 		timg = []
 		for x in timgs:
@@ -237,10 +240,10 @@ async def scaccount(data):
 	return "Wrong Synergia credentials."
 
 async def api(request):
-	global database
+	global database, LAST_SEEN_PEPS
 	try:
 		data = await request.json()
-		if "method" in data and data["method"] in ["mkaccount", "delaccount", "chgpasswd", "chglibrus", "chglibruspasswd", "getstuff", "grades_cleanup", "attendances_cleanup"]:
+		if "method" in data and data["method"] in ["mkaccount", "delaccount", "chgpasswd", "chglibrus", "chglibruspasswd", "getstuff", "grades_cleanup", "attendances_cleanup", "confetti", "get_me"]:
 			method = data["method"]
 			if method == "mkaccount":
 				if "username" in data and "password" in data and "librusLogin" in data and "librusPassword" in data:
@@ -255,6 +258,7 @@ async def api(request):
 							return response(make, 403)
 				return response("", 400)
 			elif auth(data):
+				LAST_SEEN_PEPS[data["username"]] = int(time.time())
 				if method == "chgpasswd":
 					if "newpassword" in data and isinstance(data["newpassword"], str):
 						if not checklen(data["newpassword"], 4, 32):
@@ -273,6 +277,15 @@ async def api(request):
 				elif method == "grades_cleanup":
 					if "value" in data and isinstance(data["value"], bool):
 						database[data["username"]]["grades_cleanup"] = data["value"]
+						updatedb()
+						return response("", 200)
+				elif method == "get_me":
+					return JSONresponse({
+						"confetti": database[data["username"]]["confetti"]
+					}, 200)
+				elif method == "confetti":
+					if "value" in data and isinstance(data["value"], bool):
+						database[data["username"]]["confetti"] = data["value"]
 						updatedb()
 						return response("", 200)
 				elif method == "attendances_cleanup":
@@ -311,6 +324,8 @@ async def api(request):
 						}), 200)
 					return response("", 403)
 				elif method == "delaccount":
+					if data["username"] in LAST_SEEN_PEPS:
+						del LAST_SEEN_PEPS[data["username"]]
 					try:
 						os.remove("static/img/profile/custom/%s" % (database[data["username"]]["custom_pic"]))
 					except FileNotFoundError:
@@ -504,7 +519,11 @@ async def settings(request):
 			atends_cleanup = ""
 			if database[data["username"]]["attendances_cleanup"]:
 				atends_cleanup = "ed"
-			return response(resources["settings"] % (f + database[data["username"]]["profile_pic"], database[data["username"]]["first_name"], database[data["username"]]["last_name"], data["username"], imgs, parseDumbs(database[data["username"]]["l_login"]), parseDumbs(decrypt(database[data["username"]]["l_passwd"])), grades_cleanup, atends_cleanup), 200)
+
+			confeti = ""
+			if database[data["username"]]["confetti"]:
+				confeti = "ed"
+			return response(resources["settings"] % (f + database[data["username"]]["profile_pic"], database[data["username"]]["first_name"], database[data["username"]]["last_name"], data["username"], imgs, parseDumbs(database[data["username"]]["l_login"]), parseDumbs(decrypt(database[data["username"]]["l_passwd"])), confeti, grades_cleanup, atends_cleanup), 200)
 		return response("", 401)
 	except:
 		tr = traceback.format_exc().replace(LIBRUSIK_PATH, "")
@@ -825,7 +844,10 @@ async def panelapi(request):
 					cpu_temp = gettemp()
 					users = list()
 					for x in database:
-						users.append({"first_name": database[x]["first_name"], "last_name": database[x]["last_name"], "username": x})
+						last_seen = -1
+						if x in LAST_SEEN_PEPS:
+							last_seen = LAST_SEEN_PEPS[x]
+						users.append({"first_name": database[x]["first_name"], "last_name": database[x]["last_name"], "username": x, "last_seen": last_seen, "joined": database[x]["joined"]})
 					maxusers = config["max_users"]
 					db_usage = round(len(users) / maxusers * 100)
 					db_size = round(os.stat("database.json").st_size / 10) / 100;
