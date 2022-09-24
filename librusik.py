@@ -556,8 +556,7 @@ async def attendances(request):
 				SESSIONS.saveL(data["username"], librus.headers)
 				result = (await librus.get_attendances())[::-1]
 				semesterEnds = (await librus.get_data("Classes"))["Class"]["EndFirstSemester"]
-				#semesterEnds = datetime.strptime(semesterEnds, '%Y-%m-%d')
-				semesterEnds = datetime.strptime("2022-09-14", '%Y-%m-%d')
+				semesterEnds = datetime.strptime(semesterEnds, '%Y-%m-%d')
 				semesterEnds += timedelta(days = 1)
 				persub = {}
 				presences_total = 0
