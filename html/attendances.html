@@ -1,21 +1,23 @@
-<button class="back" onclick="goto('more', 2, true, true)"></button><br>
-<div class="header">Attendances</div>
-<div class="subheader">Frequency: %s%s</div>
-<button class="bubble unclickable highlighted">
-	<div class="name">Presences</div>
-	<div class="value">%s</div>
-</button>
-<button class="bubble unclickable highlighted">
-	<div class="name">Absences</div>
-	<div class="value">%s</div>
-</button><br>
-<button class="bubble unclickable highlighted">
-	<div class="name">Lessons</div>
-	<div class="value">%s</div>
-</button>
-<button class="bubble unclickable highlighted danger">
-	<div class="name">Wasted time</div>
-	<div class="value">%s</div>
-</button><br>
-<br>
+<div id="overview">
+	<button class="back" onclick="goto('more', 2, true, true)"></button><br>
+	<div class="header">Attendances</div>
+	<div class="subheader">Per-subject dashboard</div>
+	<div class="progress">
+		<div class="text">
+			<div class="value">%s</div>
+			<div class="text">Wasted time<br><b>112h 45m</b></div>
+		</div>
+		<div class="bar"><div style="height: %s%%;animation: mainbar 4s;"></div></div>
+	</div>
+	<button class="bubble highlighted unclickable">
+		<div class="name">Presences</div>
+		<div class="value">%s out of %s</div>
+	</button>
+	<button class="bubble highlighted unclickable warn">
+		<div class="name">Absences</div>
+		<div class="value">%s, %s unexcused</div>
+	</button>
+	<br><br>
+	%s
+</div>
 %s

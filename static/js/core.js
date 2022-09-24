@@ -385,6 +385,23 @@ function showdiv(from, to, back) {
 		}, 50);
 	}, 300);
 }
+function headchoice(from, to, btn) {
+	buttons(false);
+	let btnz = btn.parentNode.getElementsByTagName("div");
+	for (var i = 0; i < btnz.length; i++) btnz[i].classList.remove("selected");
+	btn.classList.add("selected");
+	var fromdiv = document.getElementById(from);
+	var todiv = document.getElementById(to);
+	fromdiv.classList.add("hidden");
+	setTimeout(function() {
+		fromdiv.style.display = "none";
+		todiv.style.display = null;
+		setTimeout(function() {
+			todiv.classList.remove("hidden");
+			buttons();
+		}, 50);
+	}, 300);
+}
 function checkmsg(url) {
 	if (url !== "home") return;
 	var cokie = getCookie();

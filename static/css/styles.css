@@ -109,6 +109,10 @@ button.highlighted.danger {
 	background: #F33 !important;
 	border-color: #F33;
 }
+button.highlighted.warning {
+	background: #FB0 !important;
+	border-color: #FB0;
+}
 button.highlighted:hover {
 	opacity: 0.7;
 }
@@ -314,6 +318,7 @@ svg {
 	border-radius: 6px;
 	margin: 8px;
 	font-size: inherit;
+	overflow: hidden;
 	padding: 10px 12px;
 }
 .bubble > .name {
@@ -812,6 +817,76 @@ svg {
 }
 .option.checkbox > .check.ed::after {
 	transform: translate(-50%, -50%);
+}
+.progress {
+	max-width: 360px;
+	display: flex;
+	margin: 64px 0 56px;
+	align-items: center;
+	justify-content: space-around;
+	text-align: right;
+}
+.progress > .text > .value {
+	font-weight: bold;
+	font-size: 45px;
+	color: #0F8;
+}
+.progress > .text > .value:after {
+	content: "%";
+	font-size: 18px;
+}
+.progress > .text > .text {
+	color: #888;
+}
+.progress > .bar {
+	width: 16px;
+	background: #333;
+	height: 128px;
+	border-radius: 12px;
+	overflow: hidden;
+}
+.progress > .bar > div {
+	background: #0F8;
+	bottom: 0;
+	position: absolute;
+	left: 0;
+	border-radius: 12px;
+	width: 100%;
+	min-height: 16px;
+}
+.bubble.prog > .bar {
+	background: #333;
+	height: 4px;
+	width: calc(100% + 24px);
+	margin: 12px -12px -10px;
+}
+.bubble.prog > .bar > div {
+	background: #48F;
+	position: absolute;
+	left: 0;
+	height: 100%;
+	border-radius: 4px;
+	min-width: 4px;
+}
+.headchoice {
+	background: #111;
+	border-radius: 16px;
+	padding: 4px;
+	display: flex;
+	margin-bottom: 10px;
+}
+.headchoice > div {
+	font-weight: bold;
+	margin: 4px;
+	padding: 14px;
+	width: 50%;
+	border-radius: 10px;
+	cursor: pointer;
+	transition: background .3s, color .3s;
+}
+.headchoice > .selected {
+	background: #F46;
+	color: #111;
 }
 @media (max-width: 420px) {
 	.circ {
