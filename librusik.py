@@ -598,13 +598,23 @@ async def attendances(request):
 					pp = math.floor(100 * presences / ful)
 					wasted = "%sh %sm" % (math.floor(presences * 45 / 60), (presences * 45 % 60))
 					barclass = ""
+					auto_switch2 = (persub[sub]["presences"][1] + persub[sub]["absences"][1]) > 0
+					hide1 = ""
+					hide2 = ' class="hidden" style="display: none"'
+					headchoice1 = ' class="selected"'
+					headchoice2 = ''
+					if auto_switch2:
+						hide1 = ' class="hidden" style="display: none"'
+						hide2 = ""
+						headchoice1 = ""
+						headchoice2 = ' class="selected"'
 					if pp < 50:
 						barclass = " danger"
 					elif pp < 65:
 						barclass = " warning"
 					subjectos += """<button class="bubble prog" onclick="showdiv('overview', '%s')"><div class="name">%s</div><div class="value">Frequency: %s%%</div><div class="bar%s"><div style="width: %s%%"></div></div></button>""" % (sub, sub, pp, barclass, pp)
 					html += """<div id="%s" style="display: none;" class="hidden"><button class="back" onclick="showdiv('%s', 'overview', true)"></button><br><div class="header">%s</div><div class="subheader">Attendances</div><div class="progress"><div class="text"><div class="value"><b>%s</b></div><div class="text">%s out of %s<br>Wasted <b>%s</b></div></div><div class="bar"><div style="height: %s%%"></div></div></div>""" % (sub, sub, sub, pp, presences, ful, wasted, pp)
-					html += """<div class="headchoice"><div class="selected" onclick="headchoice('%s-2', '%s-1', this)">1st semester</div><div onclick="headchoice('%s-1', '%s-2', this)">2nd semester</div></div>""" % (sub, sub, sub, sub)
+					html += """<div class="headchoice"><div%s onclick="headchoice('%s-2', '%s-1', this)">1st semester</div><div%s onclick="headchoice('%s-1', '%s-2', this)">2nd semester</div></div>""" % (headchoice1, sub, sub, headchoice2, sub, sub)
 					sem_total = persub[sub]["presences"][0] + persub[sub]["absences"][0]
 					obclass = ""
 					if sem_total > 0:
@@ -618,7 +628,7 @@ async def attendances(request):
 					abwarn = ""
 					if persub[sub]["unexcused"][0] > 0:
 						abwarn = " danger"
-					html += """<div id="%s-1"><button class="bubble highlighted unclickable%s"><div class="name">Presences</div><div class="value">%s%% | %s out of %s</div></button><button class="bubble highlighted unclickable%s"><div class="name">Absences</div><div class="value">%s, %s unexcused</div></button><br><br>%s</div>""" % (sub, obclass, pp, persub[sub]["presences"][0], sem_total, abwarn, persub[sub]["absences"][0], persub[sub]["unexcused"][0], persub[sub]["html"][0])
+					html += """<div id="%s-1"%s><button class="bubble highlighted unclickable%s"><div class="name">Presences</div><div class="value">%s%% | %s out of %s</div></button><button class="bubble highlighted unclickable%s"><div class="name">Absences</div><div class="value">%s, %s unexcused</div></button><br><br>%s</div>""" % (sub, hide1, obclass, pp, persub[sub]["presences"][0], sem_total, abwarn, persub[sub]["absences"][0], persub[sub]["unexcused"][0], persub[sub]["html"][0])
 					sem_total = persub[sub]["presences"][1] + persub[sub]["absences"][1]
 					obclass = ""
 					if sem_total > 0:
@@ -632,7 +642,7 @@ async def attendances(request):
 					abwarn = ""
 					if persub[sub]["unexcused"][1] > 0:
 						abwarn = " danger"
-					html += """<div id="%s-2" class="hidden" style="display: none"><button class="bubble highlighted unclickable%s"><div class="name">Presences</div><div class="value">%s%% | %s out of %s</div></button><button class="bubble highlighted unclickable%s"><div class="name">Absences</div><div class="value">%s, %s unexcused</div></button><br><br>%s<br><br></div>""" % (sub, obclass, pp, persub[sub]["presences"][1], sem_total, abwarn, persub[sub]["absences"][1], persub[sub]["unexcused"][1], persub[sub]["html"][1])
+					html += """<div id="%s-2"%s><button class="bubble highlighted unclickable%s"><div class="name">Presences</div><div class="value">%s%% | %s out of %s</div></button><button class="bubble highlighted unclickable%s"><div class="name">Absences</div><div class="value">%s, %s unexcused</div></button><br><br>%s</div>""" % (sub, hide2, obclass, pp, persub[sub]["presences"][1], sem_total, abwarn, persub[sub]["absences"][1], persub[sub]["unexcused"][1], persub[sub]["html"][1])
 					html += "</div></div>"
 
 				tots = absences_total + presences_total
