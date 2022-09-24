@@ -667,3 +667,16 @@ function grades_cleanup(elem) {
 		}, function(data) {});
 	}, 1500);
 }
+function attendances_cleanup(elem) {
+	var cokie = getCookie();
+	checkbox(elem);
+	clearTimeout(timout);
+	timout = setTimeout(function() {
+		post("api", {
+			"method": "attendances_cleanup",
+			"username": cokie["username"],
+			"password": cokie["password"],
+			"value": elem.getElementsByClassName("check")[0].classList.contains("ed")
+		}, function(data) {});
+	}, 1500);
+}

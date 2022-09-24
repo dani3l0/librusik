@@ -791,13 +791,12 @@ svg {
 }
 .option.checkbox {
 	display: flex;
-	border: none;
 	align-items: center;
 }
 .option.checkbox > .check {
 	width: 24px;
 	height: 24px;
-	border-radius: 16px;
+	border-radius: 1000px;
 	margin: 0 4px 0 12px;
 	background: #111;
 	transition: background .3s;
@@ -806,10 +805,10 @@ svg {
 	background: #F46;
 }
 .option.checkbox > .check::after {
-	content: "+";
+	content: "✓";
 	transform: translate(-50%, -50%) scale(0) rotateZ(180deg);
 	color: #222;
-	top: 50%;
+	top: calc(50% + 1px);
 	left: 50%;
 	position: absolute;
 	font-size: 16px;

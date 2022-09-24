@@ -199,6 +199,7 @@ async def mkaccount(data):
 		database[data["username"]]["year_ends"] = userInfo["SchoolYearEnds"]
 		database[data["username"]]["custom_pic"] = None
 		database[data["username"]]["grades_cleanup"] = False
+		database[data["username"]]["attendances_cleanup"] = False
 		timgs = glob("static/img/profile/*")
 		timg = []
 		for x in timgs:
@@ -239,7 +240,7 @@ async def api(request):
 	global database
 	try:
 		data = await request.json()
-		if "method" in data and data["method"] in ["mkaccount", "delaccount", "chgpasswd", "chglibrus", "chglibruspasswd", "getstuff", "grades_cleanup"]:
+		if "method" in data and data["method"] in ["mkaccount", "delaccount", "chgpasswd", "chglibrus", "chglibruspasswd", "getstuff", "grades_cleanup", "attendances_cleanup"]:
 			method = data["method"]
 			if method == "mkaccount":
 				if "username" in data and "password" in data and "librusLogin" in data and "librusPassword" in data:
@@ -272,6 +273,11 @@ async def api(request):
 				elif method == "grades_cleanup":
 					if "value" in data and isinstance(data["value"], bool):
 						database[data["username"]]["grades_cleanup"] = data["value"]
+						updatedb()
+						return response("", 200)
+				elif method == "attendances_cleanup":
+					if "value" in data and isinstance(data["value"], bool):
+						database[data["username"]]["attendances_cleanup"] = data["value"]
 						updatedb()
 						return response("", 200)
 				elif method == "chglibrus":
@@ -495,7 +501,10 @@ async def settings(request):
 			grades_cleanup = ""
 			if database[data["username"]]["grades_cleanup"]:
 				grades_cleanup = "ed"
-			return response(resources["settings"] % (f + database[data["username"]]["profile_pic"], database[data["username"]]["first_name"], database[data["username"]]["last_name"], data["username"], imgs, parseDumbs(database[data["username"]]["l_login"]), parseDumbs(decrypt(database[data["username"]]["l_passwd"])), grades_cleanup), 200)
+			atends_cleanup = ""
+			if database[data["username"]]["attendances_cleanup"]:
+				atends_cleanup = "ed"
+			return response(resources["settings"] % (f + database[data["username"]]["profile_pic"], database[data["username"]]["first_name"], database[data["username"]]["last_name"], data["username"], imgs, parseDumbs(database[data["username"]]["l_login"]), parseDumbs(decrypt(database[data["username"]]["l_passwd"])), grades_cleanup, atends_cleanup), 200)
 		return response("", 401)
 	except:
 		tr = traceback.format_exc().replace(LIBRUSIK_PATH, "")
@@ -596,6 +605,8 @@ async def attendances(request):
 					absences = sum(persub[sub]["absences"])
 					ful = presences + absences
 					pp = math.floor(100 * presences / ful)
+					if pp == 0 and database[data["username"]]["attendances_cleanup"]:
+						continue
 					wasted = "%sh %sm" % (math.floor(presences * 45 / 60), (presences * 45 % 60))
 					barclass = ""
 					auto_switch2 = (persub[sub]["presences"][1] + persub[sub]["absences"][1]) > 0
