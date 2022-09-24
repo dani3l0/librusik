@@ -597,7 +597,12 @@ async def attendances(request):
 					ful = presences + absences
 					pp = math.floor(100 * presences / ful)
 					wasted = "%sh %sm" % (math.floor(presences * 45 / 60), (presences * 45 % 60))
-					subjectos += """<button class="bubble prog" onclick="showdiv('overview', '%s')"><div class="name">%s</div><div class="value">Frequency: %s%%</div><div class="bar"><div style="width: %s%%"></div></div></button>""" % (sub, sub, pp, pp)
+					barclass = ""
+					if pp < 50:
+						barclass = " danger"
+					elif pp < 65:
+						barclass = " warning"
+					subjectos += """<button class="bubble prog" onclick="showdiv('overview', '%s')"><div class="name">%s</div><div class="value">Frequency: %s%%</div><div class="bar%s"><div style="width: %s%%"></div></div></button>""" % (sub, sub, pp, barclass, pp)
 					html += """<div id="%s" style="display: none;" class="hidden"><button class="back" onclick="showdiv('%s', 'overview', true)"></button><br><div class="header">%s</div><div class="subheader">Attendances</div><div class="progress"><div class="text"><div class="value"><b>%s</b></div><div class="text">%s out of %s<br>Wasted <b>%s</b></div></div><div class="bar"><div style="height: %s%%"></div></div></div>""" % (sub, sub, sub, pp, presences, ful, wasted, pp)
 					html += """<div class="headchoice"><div class="selected" onclick="headchoice('%s-2', '%s-1', this)">1st semester</div><div onclick="headchoice('%s-1', '%s-2', this)">2nd semester</div></div>""" % (sub, sub, sub, sub)
 					sem_total = persub[sub]["presences"][0] + persub[sub]["absences"][0]
@@ -606,7 +611,7 @@ async def attendances(request):
 						pp = math.floor(persub[sub]["presences"][0] / sem_total * 100)
 						if pp < 50:
 							obclass = " danger"
-						elif pp < 60:
+						elif pp < 65:
 							obclass = " warning"
 					else:
 						pp = "N/A"
@@ -620,7 +625,7 @@ async def attendances(request):
 						pp = math.floor(persub[sub]["presences"][1] / sem_total * 100)
 						if pp < 50:
 							obclass = " danger"
-						elif pp < 60:
+						elif pp < 65:
 							obclass = " warning"
 					else:
 						pp = "N/A"
@@ -632,8 +637,9 @@ async def attendances(request):
 
 				tots = absences_total + presences_total
 				pp = math.floor(100 * presences_total / tots)
+				wasted = "%sh %sm" % (math.floor(presences_total * 45 / 60), (presences_total * 45 % 60))
 
-				return response(resources["attendances"] % (pp, pp, presences_total, tots, absences_total, unexcused_total, subjectos, html), 200)
+				return response(resources["attendances"] % (pp, wasted, pp, presences_total, tots, absences_total, unexcused_total, subjectos, html), 200)
 			return response(resources["error"] % (mkbackbtn("/more", 2) + "Error", ERR_403, mktryagainbtn("/attendances", 2)), 403)
 		return response("", 401)
 	except:

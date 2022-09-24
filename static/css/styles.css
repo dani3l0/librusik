@@ -868,6 +868,12 @@ svg {
 	border-radius: 4px;
 	min-width: 4px;
 }
+.bubble.prog > .warning > div {
+	background: #FB0;
+}
+.bubble.prog > .danger > div {
+	background: #F33;
+}
 .headchoice {
 	background: #111;
 	border-radius: 16px;
