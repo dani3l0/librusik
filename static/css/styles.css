@@ -38,6 +38,7 @@ body {
 	user-select: none;
 	line-height: 1.25;
 	min-height: 100vh;
+	min-width: 342px;
 	opacity: 0;
 	transition: opacity .3s;
 	word-wrap: break-word;
@@ -895,6 +896,13 @@ svg {
 .headchoice > .selected {
 	background: #F46;
 	color: #111;
+}
+iframe {
+	border: none;
+	outline: none;
+	background: #222;
+	width: 100%;
+	min-height: 360px;
 }
 @media (max-width: 420px) {
 	.circ {

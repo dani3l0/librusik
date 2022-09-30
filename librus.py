@@ -1,5 +1,8 @@
-import asyncio, aiohttp, json, datetime
+import asyncio, aiohttp, json
 from bs4 import BeautifulSoup
+from datetime import datetime, timedelta
+
+REQUESTS = [0] * 7
 
 class Librus:
 	def __init__(self, session):
@@ -9,10 +12,12 @@ class Librus:
 			self.headers = session
 
 	async def request(self, link, postdata):
+		arr_index = datetime.now().weekday()
 		for i in range(0, 5):
 			try:
 				async with aiohttp.ClientSession(headers = self.headers) as session:
 					async with session.post(link, data = postdata, timeout = 5) as resp:
+						REQUESTS[arr_index] += 1
 						if resp.status == 200:
 							return {"code": resp.status, "text": await resp.text()}
 						elif resp.status == 401:
@@ -22,10 +27,12 @@ class Librus:
 		return {"code": 000, "text": None}
 
 	async def curl(self, link):
+		arr_index = datetime.now().weekday()
 		for i in range(0, 5):
 			try:
 				async with aiohttp.ClientSession(headers = self.headers) as session:
 					async with session.get(link, timeout = 5) as resp:
+						REQUESTS[arr_index] += 1
 						if resp.status == 200:
 							return {"code": resp.status, "text": await resp.text()}
 						elif resp.status == 401:
@@ -215,9 +222,9 @@ class Librus:
 		return classrooms
 
 	async def get_timetable(self):
-		today = datetime.date.today()
-		weekStart = today + datetime.timedelta(days = 2)
-		weekStart = weekStart - datetime.timedelta(days = weekStart.weekday())
+		today = datetime.now()
+		weekStart = today + timedelta(days = 2)
+		weekStart = weekStart - timedelta(days = weekStart.weekday())
 		thisweek = today.isocalendar()[1]
 		autoweek = weekStart.isocalendar()[1]
 		days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
@@ -347,12 +354,16 @@ class Librus2:
 			return True
 		self.cookies = None
 		async with aiohttp.ClientSession() as session:
+			arr_index = datetime.now().weekday()
+			REQUESTS[arr_index] += 1
 			resp = await session.get("https://api.librus.pl/OAuth/Authorization?client_id=46&response_type=code&scope=mydata")
 			form = aiohttp.FormData()
 			form.add_field("action", "login")
 			form.add_field("login", login)
 			form.add_field("pass", password)
+			REQUESTS[arr_index] += 1
 			resp = await session.post("https://api.librus.pl/OAuth/Authorization?client_id=46", data = form)
+			REQUESTS[arr_index] += 1
 			resp = await session.get("https://api.librus.pl/OAuth/Authorization/Grant?client_id=46")
 			self.cookies = resp.cookies
 			return resp.status == 200
@@ -361,6 +372,8 @@ class Librus2:
 	async def get_messages(self):
 		try:
 			async with aiohttp.ClientSession(cookies = self.cookies) as session:
+				arr_index = datetime.now().weekday()
+				REQUESTS[arr_index] += 1
 				resp = await session.get("https://synergia.librus.pl/wiadomosci")
 				html = await resp.text()
 				messages = []
@@ -386,6 +399,8 @@ class Librus2:
 	async def get_message(self, link):
 		try:
 			async with aiohttp.ClientSession(cookies = self.cookies) as session:
+				arr_index = datetime.now().weekday()
+				REQUESTS[arr_index] += 1
 				resp = await session.get("https://synergia.librus.pl/wiadomosci/%s" % link.replace("-", "/"))
 				html = await resp.text()
 				soup = BeautifulSoup(html, "html.parser")

@@ -101,9 +101,9 @@ function last_seen(seconds) {
 	if (seconds == -1) return "Not seen in this session";
 	let now = Math.round(Date.now() / 1000);
 	let diff = now - seconds;
-	if (diff < 120) return `Last seen seconds ago`;
+	if (diff < 120) return `Last seen just now`;
 	else if (diff < (120 * 60)) return `Last seen ${Math.floor(diff / 60)} minutes ago`;
-	else if (diff < (120 * 60 * 60)) return `Last seen ${Math.floor(diff / 60 / 60)} hours ago`;
+	else if (diff < (72 * 60 * 60)) return `Last seen ${Math.floor(diff / 60 / 60)} hours ago`;
 	return `Last seen ${Math.floor(diff / 60 / 60 / 24)} days ago`;
 }
 function rminputs() {

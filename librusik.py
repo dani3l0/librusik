@@ -4,6 +4,7 @@ from datetime import datetime, date, timedelta
 from glob import glob
 from cryptography.fernet import Fernet
 from librus import Librus, Librus2
+import librus
 from sessionmanager import SessionManager
 import ssl
 
@@ -24,8 +25,6 @@ host = {
 
 welcomes = ["Hello", "Hi", "Hey"]
 greetings = ["How are you doing?", "Good to see you again.", "How are things?", "Librusik is awesome, isn't it?", "Too lazy to log into Synergia? :D", "Have a wonderful day!", "Nice to see you.", "Synergia still sucks? :D"]
-welcome = random.choice(welcomes)
-greeting = random.choice(greetings)
 
 LAST_SEEN_PEPS = {}
 database = json.loads(open("database.json", "r").read())
@@ -36,10 +35,15 @@ SESSIONS = SessionManager(database)
 async def updatetitles():
 	global welcome
 	global greeting
+	week_last = datetime.now().strftime("%W")
 	while True:
-		await asyncio.sleep(2700)
+		week = datetime.now().strftime("%W")
+		if week != week_last:
+			week_last = week
+			librus.REQUESTS = [0] * 7
 		welcome = random.choice(welcomes)
 		greeting = random.choice(greetings)
+		await asyncio.sleep(60)
 
 asyncio.gather(updatetitles())
 
@@ -57,6 +61,7 @@ resources = {
 	"freedays": open("html/freedays.html", "r").read(),
 	"teacherfreedays": open("html/teacherfreedays.html", "r").read(),
 	"parentteacherconferences": open("html/parentteacherconferences.html", "r").read(),
+	"traffic": open("html/traffic.html", "r").read(),
 	"school": open("html/school.html", "r").read(),
 	"settings": open("html/settings.html", "r").read(),
 	"login": open("html/login.html", "r").read(),
@@ -109,9 +114,6 @@ def gettemp():
 	except:
 		try:
 			c0 = int(open("/sys/class/hwmon/hwmon0/temp1_input", "r").read().rstrip())
-			#c1 = int(open("/sys/class/hwmon/hwmon1/temp2_input", "r").read().rstrip())
-			#c2 = int(open("/sys/class/hwmon/hwmon1/temp4_input", "r").read().rstrip())
-			#c3 = int(open("/sys/class/hwmon/hwmon1/temp5_input", "r").read().rstrip())
 			d = c0
 		except:
 			d = 0
@@ -808,6 +810,12 @@ async def messages(request):
 		tr = traceback.format_exc().replace(LIBRUSIK_PATH, "")
 		return response(resources["error"] % (mkbackbtn("messages", 2) + "Internal server error", tr, mktryagainbtn("/messages", 2)), 500)
 
+async def traffic(request):
+	return response(resources["traffic"], 200)
+
+async def getTraffic(request):
+	return JSONresponse(librus.REQUESTS, 200)
+
 
 async def message(request):
 	global database
@@ -997,6 +1005,8 @@ app.add_routes([
 	web.route('POST', '/teacherfreedays', teacherfreedays),
 	web.route('POST', '/parentteacherconferences', parentteacherconferences),
 	web.route('POST', '/school', school),
+	web.route('POST', '/traffic', traffic),
+	web.route('GET', '/getTraffic', getTraffic),
 	web.route('POST', '/messages', messages),
 	web.route('POST', '/message/{uri}', message),
 	web.route('GET', '/panel', panel),

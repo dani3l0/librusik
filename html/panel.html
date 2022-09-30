@@ -43,6 +43,13 @@
 				<svg viewBox="0 0 24 24" class="icon" fill="#48F"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M2 20h20v-4H2v4zm2-3h2v2H4v-2zM2 4v4h20V4H2zm4 3H4V5h2v2zm-4 7h20v-4H2v4zm2-3h2v2H4v-2z"/></svg>
 			</div><br>
 			<button onclick="showdiv('main', 'logout')" class="highlighted">Log out</button><br>
+			<button class="option" onclick="showdiv('main', 'traffic')">
+				<svg viewBox="0 0 36 36"><g clip-path="url(#clip0_106_2)"><path d="M30 15H25.5V13.29C28.08 12.615 30 10.29 30 7.5H25.5V6C25.5 5.175 24.825 4.5 24 4.5H12C11.175 4.5 10.5 5.175 10.5 6V7.5H5.99999C5.99999 10.29 7.91999 12.615 10.5 13.29V15H5.99999C5.99999 17.79 7.91999 20.115 10.5 20.79V22.5H5.99999C5.99999 25.29 7.91999 27.615 10.5 28.29V30C10.5 30.825 11.175 31.5 12 31.5H24C24.825 31.5 25.5 30.825 25.5 30V28.29C28.08 27.615 30 25.29 30 22.5H25.5V20.79C28.08 20.115 30 17.79 30 15ZM22.5 28.5H13.5V7.5H22.5V28.5ZM18 27C19.245 27 20.25 25.995 20.25 24.75C20.25 23.505 19.245 22.5 18 22.5C16.755 22.5 15.75 23.505 15.75 24.75C15.75 25.995 16.755 27 18 27ZM18 20.25C19.245 20.25 20.25 19.245 20.25 18C20.25 16.755 19.245 15.75 18 15.75C16.755 15.75 15.75 16.755 15.75 18C15.75 19.245 16.755 20.25 18 20.25ZM18 13.5C19.245 13.5 20.25 12.495 20.25 11.25C20.25 10.005 19.245 9 18 9C16.755 9 15.75 10.005 15.75 11.25C15.75 12.495 16.755 13.5 18 13.5Z"/></g><defs><clipPath id="clip0_106_2"><rect width="36" height="36"/></clipPath></defs></svg>
+				<div>
+					<div class="title">Traffic</div>
+					<div class="subtitle">See how many times Librusik got connected to Synergia.</div>
+				</div>
+			</button>
 			<button class="option" onclick="showdiv('main', 'credentials')">
 				<svg viewBox="0 0 24 24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M22 19h-6v-4h-2.68c-1.14 2.42-3.6 4-6.32 4-3.86 0-7-3.14-7-7s3.14-7 7-7c2.72 0 5.17 1.58 6.32 4H24v6h-2v4zm-4-2h2v-4h2v-2H11.94l-.23-.67C11.01 8.34 9.11 7 7 7c-2.76 0-5 2.24-5 5s2.24 5 5 5c2.11 0 4.01-1.34 4.71-3.33l.23-.67H18v4zM7 15c-1.65 0-3-1.35-3-3s1.35-3 3-3 3 1.35 3 3-1.35 3-3 3zm0-4c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1z"/></svg>
 				<div>
@@ -89,6 +96,12 @@
 					<div class="subtitle">If you feel a bit insecure or never changed it before.</div>
 				</div>
 			</button>
+		</div>
+		<div id="traffic" class="hidden" style="display:none">
+			<button class="back" onclick="showdiv('traffic', 'main', true)"></button>
+			<div class="header">Traffic</div>
+			<div class="subheader">How many times Librusik got connected to Synergia</div>
+			<iframe src="traffic.html"></iframe>
 		</div>
 		<div id="chgname" class="hidden" style="display:none">
 			<button class="back" onclick="showdiv('chgname', 'credentials', true)"></button>

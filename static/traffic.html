@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Traffic Monitor</title>
+	<link rel="stylesheet" type="text/css" href="css/styles.css">
+</head>
+<body onload="fetchTraffic();setInterval(fetchTraffic, 2500)">
+	<div class="today">
+		<div id="today" style="color: #F46">0</div>
+		<div>today</div>
+	</div>
+	<div class="databox">
+		<div class="data">
+			<div id="yesterday" style="color: #68F;">0</div>
+			<div>yesterday</div>
+		</div>
+		<div class="data">
+			<div id="week" style="color: #0F8;">0</div>
+			<div>this week</div>
+		</div>
+	</div>
+</body>
+<script type="text/javascript">
+	function fetchTraffic() {
+		document.body.style.opacity = 1;
+		let today = document.getElementById('today');
+		let yesterday = document.getElementById('yesterday');
+		let week = document.getElementById('week');
+		let xhr = new XMLHttpRequest();
+		xhr.open("GET", "/getTraffic");
+		xhr.onload = function() {
+			let data = JSON.parse(this.responseText);
+			let dow = ((new Date()).getDay() + 6) % 7;
+			animateValue(today, data[dow]);
+			let sum = 0;
+			data.forEach(x => {sum += x});
+			animateValue(week, sum);
+			let y = dow - 1;
+			if (y < 0) yesterday.innerText = "N/A";
+			else animateValue(yesterday, data[y]);
+		}
+		xhr.send();
+	}
+	function easeInOutQuad(t, b, c, d) {
+		if ((t /= d / 2) < 1) return c / 2 * t * t + b;
+		return -c / 2 * ((--t) * (t - 2) - 1) + b;
+	}
+	function animateValue(elem, to) {
+		if (elem.innerText != to) elem.classList.add("updating");
+		to = Math.round(to);
+		let duration = 1200;
+		let from = 0;
+		if (elem.innerText !== "N/A") from = parseInt(elem.innerText, 10);
+		let range = to - from;
+		if (from == to) {
+			elem.innerText = to;
+			return;
+		}
+		let current = from;
+		let start = new Date();
+		let step = function() {
+			let now = new Date();
+			if (now - start > duration) return;
+			current = Math.round(easeInOutQuad(now - start, from, range, duration));
+			if (current != to) setTimeout(step, 10);
+			else setTimeout(() => {elem.classList.remove("updating")}, 600);
+			elem.innerText = current;
+		}
+		setTimeout(step, 10);
+	}
+</script>
+<style type="text/css">
+	body {
+		min-height: unset;
+		overflow: hidden;
+		margin: 0;
+		text-align: center;
+		min-width: 0;
+	}
+	#week, #yesterday {
+		font-size: 24px;
+		margin-bottom: 1px;
+		transition: text-shadow .7s;
+	}
+	.databox {
+		font-weight: bold;
+		border: 1px solid #333;
+		display: inline-flex;
+		border-radius: 20px;
+		overflow: hidden;
+		margin: 0 auto;
+		width: 100%;
+		color: #888;
+	}
+	.data {
+		text-align: left;
+		margin: -1px;
+		border-left: 1px solid #333;
+		padding: 20px;
+		width: 50%;
+		min-width: 100px;
+	}
+	#today {
+		font-size: 64px;
+		margin-bottom: 1px;
+		transition: text-shadow .7s;
+	}
+	#today.updating {
+		text-shadow: 0 0 16px #F46;
+	}
+	.today {
+		font-weight: bold;
+		margin: 42px 0 56px;
+		color: #888;
+	}
+</style>
+</html>
