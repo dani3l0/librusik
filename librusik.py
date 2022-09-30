@@ -56,6 +56,7 @@ resources = {
 	"messages": open("html/messages.html", "r").read(),
 	"message": open("html/message.html", "r").read(),
 	"attendances": open("html/attendances.html", "r").read(),
+	"attendancesold": open("html/attendancesold.html", "r").read(),
 	"exams": open("html/exams.html", "r").read(),
 	"freedays": open("html/freedays.html", "r").read(),
 	"teacherfreedays": open("html/teacherfreedays.html", "r").read(),
@@ -578,6 +579,41 @@ async def timetable(request):
 		tr = traceback.format_exc().replace(LIBRUSIK_PATH, "")
 		return response(resources["error"] % (mkbackbtn("/more", 2) + "Internal server error", tr, mktryagainbtn("/timetable", 2)), 500)
 
+async def attendances_old(request):
+	try:
+		data = await request.json()
+		if auth(data):
+			librus = Librus(SESSIONS.getL(data["username"]))
+			if await librus.mktoken(database[data["username"]]["l_login"], decrypt(database[data["username"]]["l_passwd"])):
+				SESSIONS.saveL(data["username"], librus.headers)
+				result = (await librus.get_attendances())[::-1]
+				page = ""
+				lessons = 0
+				presences = 0
+				absences = 0
+				for x in result:
+					lessons += 1
+					if x["isPresence"]:
+						presences += 1
+						color = "green"
+					else:
+						absences += 1
+						if x["Short"] == "u":
+							color = "yellow"
+						else:
+							color = "red"
+					page += """<button class="bubble unclickable %s"><div class="name">%s</div><div class="value"><i>%s</i>, %s</div><div class="value">Added by %s %s</div><div class="value">%s</div></button>""" % (color, x["Lesson"], x["Type"], x["Date"], x["AddedBy"]["FirstName"], x["AddedBy"]["LastName"], x["Added"])
+				wasted = "%sh %sm" % (math.floor(presences * 45 / 60), (presences * 45 % 60))
+				if lessons > 0:
+					return response(resources["attendancesold"] % (round((presences / lessons) * 100, 1), "%", presences, absences, lessons, wasted, page), 200)
+				else:
+					return response(resources["attendancesold"] % ("Unavailable", "", presences, absences, lessons, wasted, page), 200)
+			return response(resources["error"] % (mkbackbtn("/more", 2) + "Error", ERR_403, mktryagainbtn("/attendancesold", 2)), 403)
+		return response("", 401)
+	except:
+		tr = traceback.format_exc().replace(LIBRUSIK_PATH, "")
+		return response(resources["error"] % (mkbackbtn("/attendances", 2) + "Internal server error", tr, mktryagainbtn("/attendancesold", 2)), 500)
+
 async def attendances(request):
 	try:
 		data = await request.json()
@@ -652,7 +688,7 @@ async def attendances(request):
 					obclass = ""
 					if sem_total > 0:
 						pp = math.floor(persub[sub]["presences"][0] / sem_total * 100)
-						if pp < 50:
+						if pp < 50 or persub[sub]["unexcused"][0]:
 							obclass = " danger"
 						elif pp < 65:
 							obclass = " warning"
@@ -666,7 +702,7 @@ async def attendances(request):
 					obclass = ""
 					if sem_total > 0:
 						pp = math.floor(persub[sub]["presences"][1] / sem_total * 100)
-						if pp < 50:
+						if pp < 50 or persub[sub]["unexcused"][1]:
 							obclass = " danger"
 						elif pp < 65:
 							obclass = " warning"
@@ -984,7 +1020,7 @@ async def error_middleware(request, handler):
 	return response(resources["errorpage"] % (str(status), str(exc)), status)
 
 
-app = web.Application(middlewares=[error_middleware], client_max_size=1024**2*4)
+app = web.Application(middlewares = [error_middleware], client_max_size = 1024**2*4)
 
 
 # DEBUG ONLY
@@ -1001,6 +1037,7 @@ app.add_routes([
 	web.route('POST', '/settings', settings),
 	web.route('POST', '/timetable', timetable),
 	web.route('POST', '/attendances', attendances),
+	web.route('POST', '/attendancesold', attendances_old),
 	web.route('POST', '/exams', exams),
 	web.route('POST', '/freedays', freedays),
 	web.route('POST', '/teacherfreedays', teacherfreedays),
