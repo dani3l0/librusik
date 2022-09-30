@@ -903,6 +903,7 @@ iframe {
 	background: #222;
 	width: 100%;
 	min-height: 360px;
+	max-width: 540px;
 }
 @media (max-width: 420px) {
 	.circ {

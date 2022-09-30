@@ -417,6 +417,7 @@ function checkmsg(url) {
 		"username": cokie["username"],
 		"password": cokie["password"]
 	}, function(data) {
+		document.getElementById("datafetcher").classList.add("hidden");
 		try {
 			var messages = document.getElementById("messages");
 			var messagest = messages.getElementsByTagName("div")[0];
@@ -424,7 +425,6 @@ function checkmsg(url) {
 			var lucky = document.getElementById("luckynum");
 			var luckyt = lucky.getElementsByTagName("div")[0];
 			if (data.status == 200) {
-				document.getElementById("datafetcher").classList.add("hidden");
 				var k = JSON.parse(data.responseText);
 				if (k.messages > 0) {
 					let addon = "s";
