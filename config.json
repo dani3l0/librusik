@@ -5,6 +5,7 @@
     "port": 7777,
     "subdirectory": "/",
     "ssl": false,
+    "readable_db": false,
     "pubkey": "/etc/letsencrypt/live/my.domain.com/fullchain.pem",
     "privkey": "/etc/letsencrypt/live/my.domain.com/privkey.pem"
 }

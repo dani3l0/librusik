@@ -72,10 +72,14 @@ resources = {
 }
 
 def updatedb():
-	open("database.json", "w").write(json.dumps(database, indent = 4))
+	beautified = json.dumps(database, indent = 4) if config["readable_db"] else json.dumps(database)
+	if open("database.json").read() != beautified:
+		open("database.json", "w").write(beautified)
 
 def updateconf():
-	open("config.json", "w").write(json.dumps(config, indent = 4))
+	beautified = json.dumps(config, indent = 4)
+	if open("config.json").read() != beautified:
+		open("config.json", "w").write(beautified)
 
 key = open("fernet.key", "r").read()
 frt = Fernet(key.encode())
