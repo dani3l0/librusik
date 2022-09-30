@@ -637,25 +637,6 @@ function calc(elem) {
 	document.getElementById('avg').innerText = (Math.round(sum(grds) * 100 / grds.length) / 100).toFixed(2);
 }
 
-// Czeka na papieżową
-setInterval(function() {
-	let active = document.getElementById('papaj');
-	let time = new Date();
-	time = `${time.getHours()}:${time.getMinutes()}`;
-	if (time === "21:37") {
-		if (active) return;
-		let link = document.createElement('link');
-		link.setAttribute('rel', 'stylesheet');
-		link.setAttribute('href', 'css/papiez.css');
-		link.setAttribute('id', 'papaj');
-		document.head.appendChild(link);
-	}
-	else {
-		if (!active) return;
-		active.remove();
-	}
-}, 1000);
-
 let timout = {};
 function checkbox(elem) {
 	elem = elem.getElementsByClassName("check")[0];
@@ -676,6 +657,7 @@ function featureTile(elem, action) {
 }
 function restartApp() {
 	document.body.style.opacity = 0;
+	buttons(false);
 	setTimeout(function() {
 		gou('.');
 	}, 1500);
