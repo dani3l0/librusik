@@ -981,6 +981,8 @@ async def upload_handler(request):
 		uid = str(uuid.uuid1())
 		filename = uid[0:uid.rindex("-")]
 		filename = filename.replace("-", "")
+		if not os.path.exists('static/img/profile/custom'):
+			os.mkdir('static/img/profile/custom')
 		with open(os.path.join("static/img/profile/custom/", filename), "wb") as f:
 			f.write(img.file.read())
 		if database[data["username"]]["custom_pic"]:
