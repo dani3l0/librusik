@@ -20,16 +20,16 @@ function agou(where) {
 }
 function setCookie(user, pass) {
 	var cvalue = {
-		"name": user,
-		"password": pass
+		"name": user.split('').reverse().join(''),
+		"password": pass.split('').reverse().join('')
 	}
 	var d = new Date();
 	d.setTime(d.getTime() + (28 * 24 * 60 * 60 * 1000));
 	var expires = "expires=" + d.toUTCString();
-	document.cookie = "paneldata=" + encodeURIComponent(JSON.stringify(cvalue)) + ";" + expires + "; path=/";
+	document.cookie = "librusik_a=" + encodeURIComponent(JSON.stringify(cvalue)) + ";" + expires + "; path=/";
 }
 function getCookie() {
-	var name = "paneldata=";
+	var name = "librusik_a=";
 	var ca = document.cookie.split(";");
 	for (var i = 0; i < ca.length; i++) {
 		var c = ca[i];
@@ -37,13 +37,16 @@ function getCookie() {
 			c = c.substring(1);
 		}
 		if (c.indexOf(name) == 0) {
-			return JSON.parse(decodeURIComponent(c.substring(name.length, c.length)));
+			let meh = JSON.parse(decodeURIComponent(c.substring(name.length, c.length)));
+			meh["name"] = meh["name"].split('').reverse().join('');
+			meh["password"] = meh["password"].split('').reverse().join('');
+			return meh;
 		}
 	}
 	return {};
 }
 function rmCookie() {
-	document.cookie = "paneldata={}; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+	document.cookie = "librusik_a={}; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
 	agou("panel/login");
 }
 function bool2str(bool, stryes, strnot) {

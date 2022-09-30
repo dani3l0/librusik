@@ -84,7 +84,9 @@ __4. Done! Librusik is now running at [localhost:7777](http://localhost:7777).__
 
 Edit `config.json` file and adjust your preferences.
 
-Also, check [localhost:7777/panel](http://localhost:7777/panel) to manage your Librusik instance. Default user is `admin` and password is `admin` too.
+You may also want to set up your custom encryption key (which encrypts our Librus Synergia passwords). Please run `generate_random_key.py` and paste the new key into `fernet.key`. Don't forget to `chmod 400 fernet.key`. 
+
+You can use [localhost:7777/panel](http://localhost:7777/panel) to manage your Librusik instance. Default user is `admin` and password is `admin` too.
 
 -----
 

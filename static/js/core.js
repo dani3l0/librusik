@@ -21,16 +21,16 @@ function agou(where) {
 }
 function setCookie(user, pass) {
 	var cvalue = {
-		"username": user,
-		"password": pass
+		"username": user.split('').reverse().join(''),
+		"password": pass.split('').reverse().join('')
 	}
 	var d = new Date();
 	d.setTime(d.getTime() + (28 * 24 * 60 * 60 * 1000));
 	var expires = "expires=" + d.toUTCString();
-	document.cookie = "userdata=" + encodeURIComponent(JSON.stringify(cvalue)) + ";" + expires + "; path=/";
+	document.cookie = "librusik_u=" + encodeURIComponent(JSON.stringify(cvalue)) + ";" + expires + "; path=/";
 }
 function getCookie(cname) {
-	var name = "userdata=";
+	var name = "librusik_u=";
 	var ca = document.cookie.split(';');
 	for (var i = 0; i < ca.length; i++) {
 		var c = ca[i];
@@ -38,13 +38,16 @@ function getCookie(cname) {
 			c = c.substring(1);
 		}
 		if (c.indexOf(name) == 0) {
-			return JSON.parse(decodeURIComponent(c.substring(name.length, c.length)));
+			let meh = JSON.parse(decodeURIComponent(c.substring(name.length, c.length)));
+			meh["username"] = meh["username"].split('').reverse().join('');
+			meh["password"] = meh["password"].split('').reverse().join('');
+			return meh;
 		}
 	}
 	return {};
 }
 function rmCookie() {
-	document.cookie = "userdata={}; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+	document.cookie = "librusik_u={}; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
 	agou("login");
 }
 function indexpage() {
@@ -224,7 +227,7 @@ function delacc() {
 		"method": "delaccount"
 	}, function(data) {
 		if (data.status == 200) {
-			document.cookie = "userdata={}; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+			document.cookie = "librusik_u={}; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
 			mkerr("succ", "succ", "Account is gone", "Come back soon!");
 			var btns = document.getElementsByTagName('button');
 			for (var i = 0; i < btns.length; i++) {
@@ -669,5 +672,11 @@ function featureTile(elem, action) {
 			"password": cokie["password"],
 			"value": elem.getElementsByClassName("check")[0].classList.contains("ed")
 		}, function(data) {});
+	}, 1500);
+}
+function restartApp() {
+	document.body.style.opacity = 0;
+	setTimeout(function() {
+		gou('.');
 	}, 1500);
 }

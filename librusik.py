@@ -47,7 +47,6 @@ async def updatetitles():
 
 asyncio.gather(updatetitles())
 
-frt = Fernet(b"47hltIVR5xK4H44tog6vI7EaGgBzWB7H_Ufvwx4n7dw=")  # Use your own Fernet key to increase security
 resources = {
 	"index": open("html/index.html", "r").read() % (config["subdirectory"]),
 	"home": open("html/home.html", "r").read(),
@@ -77,6 +76,8 @@ def updatedb():
 def updateconf():
 	open("config.json", "w").write(json.dumps(config, indent = 4))
 
+key = open("fernet.key", "r").read()
+frt = Fernet(key.encode())
 def encrypt(what):
 	coded = frt.encrypt(what.encode())
 	return coded.decode()
