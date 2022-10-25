@@ -348,6 +348,7 @@ class Librus:
 class Librus2:
 	def __init__(self, session):
 		self.cookies = session
+		self.host = "https://synergia.librus.pl"
 
 	async def mktoken(self, login, password):
 		if await self.get_messages():
@@ -374,7 +375,7 @@ class Librus2:
 			async with aiohttp.ClientSession(cookies = self.cookies) as session:
 				arr_index = datetime.now().weekday()
 				REQUESTS[arr_index] += 1
-				resp = await session.get("https://synergia.librus.pl/wiadomosci")
+				resp = await session.get("%s/wiadomosci" % (self.host))
 				html = await resp.text()
 				messages = []
 				soup = BeautifulSoup(html, "html.parser")
@@ -401,7 +402,7 @@ class Librus2:
 			async with aiohttp.ClientSession(cookies = self.cookies) as session:
 				arr_index = datetime.now().weekday()
 				REQUESTS[arr_index] += 1
-				resp = await session.get("https://synergia.librus.pl/wiadomosci/%s" % link.replace("-", "/"))
+				resp = await session.get("%s/wiadomosci/%s" % (self.host, link.replace("-", "/")))
 				html = await resp.text()
 				soup = BeautifulSoup(html, "html.parser")
 				main = soup.find("table", class_ = "stretch container-message")
@@ -413,10 +414,19 @@ class Librus2:
 				for file in files_div.find_all("tr"):
 					try:
 						f = file.find_all("td")
-						f[1]
+						imgs = file.find_all("img")
+						for img in imgs:
+							cl = str(img.get("onclick")).strip().replace(" ", "").replace("\n", "").replace("\\", "")
+							if cl.startswith("otworz"):
+								cl = self.host + cl.split('("')[1].split('",')[0]
 						name = f[0].text.strip()
 						if "." in name:
-							files.append(name)
+							files.append({
+								"name": name,
+								"source": cl,
+								"direct": "/get",
+								"nice": cl.split("/pobierz_zalacznik/")[1]
+							})
 					except:
 						pass
 				btf = data_p[1].text
@@ -439,3 +449,19 @@ class Librus2:
 				"content": tr,
 				"attachments": []
 			}
+
+	async def download_file(self, link):
+		try:
+			async with aiohttp.ClientSession(cookies = self.cookies) as session:
+				arr_index = datetime.now().weekday()
+				REQUESTS[arr_index] += 1
+				resp = await session.get("%s/wiadomosci/pobierz_zalacznik/%s" % (self.host, link))
+				respF = await session.get("%s/get" % (resp.url))
+				headers = respF.headers
+				file_I_guess = await respF.read()
+			return {
+				"headers": headers,
+				"content": file_I_guess
+			}
+		except:
+			return None

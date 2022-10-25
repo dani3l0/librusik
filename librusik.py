@@ -871,13 +871,33 @@ async def message(request):
 				mesg = await librus.get_message(uri)
 				attachments = ""
 				for file in mesg["attachments"]:
-					attachments += """<div>%s</div>""" % file
+					attachments += """<div onclick="downloadMsgFile(this, '%s')">%s</div>""" % (file["nice"].replace("/", "-"), parseDumbs(file["name"]))
+
 				return response(resources["message"] % (mesg["subject"], mesg["from"], mesg["date"], mesg["content"], attachments, mesg["read"]), 200)
 			return response(resources["error"] % (mkbackbtn(uri_full, 2) + "Error", ERR_403, mktryagainbtn(uri_full, 2)), 403)
 		return response("", 401)
 	except:
 		tr = traceback.format_exc().replace(LIBRUSIK_PATH, "")
 		return response(resources["error"] % (mkbackbtn(uri_full, 2) + "Internal server error", tr, mktryagainbtn(uri_full, 2)), 500)
+
+
+async def message_download_file(request):
+	global database
+	uri = request.match_info["uri"]
+	uri = uri.replace("-", "/")
+	uri_full = "message_download_file/%s" % uri
+	try:
+		data = await request.json()
+		if auth(data):
+			librus = Librus2(SESSIONS.getL2(data["username"]))
+			if await librus.mktoken(database[data["username"]]["l_login"], decrypt(database[data["username"]]["l_passwd"])):
+				SESSIONS.saveL2(data["username"], librus.cookies)
+				file = await librus.download_file(uri)
+				return web.Response(body = file["content"], status = 200, headers = file["headers"])
+		return response("", 401)
+	except SystemExit:
+		tr = traceback.format_exc().replace(LIBRUSIK_PATH, "")
+		return response("", 500)
 
 
 ####################################################################################################################################################################################################
@@ -1026,11 +1046,11 @@ async def error_middleware(request, handler):
 	return response(resources["errorpage"] % (str(status), str(exc)), status)
 
 
-app = web.Application(middlewares = [error_middleware], client_max_size = 1024**2*4)
+#app = web.Application(middlewares = [error_middleware], client_max_size = 1024**2*4)
 
 
 # DEBUG ONLY
-#app = web.Application(client_max_size=1024**2*4)
+app = web.Application(client_max_size=1024**2*4)
 
 app.add_routes([
 	web.route('GET', '/', index),
@@ -1053,6 +1073,7 @@ app.add_routes([
 	web.route('GET', '/getTraffic', getTraffic),
 	web.route('POST', '/messages', messages),
 	web.route('POST', '/message/{uri}', message),
+	web.route('POST', '/message_download_file/{uri}', message_download_file),
 	web.route('GET', '/panel', panel),
 	web.route('GET', '/panel/login', panell),
 	web.route('POST', '/panel/api', panelapi),

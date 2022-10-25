@@ -1,5 +1,5 @@
 var current = 0;
-console.log(" _     _ _                    _ _    \n| |   (_) |__  _ __ _   _ ___(_) | __\n| |   | | '_ \\| '__| | | / __| | |/ /\n| |___| | |_) | |  | |_| \\__ \\ |   < \n|_____|_|_.__/|_|   \\__,_|___/_|_|\\_\\ \n                                      ");
+console.log(" _	 _ _					_ _	\n| |   (_) |__  _ __ _   _ ___(_) | __\n| |   | | '_ \\| '__| | | / __| | |/ /\n| |___| | |_) | |  | |_| \\__ \\ |   < \n|_____|_|_.__/|_|   \\__,_|___/_|_|\\_\\ \n									  ");
 console.log("You are here at your own risk.");
 function konfeti() {
 	let confetti = new Confetti('body');
@@ -661,4 +661,55 @@ function restartApp() {
 	setTimeout(function() {
 		gou('.');
 	}, 1500);
+}
+function saveOrOpenBlob(blob, fileName) {  
+    var a = document.createElement('a');
+    a.href = window.URL.createObjectURL(blob);
+    a.download = fileName;
+    a.dispatchEvent(new MouseEvent('click'));
+}
+function downloadMsgFile(elem, uri, download) {
+	if (!download) {
+		let dwbutton = document.getElementById("dwbutton");
+		dwbutton.innerText = "Download";
+		let filename = elem.innerText;
+		document.getElementById('download-prompt').classList.add("shown");
+		document.getElementById('darken').style.display = null;
+		setTimeout(function() {
+			document.getElementById('darken').classList.remove("hidden");
+		}, 50);
+		document.getElementById("fname").innerText = elem.innerText;
+		dwbutton.classList.remove("unclickable");
+		dwbutton.disabled = false;
+		dwbutton.onclick = function() {
+			downloadMsgFile(this, uri, true);
+		}
+		return;
+	}
+	elem.innerText = "Please wait...";
+	elem.disabled = true;
+	elem.classList.add("unclickable");
+	let filename = document.getElementById("fname").innerText;
+	let cookie = getCookie();
+	let data = {
+		"username": cookie["username"],
+		"password": cookie["password"]
+	}
+	let xhr = new XMLHttpRequest();
+	xhr.open("POST", `message_download_file/${uri}`, true);
+	xhr.responseType = 'blob';
+	xhr.timeout = 1500000;
+	xhr.onload = function (e) {
+		let blob = e.currentTarget.response;
+		saveOrOpenBlob(blob, filename);
+		closeFileDownload();
+	}
+	xhr.send(JSON.stringify(data));
+}
+function closeFileDownload() {
+	document.getElementById('download-prompt').classList.remove("shown");
+	document.getElementById('darken').classList.add("hidden");
+	setTimeout(function() {
+		document.getElementById('darken').style.display = "none";
+	}, 350);
 }

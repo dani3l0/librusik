@@ -556,7 +556,12 @@ svg {
 	display: inline-block;
 	vertical-align: top;
 	margin: 6px;
-	width: calc(50% - 48px);	
+	width: calc(50% - 48px);
+	cursor: pointer;
+	transition: background .3s;
+}
+.attachments > div:hover {
+	background: #333;
 }
 .moreitem {
 	text-align: center;
@@ -904,6 +909,47 @@ iframe {
 	width: 100%;
 	min-height: 360px;
 	max-width: 540px;
+}
+#download-prompt {
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	z-index: 10;
+	background: #333;
+	padding: 24px 32px;
+	border-radius: 32px;
+	transform: translate(-50%, -50%) scale(0);
+	opacity: 0;
+	transition: transform .3s, opacity .3s;
+}
+#download-prompt.shown {
+	opacity: 1;
+	transform: translate(-50%, -50%) scale(1);
+}
+.bigfile {
+	fill: #F80;
+	color: #F80;
+	font-family: monospace;
+	margin: 0 8px 24px;
+}
+.bigfile > div {
+	background: #F803;
+	display: inline-block;
+	padding: 8px;
+	border-radius: 6px;
+}
+#darken {
+	background: #222;
+	opacity: .8;
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	transition: opacity .3s;
+}
+#darken.hidden {
+	opacity: 0;
 }
 @media (max-width: 420px) {
 	.circ {
