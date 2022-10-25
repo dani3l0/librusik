@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 from datetime import datetime, timedelta
 
 REQUESTS = [0] * 7
+PATH_ = os.path.dirname(os.path.abspath(__file__)) + "/"
 
 class Librus:
 	def __init__(self, session):
@@ -440,7 +441,7 @@ class Librus2:
 					"attachments": files
 				}
 		except:
-			tr = traceback.format_exc().replace("/home/prod/Librusik/", "")
+			tr = traceback.format_exc().replace(PATH_, "")
 			return {
 				"subject": "Internal Server Error",
 				"from": "nobody",
