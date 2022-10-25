@@ -90,7 +90,7 @@ function errorpage() {
 	document.body.style.opacity = 1;
 	var button = document.getElementById("returnbtn");
 	button.onclick = function() {
-		agou("");
+		agou("/");
 	}
 	return;
 }
@@ -573,7 +573,6 @@ function uploadPic(field) {
 	stuff.append("file", file);
 	stuff.append("username", cookie["username"]);
 	stuff.append("password", cookie["password"]);
-	console.log(stuff)
 	xhr.send(stuff);
 }
 function setProfilePic(pic) {
@@ -662,49 +661,30 @@ function restartApp() {
 		gou('.');
 	}, 1500);
 }
-function saveOrOpenBlob(blob, fileName) {  
-    var a = document.createElement('a');
-    a.href = window.URL.createObjectURL(blob);
-    a.download = fileName;
-    a.dispatchEvent(new MouseEvent('click'));
+function downloadMsgFile(elem, uri) {
+	let dwbutton = document.getElementById("dwbutton");
+	dwbutton.innerText = "Download";
+	let filename = elem.innerText;
+	document.getElementById('download-prompt').classList.add("shown");
+	document.getElementById('darken').style.display = null;
+	setTimeout(function() {
+		document.getElementById('darken').classList.remove("hidden");
+	}, 50);
+	document.getElementById("fname").innerText = elem.innerText;
+	dwbutton.classList.remove("unclickable");
+	dwbutton.disabled = false;
+	dwbutton.onclick = function() {
+		downloadMsgFileY(this, uri);
+	}
 }
-function downloadMsgFile(elem, uri, download) {
-	if (!download) {
-		let dwbutton = document.getElementById("dwbutton");
-		dwbutton.innerText = "Download";
-		let filename = elem.innerText;
-		document.getElementById('download-prompt').classList.add("shown");
-		document.getElementById('darken').style.display = null;
-		setTimeout(function() {
-			document.getElementById('darken').classList.remove("hidden");
-		}, 50);
-		document.getElementById("fname").innerText = elem.innerText;
-		dwbutton.classList.remove("unclickable");
-		dwbutton.disabled = false;
-		dwbutton.onclick = function() {
-			downloadMsgFile(this, uri, true);
-		}
-		return;
-	}
-	elem.innerText = "Please wait...";
-	elem.disabled = true;
-	elem.classList.add("unclickable");
+function downloadMsgFileY(elem, uri) {
 	let filename = document.getElementById("fname").innerText;
-	let cookie = getCookie();
-	let data = {
-		"username": cookie["username"],
-		"password": cookie["password"]
-	}
-	let xhr = new XMLHttpRequest();
-	xhr.open("POST", `message_download_file/${uri}`, true);
-	xhr.responseType = 'blob';
-	xhr.timeout = 1500000;
-	xhr.onload = function (e) {
-		let blob = e.currentTarget.response;
-		saveOrOpenBlob(blob, filename);
-		closeFileDownload();
-	}
-	xhr.send(JSON.stringify(data));
+    let cook = getCookie();
+    let a = document.createElement('a');
+    a.href = `message_download_file/${uri}`;
+    a.download = filename;
+    a.dispatchEvent(new MouseEvent('click'));
+    closeFileDownload();
 }
 function closeFileDownload() {
 	document.getElementById('download-prompt').classList.remove("shown");

@@ -7,6 +7,7 @@ from librus import Librus, Librus2
 import librus
 from sessionmanager import SessionManager
 import ssl
+from urllib.parse import unquote
 
 LIBRUSIK_PATH = os.path.dirname(os.path.abspath(__file__)) + "/"
 
@@ -880,14 +881,17 @@ async def message(request):
 		tr = traceback.format_exc().replace(LIBRUSIK_PATH, "")
 		return response(resources["error"] % (mkbackbtn(uri_full, 2) + "Internal server error", tr, mktryagainbtn(uri_full, 2)), 500)
 
-
 async def message_download_file(request):
 	global database
 	uri = request.match_info["uri"]
 	uri = uri.replace("-", "/")
 	uri_full = "message_download_file/%s" % uri
+	cookie = json.loads(unquote(request.cookies["librusik_u"]))
 	try:
-		data = await request.json()
+		data = {
+			"username": cookie["username"][::-1],
+			"password": cookie["password"][::-1]
+		}
 		if auth(data):
 			librus = Librus2(SESSIONS.getL2(data["username"]))
 			if await librus.mktoken(database[data["username"]]["l_login"], decrypt(database[data["username"]]["l_passwd"])):
@@ -1073,7 +1077,7 @@ app.add_routes([
 	web.route('GET', '/getTraffic', getTraffic),
 	web.route('POST', '/messages', messages),
 	web.route('POST', '/message/{uri}', message),
-	web.route('POST', '/message_download_file/{uri}', message_download_file),
+	web.route('GET', '/message_download_file/{uri}', message_download_file),
 	web.route('GET', '/panel', panel),
 	web.route('GET', '/panel/login', panell),
 	web.route('POST', '/panel/api', panelapi),
