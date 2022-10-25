@@ -1,4 +1,4 @@
-import asyncio, aiohttp, json
+import asyncio, aiohttp, json, os
 from bs4 import BeautifulSoup
 from datetime import datetime, timedelta
 
