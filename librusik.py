@@ -345,7 +345,7 @@ async def api(request):
 				return response("", 400)
 			return response("", 401)
 		return response("", 400)
-	except SystemExit:
+	except:
 		return response("", 500)
 
 async def authenticate(request):
@@ -1015,7 +1015,7 @@ async def upload_handler(request):
 		database[data["username"]]["profile_pic"] = filename
 		updatedb()
 		return response("", 200)
-	except SystemExit:
+	except:
 		return response("", 500)
 
 async def set_profile_pic(request):
