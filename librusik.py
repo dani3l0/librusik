@@ -895,7 +895,7 @@ async def message_download_file(request):
 				file = await librus.download_file(uri)
 				return web.Response(body = file["content"], status = 200, headers = file["headers"])
 		return response("", 401)
-	except SystemExit:
+	except:
 		tr = traceback.format_exc().replace(LIBRUSIK_PATH, "")
 		return response("", 500)
 
@@ -1046,11 +1046,11 @@ async def error_middleware(request, handler):
 	return response(resources["errorpage"] % (str(status), str(exc)), status)
 
 
-#app = web.Application(middlewares = [error_middleware], client_max_size = 1024**2*4)
+app = web.Application(middlewares = [error_middleware], client_max_size = 1024**2*4)
 
 
 # DEBUG ONLY
-app = web.Application(client_max_size=1024**2*4)
+#app = web.Application(client_max_size=1024**2*4)
 
 app.add_routes([
 	web.route('GET', '/', index),
