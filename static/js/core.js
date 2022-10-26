@@ -1,6 +1,10 @@
 var current = 0;
 console.log(" _	 _ _					_ _	\n| |   (_) |__  _ __ _   _ ___(_) | __\n| |   | | '_ \\| '__| | | / __| | |/ /\n| |___| | |_) | |  | |_| \\__ \\ |   < \n|_____|_|_.__/|_|   \\__,_|___/_|_|\\_\\ \n									  ");
 console.log("You are here at your own risk.");
+
+function getByID(id) {
+	return document.getElementById(id);
+}
 function konfeti() {
 	let confetti = new Confetti('body');
 	confetti.setCount(100);
@@ -34,9 +38,7 @@ function getCookie(cname) {
 	var ca = document.cookie.split(';');
 	for (var i = 0; i < ca.length; i++) {
 		var c = ca[i];
-		while (c.charAt(0) == ' ') {
-			c = c.substring(1);
-		}
+		while (c.charAt(0) == ' ') c = c.substring(1);
 		if (c.indexOf(name) == 0) {
 			let meh = JSON.parse(decodeURIComponent(c.substring(name.length, c.length)));
 			meh["username"] = meh["username"].split('').reverse().join('');
@@ -88,30 +90,18 @@ function loginpage() {
 }
 function errorpage() {
 	document.body.style.opacity = 1;
-	var button = document.getElementById("returnbtn");
-	button.onclick = function() {
-		agou("/");
-	}
+	var button = getByID("returnbtn");
+	button.onclick = function() {agou("/")};
 	return;
 }
 function buttons(state) {
 	var buttons = document.getElementsByTagName("button");
-	if (state === false) {
-		for (let i = 0; i < buttons.length; i++) {
-			buttons[i].disabled = true;
-		}
-	}
-	else {
-		for (let i = 0; i < buttons.length; i++) {
-			buttons[i].disabled = false;
-		}
-	}
+	if (state === false) for (let i = 0; i < buttons.length; i++) buttons[i].disabled = true;
+	else for (let i = 0; i < buttons.length; i++) buttons[i].disabled = false;
 }
 function rminputs() {
 	var inputs = document.getElementsByTagName("input");
-	for (let i = 0; i < inputs.length; i++) {
-		inputs[i].value = "";
-	}
+	for (let i = 0; i < inputs.length; i++) inputs[i].value = "";
 }
 function post(location, data, callback) {
 	var xhr = new XMLHttpRequest();
@@ -126,15 +116,15 @@ function post(location, data, callback) {
 	xhr.send(JSON.stringify(data));
 }
 function usernameit(div) {
-	input = document.getElementById(div);
+	input = getByID(div);
 	value = (input.value).toLowerCase();
 	value = value.replace(/[^a-z0-9]/g, "");
 	input.value = value;
 }
 function mkerr(type, to, name, description) {
-	var title = document.getElementById(type + "name");
-	var desc = document.getElementById(type + "desc");
-	var btn = document.getElementById(type + "btn");
+	var title = getByID(type + "name");
+	var desc = getByID(type + "desc");
+	var btn = getByID(type + "btn");
 	title.innerText = name;
 	desc.innerText = description;
 	btn.onclick = function() {
@@ -142,11 +132,9 @@ function mkerr(type, to, name, description) {
 	}
 }
 function login() {
-	var user = document.getElementById("user").value;
-	var pass = document.getElementById("passwd").value;
-	if (user.length < 4 | user.length > 16 | pass.length < 4 | pass.length > 32) {
-		return;
-	}
+	var user = getByID("user").value;
+	var pass = getByID("passwd").value;
+	if (user.length < 4 | user.length > 16 | pass.length < 4 | pass.length > 32) return;
 	buttons(false);
 	dim("login");
 	post("auth", {
@@ -172,12 +160,10 @@ function login() {
 	});
 }
 function register() {
-	var user = document.getElementById("nuser").value;
-	var pass = document.getElementById("npasswd").value;
-	var passc = document.getElementById("npasswdc").value;
-	if (user.length < 4 | user.length > 16 | pass.length < 4 | pass.length > 32) {
-		return;
-	}
+	var user = getByID("nuser").value;
+	var pass = getByID("npasswd").value;
+	var passc = getByID("npasswdc").value;
+	if (user.length < 4 | user.length > 16 | pass.length < 4 | pass.length > 32) return;
 	buttons(false);
 	dim("register");
 	if (pass !== passc) {
@@ -185,8 +171,8 @@ function register() {
 		showdiv("register", "err");
 		return;
 	}
-	var libruslogin = document.getElementById("l_user").value;
-	var libruspass = document.getElementById("l_passwd").value;
+	var libruslogin = getByID("l_user").value;
+	var libruspass = getByID("l_passwd").value;
 	post("api", {
 		"method": "mkaccount",
 		"username": user,
@@ -213,11 +199,9 @@ function register() {
 	});
 }
 function delacc() {
-	var confirmation = document.getElementById("delaccconf").value.toLowerCase();
-	var passwor = document.getElementById("delaccpasswd").value;
-	if (passwor.length < 4 | passwor.length > 32 | confirmation.toLowerCase().replace(/[^a-z0-9]/g, "") != "yesiamtotallysure") {
-		return;
-	}
+	var confirmation = getByID("delaccconf").value.toLowerCase();
+	var passwor = getByID("delaccpasswd").value;
+	if (passwor.length < 4 | passwor.length > 32 | confirmation.toLowerCase().replace(/[^a-z0-9]/g, "") != "yesiamtotallysure") return;
 	buttons(false);
 	dim("rmaccount");
 	var cookie = getCookie();
@@ -249,12 +233,10 @@ function delacc() {
 	});
 }
 function changepasswd() {
-	var newpass = document.getElementById("newpass").value;
-	var newpassc = document.getElementById("newpassc").value;
-	var pasword = document.getElementById("pass").value;
-	if (newpass.length < 4 | newpass.length > 32 | pasword.length < 4 | pasword.length > 32) {
-		return;
-	}
+	var newpass = getByID("newpass").value;
+	var newpassc = getByID("newpassc").value;
+	var pasword = getByID("pass").value;
+	if (newpass.length < 4 | newpass.length > 32 | pasword.length < 4 | pasword.length > 32) return;
 	buttons(false);
 	if (newpass !== newpassc) {
 		mkerr("err", "chgpasswd", "Error", "Passwords do not match.");
@@ -286,11 +268,9 @@ function changepasswd() {
 	});
 }
 function newspass() {
-	var newpass = document.getElementById("newspasswd").value;
-	var pass = document.getElementById("newslibrusikpasswd").value;
-	if (newpass.length < 4 | newpass.length > 32 | pass.length < 4 | pass.length > 32) {
-		return;
-	}
+	var newpass = getByID("newspasswd").value;
+	var pass = getByID("newslibrusikpasswd").value;
+	if (newpass.length < 4 | newpass.length > 32 | pass.length < 4 | pass.length > 32) return;
 	buttons(false);
 	dim("newsynergiapass");
 	var cookie = getCookie();
@@ -320,12 +300,10 @@ function newspass() {
 	});
 }
 function newsaccount() {
-	var newlogin = document.getElementById("newslogin").value;
-	var newpass = document.getElementById("newspassword").value;
-	var pass = document.getElementById("newslibrusikpass").value;
-	if (newlogin.length < 4 | newlogin.length > 32 | newpass.length < 4 | newpass.length > 32 | pass.length < 4 | pass.length > 32) {
-		return;
-	}
+	var newlogin = getByID("newslogin").value;
+	var newpass = getByID("newspassword").value;
+	var pass = getByID("newslibrusikpass").value;
+	if (newlogin.length < 4 | newlogin.length > 32 | newpass.length < 4 | newpass.length > 32 | pass.length < 4 | pass.length > 32) return;
 	buttons(false);
 	dim("newsynergia");
 	var cookie = getCookie();
@@ -356,13 +334,13 @@ function newsaccount() {
 	});
 }
 function dim(div) {
-	document.getElementById(div).classList.add("ttop");
-	document.getElementById(div).classList.add("hidden");
+	getByID(div).classList.add("ttop");
+	getByID(div).classList.add("hidden");
 }
 function showdiv(from, to, back) {
 	buttons(false);
-	var fromdiv = document.getElementById(from);
-	var todiv = document.getElementById(to);
+	var fromdiv = getByID(from);
+	var todiv = getByID(to);
 	if (!back) {
 		fromdiv.classList.add("ttop");
 		fromdiv.classList.add("hidden");
@@ -397,8 +375,8 @@ function headchoice(from, to, btn) {
 	let btnz = btn.parentNode.getElementsByTagName("div");
 	for (var i = 0; i < btnz.length; i++) btnz[i].classList.remove("selected");
 	btn.classList.add("selected");
-	var fromdiv = document.getElementById(from);
-	var todiv = document.getElementById(to);
+	var fromdiv = getByID(from);
+	var todiv = getByID(to);
 	fromdiv.classList.add("hidden");
 	setTimeout(function() {
 		fromdiv.style.display = "none";
@@ -417,12 +395,12 @@ function checkmsg(url) {
 		"username": cokie["username"],
 		"password": cokie["password"]
 	}, function(data) {
-		document.getElementById("datafetcher").classList.add("hidden");
 		try {
-			var messages = document.getElementById("messages");
+			getByID("datafetcher").classList.add("hidden");
+			var messages = getByID("messages");
 			var messagest = messages.getElementsByTagName("div")[0];
 			if (!messages) return;
-			var lucky = document.getElementById("luckynum");
+			var lucky = getByID("luckynum");
 			var luckyt = lucky.getElementsByTagName("div")[0];
 			if (data.status == 200) {
 				var k = JSON.parse(data.responseText);
@@ -447,11 +425,11 @@ function checkmsg(url) {
 				}, 1000);
 			}
 		}
-		catch {}
+		catch (e) {}
 	});
 }
 function goto(url, page, force, back) {
-	var div = document.getElementById("content");
+	var div = getByID("content");
 	var pages = document.getElementsByClassName("panelitem");
 	pages[current].classList.remove("active");
 	pages[page].classList.add("active");
@@ -539,21 +517,16 @@ function goto(url, page, force, back) {
 function uploadPic(field) {
 	var cookie = getCookie();
 	var files = field.files;
-	var info = document.getElementById("uploadpicbtn").getElementsByClassName("subtitle")[0];
+	var info = getByID("uploadpicbtn").getElementsByClassName("subtitle")[0];
 	info.classList.remove("err");
 	if (files.length === 0) {
 		info.innerText = "Up to 4 MB, but should not be bigger than 1000px";
 		return;
 	};
 	var filename = files[0].name;
-	if (files[0].size === 0) {
+	if (files[0].size === 0 | files[0].size > 4000000) {
 		info.classList.add("err");
-		info.innerText = "File is empty!";
-		return;
-	}
-	if (files[0].size > 4000000) {
-		info.classList.add("err");
-		info.innerText = "File is too big! (" + Math.round(files[0].size / 1000 / 10) / 100 + " MB / 4.00 MB)"
+		info.innerText = (files[0].size) ? "File is empty!" : "File is too big! (" + Math.round(files[0].size / 1000 / 10) / 100 + " MB / 4.00 MB)";
 		return;
 	}
 	buttons(false);
@@ -594,18 +567,14 @@ function loadimg(elem) {
 	elem.style.opacity = 1;
 }
 function getGrades() {
-	let items = document.getElementById("averages").getElementsByTagName('input');
+	let items = getByID("averages").getElementsByTagName('input');
 	let arr = [];
-	for (var i = 0; i < items.length; i++) {
-		arr.push(parseInt(items[i].value, 10));
-	}
+	for (var i = 0; i < items.length; i++) arr.push(parseInt(items[i].value, 10));
 	return arr;
 }
 function sum(arr) {
 	let r = 0;
-	for (var i = 0; i < arr.length; i++) {
-		r += arr[i]
-	}
+	for (var i = 0; i < arr.length; i++) r += arr[i];
 	return r;
 }
 function parseGrade(val) {
@@ -633,7 +602,7 @@ function parseInp(elem) {
 function calc(elem) {
 	parseInp(elem);
 	let grds = getGrades();
-	document.getElementById('avg').innerText = (Math.round(sum(grds) * 100 / grds.length) / 100).toFixed(2);
+	getByID('avg').innerText = (Math.round(sum(grds) * 100 / grds.length) / 100).toFixed(2);
 }
 
 let timout = {};
@@ -662,15 +631,16 @@ function restartApp() {
 	}, 1500);
 }
 function downloadMsgFile(elem, uri) {
-	let dwbutton = document.getElementById("dwbutton");
+	let dwbutton = getByID("dwbutton");
 	dwbutton.innerText = "Download";
 	let filename = elem.innerText;
-	document.getElementById('download-prompt').classList.add("shown");
-	document.getElementById('darken').style.display = null;
+	getByID('download-prompt').classList.add("shown");
+	let darken = getByID('darken');
+	darken.style.display = null;
 	setTimeout(function() {
-		document.getElementById('darken').classList.remove("hidden");
+		darken.classList.remove("hidden");
 	}, 50);
-	document.getElementById("fname").innerText = elem.innerText;
+	getByID("fname").innerText = elem.innerText;
 	dwbutton.classList.remove("unclickable");
 	dwbutton.disabled = false;
 	dwbutton.onclick = function() {
@@ -678,7 +648,7 @@ function downloadMsgFile(elem, uri) {
 	}
 }
 function downloadMsgFileY(elem, uri) {
-	let filename = document.getElementById("fname").innerText;
+	let filename = getByID("fname").innerText;
     let cook = getCookie();
     let a = document.createElement('a');
     a.href = `message_download_file/${uri}`;
@@ -687,9 +657,10 @@ function downloadMsgFileY(elem, uri) {
     closeFileDownload();
 }
 function closeFileDownload() {
-	document.getElementById('download-prompt').classList.remove("shown");
-	document.getElementById('darken').classList.add("hidden");
+	getByID('download-prompt').classList.remove("shown");
+	let darken = getByID('darken');
+	darken.classList.add("hidden");
 	setTimeout(function() {
-		document.getElementById('darken').style.display = "none";
+		darken.style.display = "none";
 	}, 350);
 }

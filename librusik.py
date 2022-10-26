@@ -120,8 +120,7 @@ def gettemp():
 		d = int(open("/sys/class/thermal/thermal_zone0/temp", "r").read().rstrip())
 	except:
 		try:
-			c0 = int(open("/sys/class/hwmon/hwmon0/temp1_input", "r").read().rstrip())
-			d = c0
+			d = int(open("/sys/class/hwmon/hwmon0/temp1_input", "r").read().rstrip())
 		except:
 			d = 0
 	if len(str(d)) > 3:
