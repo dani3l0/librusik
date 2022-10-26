@@ -868,6 +868,18 @@ svg {
 	width: calc(100% + 24px);
 	margin: 12px -12px -10px;
 }
+.progress.danger > .bar > div {
+	background: #F33 !important;
+}
+.progress.danger > .text > .value {
+	color: #F33 !important;
+}
+.progress.warning > .bar > div {
+	background: #FB0 !important;
+}
+.progress.warning > .text > .value {
+	color: #FB0 !important;
+}
 .bubble.prog > .bar > div {
 	background: #48F;
 	position: absolute;
