@@ -1,49 +1,43 @@
-# Librusik
-
-Simple, fast, dark-themed Librus web client with some cool features.
-
-Runnable even on RPi 1B.
-
-![screenshot](https://gitlab.com/dani3l0/librusik/-/raw/stable/screenshots/librusik-2.png)
-
------
+<img src="screenshots/librusik.png" alt="Status" width="600"/>
 
 ## Features
 
-### Librus:
+### Librus Synergia:
 
-- Grades (with Librus-independent average calculation)
+📋 Grades (with independent average calculation - works even if school has disabled it)
 
-- Timetable
+🗓️ Timetable
 
-- Messages (preview only)
+✉️ Messages (with downloading attachments) (outgoing messages are unsupported)
 
-- Presences & Absences (with frequency %% calculation)
+✅ Presences & Absences (with per-semester per-subject frequency %% calculation)
 
-- Exams
+✏️ Exams
 
-- School free days
+🏠 School free days
 
-- Teacher free days
+🧑‍🏫 Teacher free days
 
-- Parent-teacher conferences
+👪 Parent-teacher conferences
 
-- About school
+🏫 About school
 
 
-### Client:
+### Client (Librusik UI):
 
-- Dark theme
+🌙 Dark theme
 
-- Cookies (Browser will remember you for 28 days)
+🍪 Cookies (you won't be logged out each time you close the browser)
 
-- Grades cleanup (Removes subjects without grades from Grades page)
+🧹 Grades cleanup (removes subjects without grades from Grades page)
 
-- Average predictor (Edit final grades in average screen to predict your final average)
+🔮 Average predictor (edit final grades in average screen to predict your final average)
 
-- Cool countdown meters on home screen
+⌛ Cool countdown meters on home screen
 
-- _Something happens at papieżowa_
+🎉 Party mode
+
+✨ ...and many more!
 
 -----
 
@@ -52,16 +46,11 @@ Runnable even on RPi 1B.
 This app __will not run on Windows__. And no support for it, ever.
 I used Debian 11 (and previously 10) for a couple of years and everything was pretty fine.
 
-__1. Install python3 dependencies (multiple ways to do it):__
+__1. Install required dependencies:__
 
 - via pip:
 ```
-pip install bs4 aiohttp cryptography
-```
-
-- or via distro packages:
-```
-apt install python3-bs4 python3-aiohttp python3-cryptography
+pip install -r requirements.txt
 ```
 
 
@@ -86,7 +75,7 @@ Edit `config.json` file and adjust your preferences.
 
 You may also want to set up your custom encryption key (which encrypts our Librus Synergia passwords). Please run `generate_random_key.py` and paste the new key into `fernet.key`. Don't forget to `chmod 400 fernet.key`. 
 
-You can use [localhost:7777/panel](http://localhost:7777/panel) to manage your Librusik instance. Default user is `admin` and password is `admin` too.
+You can use [localhost:7777/panel](http://localhost:7777/panel) to manage your Librusik instance. Default user is `admin` and password is `admin`.
 
 -----
 
