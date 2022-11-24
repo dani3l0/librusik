@@ -631,6 +631,7 @@ function restartApp() {
 	}, 1500);
 }
 function downloadMsgFile(elem, uri) {
+	scrollTo(0,0);
 	let dwbutton = getByID("dwbutton");
 	dwbutton.innerText = "Download";
 	let filename = elem.innerText;

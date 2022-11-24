@@ -30,6 +30,9 @@
   src: url(../font/Quicksand-Bold_ext.woff2) format('woff2');
   unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
+html {
+	scroll-behavior: smooth;
+}
 body {
 	font-family: Quicksand;
 	background: #222;
@@ -44,7 +47,7 @@ body {
 	word-wrap: break-word;
 	-webkit-tap-highlight-color: transparent;
 	overflow-x: hidden;
-	padding: 0 10px 24px;
+	padding: 0 10px 0;
 	margin: 0;
 }
 #canvas {
@@ -274,8 +277,8 @@ div {
 svg {
 	border-radius: 12px;
 	margin: 8px;
-	width: 200px;
-	height: 200px;
+	width: 128px;
+	height: 128px;
 }
 .header {
 	font-size: 24px;
@@ -818,7 +821,7 @@ svg {
 	background: #F46;
 }
 .option.checkbox > .check::after {
-	content: "✓";
+	content: "âœ“";
 	transform: translate(-50%, -50%) scale(0) rotateZ(180deg);
 	color: #222;
 	top: calc(50% + 1px);
@@ -931,9 +934,9 @@ iframe {
 }
 #download-prompt {
 	position: fixed;
-	top: 50%;
+	top: 0;
 	left: 50%;
-	z-index: 10;
+	z-index: 500000;
 	background: #333;
 	padding: 24px 32px;
 	border-radius: 32px;
@@ -943,7 +946,7 @@ iframe {
 }
 #download-prompt.shown {
 	opacity: 1;
-	transform: translate(-50%, -50%) scale(1);
+	transform: translateX(-50%) scale(1);
 }
 .bigfile {
 	fill: #F80;
