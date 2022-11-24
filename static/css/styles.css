@@ -821,7 +821,7 @@ svg {
 	background: #F46;
 }
 .option.checkbox > .check::after {
-	content: "Ã¢Å“â€œ";
+	content: "✔";
 	transform: translate(-50%, -50%) scale(0) rotateZ(180deg);
 	color: #222;
 	top: calc(50% + 1px);
