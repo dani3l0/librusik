@@ -538,7 +538,7 @@ function uploadPic(field) {
 		if (this.status == 200) goto('settings', 3, true, true);
 		else {
 			info.classList.add("err");
-			info.innerText = "File is invalid or it's too big!";
+			info.innerText = this.responseText;
 		}
 	};
 	var stuff = new FormData();

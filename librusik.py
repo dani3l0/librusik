@@ -1001,11 +1001,11 @@ async def upload_handler(request):
 			return web.Response(text = json.dumps({"ok": False}), status = 401, headers = {'Content-Type': 'application/json'})
 		size = int(request.headers.get("Content-Length")) / 1000 / 1000
 		if data["username"] not in database or size > 10:
-			return response("", 401)
+			return response("File is way too big!", 401)
 		img = data["file"]
-		extension = img.filename[img.filename.rindex(".") + 1:].lower()
-		if extension.lower() not in ["jpg", "png", "jpeg", "gif", "svg", "webp"]:
-			return response("", 400)
+		headers = img.headers["Content-Type"]
+		if headers not in ["image/png", "image/jpeg"]:
+			return response("Attached file is not a photo.", 400)
 		uid = str(uuid.uuid1())
 		filename = uid[0:uid.rindex("-")]
 		filename = filename.replace("-", "")
@@ -1020,7 +1020,7 @@ async def upload_handler(request):
 		updatedb()
 		return response("", 200)
 	except:
-		return response("", 500)
+		return response("File is invalid!", 500)
 
 async def set_profile_pic(request):
 	try:
