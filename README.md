@@ -71,9 +71,7 @@ __4. Done! Librusik is now running at [localhost:7777](http://localhost:7777).__
 
 ## Configuration
 
-Edit `config.json` file and adjust your preferences.
-
-You may also want to set up your custom encryption key (which encrypts our Librus Synergia passwords). Please run `generate_random_key.py` and paste the new key into `fernet.key`. Don't forget to `chmod 400 fernet.key`. 
+Librusik will generate `data` dir upon its first boot. You can edit `data/config.json` file and adjust the preferences to your liking. Some of them can be set from Panel.
 
 You can use [localhost:7777/panel](http://localhost:7777/panel) to manage your Librusik instance. Default user is `admin` and password is `admin`.
 

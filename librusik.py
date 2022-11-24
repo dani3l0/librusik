@@ -1,4 +1,4 @@
-import asyncio, aiohttp, json, math, time, os, hashlib, re, subprocess, random, uuid, string, traceback
+import asyncio, aiohttp, json, math, time, os, hashlib, re, subprocess, random, uuid, string, traceback, base64
 from aiohttp import web
 from datetime import datetime, date, timedelta
 from glob import glob
@@ -8,6 +8,41 @@ import librus
 from sessionmanager import SessionManager
 import ssl
 from urllib.parse import unquote
+
+
+CONFIG_DEFAULT = {
+	"max_users": 8,
+	"name": "admin",
+	"passwd": "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918",
+	"port": 7777,
+	"subdirectory": "/",
+	"ssl": False,
+	"readable_db": False,
+	"pubkey": "/etc/letsencrypt/live/my.domain.com/fullchain.pem",
+	"privkey": "/etc/letsencrypt/live/my.domain.com/privkey.pem"
+}
+
+
+DATA_DIR = "data"
+
+def setup():
+	first_run = not os.path.exists(DATA_DIR)
+	if not first_run:
+		return
+	print("It seems this is the first run. Initializing data...")
+	os.mkdir(DATA_DIR)
+	conf = open("%s/config.json" % DATA_DIR, "w")
+	conf.write(json.dumps(CONFIG_DEFAULT, indent = 4))
+	conf.close()
+	db = open("%s/database.json" % DATA_DIR, "w")
+	db.write(json.dumps({}))
+	db.close()
+	key = open("%s/fernet.key" % DATA_DIR, "w")
+	key.write(base64.urlsafe_b64encode(os.urandom(32)).decode())
+	key.close()
+	os.chmod("%s/fernet.key" % DATA_DIR, 0o400)
+
+setup()
 
 LIBRUSIK_PATH = os.path.dirname(os.path.abspath(__file__)) + "/"
 
@@ -28,8 +63,8 @@ welcomes = ["Hello", "Hi", "Hey"]
 greetings = ["How are you doing?", "Good to see you again.", "How are things?", "Librusik is awesome, isn't it?", "Too lazy to log into Synergia? :D", "Have a wonderful day!", "Nice to see you.", "Synergia still sucks? :D"]
 
 LAST_SEEN_PEPS = {}
-database = json.loads(open("database.json", "r").read())
-config = json.loads(open("config.json", "r").read())
+database = json.loads(open("%s/database.json" % DATA_DIR, "r").read())
+config = json.loads(open("%s/config.json" % DATA_DIR, "r").read())
 
 SESSIONS = SessionManager(database)
 
@@ -75,15 +110,15 @@ resources = {
 
 def updatedb():
 	beautified = json.dumps(database, indent = 4) if config["readable_db"] else json.dumps(database)
-	if open("database.json").read() != beautified:
-		open("database.json", "w").write(beautified)
+	if open("%s/database.json" % DATA_DIR).read() != beautified:
+		open("%s/database.json" % DATA_DIR, "w").write(beautified)
 
 def updateconf():
 	beautified = json.dumps(config, indent = 4)
-	if open("config.json").read() != beautified:
-		open("config.json", "w").write(beautified)
+	if open("%s/config.json" % DATA_DIR).read() != beautified:
+		open("%s/config.json" % DATA_DIR, "w").write(beautified)
 
-key = open("fernet.key", "r").read()
+key = open("%s/fernet.key" % DATA_DIR, "r").read()
 frt = Fernet(key.encode())
 def encrypt(what):
 	coded = frt.encrypt(what.encode())
@@ -938,7 +973,7 @@ async def panelapi(request):
 						users.append({"first_name": database[x]["first_name"], "last_name": database[x]["last_name"], "username": x, "last_seen": last_seen, "joined": database[x]["joined"]})
 					maxusers = config["max_users"]
 					db_usage = round(len(users) / maxusers * 100)
-					db_size = round(os.stat("database.json").st_size / 10) / 100;
+					db_size = round(os.stat("%s/database.json" % DATA_DIR).st_size / 10) / 100;
 					return JSONresponse({
 						"os": host["name"],
 						"cores": host["cpus"],
