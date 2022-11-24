@@ -44,11 +44,9 @@
 ## Installation
 
 This app __will not run on Windows__. And no support for it, ever.
-I used Debian 11 (and previously 10) for a couple of years and everything was pretty fine.
 
 __1. Install required dependencies:__
 
-- via pip:
 ```
 pip install -r requirements.txt
 ```
