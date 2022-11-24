@@ -107,7 +107,7 @@ function post(location, data, callback) {
 	var xhr = new XMLHttpRequest();
 	xhr.open("POST", location, true);
 	xhr.setRequestHeader("Content-Type", "application/json");
-	xhr.timeout = 1500000;
+	xhr.timeout = 3000;
 	xhr.onreadystatechange = function() {
 		if (this.readyState === 4) {
 			callback(this);
@@ -136,14 +136,14 @@ function login() {
 	var pass = getByID("passwd").value;
 	if (user.length < 4 | user.length > 16 | pass.length < 4 | pass.length > 32) return;
 	buttons(false);
-	dim("login");
+	dim("log_in");
 	post("auth", {
 		"username": user,
 		"password": pass
 	}, function(data) {
 		if (data.status == 200) {
 			mkerr("succ", "succ", "Logged in", "You will be redirected in few seconds.");
-			showdiv("login", "succ");
+			showdiv("log_in", "succ");
 			setCookie(user, pass);
 			setTimeout(function() {
 				agou("");
@@ -151,11 +151,11 @@ function login() {
 		}
 		else if (data.status == 401) {
 			mkerr("err", "login", "Unauthorized", "Provided credentials are invalid.");
-			showdiv("login", "err");
+			showdiv("log_in", "err");
 		}
 		else {
 			mkerr("err", "login", "Error", "Couldn't log in.");
-			showdiv("login", "err");
+			showdiv("log_in", "err");
 		}
 	});
 }
@@ -474,7 +474,7 @@ function goto(url, page, force, back) {
 	var xhr = new XMLHttpRequest();
 	var xhrstart = (new Date()).getTime()
 	xhr.open("POST", url);
-	xhr.timeout = 10000;
+	xhr.timeout = 7000;
 	xhr.setRequestHeader("Content-Type", "application/json");
 	var svg = '<svg class="svge" viewBox="0 0 24 24"><path d="M11 15h2v2h-2v-2zm0-8h2v6h-2V7zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/></svg>';
 	xhr.onreadystatechange = function() {

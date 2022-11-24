@@ -22,6 +22,7 @@
 	transition: width 1.2s;
 }
 .progtext {
+	font-weight: bold;
 	display: inline;
 	color: #F22;
 }
@@ -108,4 +109,15 @@
 	margin-top: -14px;
 	margin-bottom: 8px;
 	font-size: 11px;
+}
+.progress {
+	overflow: hidden;
+	border-radius: 4px;
+}
+#rebutstatus {
+	height: 100%;
+	background: #F33;
+	min-width: 0;
+	width: 0;
+	margin-right: auto;
 }

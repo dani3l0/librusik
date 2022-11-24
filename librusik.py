@@ -66,6 +66,7 @@ resources = {
 	"school": open("html/school.html", "r").read(),
 	"settings": open("html/settings.html", "r").read(),
 	"login": open("html/login.html", "r").read(),
+	"about": open("html/about.html", "r").read(),
 	"panel": open("html/panel.html", "r").read() % config["subdirectory"],
 	"panellogin": open("html/panellogin.html", "r").read() %config["subdirectory"],
 	"error": open("html/error.html", "r").read(),
@@ -366,7 +367,7 @@ async def login(request):
 	c = f.read().split("\n")[0]
 	m = os.path.getctime("static/app/version")
 	m = datetime.fromtimestamp(m).strftime("%d %B %Y")
-	return response(resources["login"] % (c, m, c), 200)
+	return response(resources["login"] % (resources["about"], c, m, c), 200)
 
 
 ####################################################################################################################################################################################################
@@ -531,7 +532,7 @@ async def settings(request):
 			confeti = ""
 			if database[data["username"]]["confetti"]:
 				confeti = "ed"
-			return response(resources["settings"] % (f + database[data["username"]]["profile_pic"], database[data["username"]]["first_name"], database[data["username"]]["last_name"], data["username"], imgs, parseDumbs(database[data["username"]]["l_login"]), parseDumbs(decrypt(database[data["username"]]["l_passwd"])), confeti, grades_cleanup, atends_cleanup), 200)
+			return response(resources["settings"] % (f + database[data["username"]]["profile_pic"], database[data["username"]]["first_name"], database[data["username"]]["last_name"], data["username"], resources["about"], imgs, parseDumbs(database[data["username"]]["l_login"]), parseDumbs(decrypt(database[data["username"]]["l_passwd"])), confeti, grades_cleanup, atends_cleanup), 200)
 		return response("", 401)
 	except:
 		tr = traceback.format_exc().replace(LIBRUSIK_PATH, "")

@@ -126,11 +126,11 @@ button.back {
 	background-repeat: no-repeat;
 	border-radius: 1000px;
 }
-#panel > button > * {
+.panelitem > * {
 	display: inline-block;
 	vertical-align: middle;
 }
-#panel > button {
+.panelitem {
 	overflow-x: hidden;
 	border: none;
 	margin: 8px 4px;
@@ -138,28 +138,37 @@ button.back {
 	background: transparent !important;
 	transition: background .3s;
 }
-#panel > button > div {
+.panelitem > div {
 	color: transparent;
-	width: 0;
+	width: 0 !important;
 	white-space: nowrap;
 	transition: width .3s, color .3s;
 }
-#panel > button > svg {
+.panelitem > svg {
 	width: 20px;
 	height: 20px;
 	fill: #888;
 	margin: 0;
 	transition: fill .3s;
 }
-#panel > button.active {
+.panelitem.active {
 	background: #F46 !important;
 }
-#panel > button.active > * {
+.panelitem.active > * {
 	color: #222 !important;
 	fill: #222;
 }
-#panel > button.active > div {
-	width: 8ch;
+.panelitem.active > div.home {
+	width: 51px !important;
+}
+.panelitem.active > div.grades {
+	width: 58px !important;
+}
+.panelitem.active > div.more {
+	width: 48px !important;
+}
+.panelitem.active > div.settings {
+	width: 64px !important;
 }
 .unclickable {
 	cursor: default;
@@ -172,7 +181,7 @@ input {
 	font-family: "Quicksand";
 	margin: 4px;
 	padding: 12px 14px;
-	width: 180px;
+	width: 192px;
 	border-radius: 6px;
 	font-weight: bold;
 	outline: none;
@@ -197,13 +206,8 @@ div {
 	transition: opacity .3s, transform .3s, color .3s;
 }
 .loginbox {
-	max-width: 360px;
+	max-width: 640px;
 	padding: 12px;
-}
-.loginbox > .method {
-	font-size: 25px;
-	padding: 0 16px 6px;
-	margin-bottom: 16px;
 }
 .gotoapp {
 	background: transparent !important;
@@ -393,7 +397,7 @@ svg {
 .option > div > .title {
 	color: #BBB;
 	font-size: 17px;
-	margin-bottom: 6px;
+	margin-bottom: 2px;
 }
 .subtitle {
 	color: #999;
@@ -581,6 +585,9 @@ svg {
 	font-weight: bold;
 	font-size: 14px;
 	transition: font-size .3s;
+}
+.moreitem > .subtitle {
+	color: #666;
 }
 .msgread {
 	color: #666;
