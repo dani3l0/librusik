@@ -116,14 +116,25 @@ def getRSS():
 	except:
 		return None
 
+def getval(path, toInt):
+	f = open("/sys/class/hwmon/hwmon0/temp1_input", "r").read().rstrip()
+	if toInt: f = int(f)
+	return f
+
 def gettemp():
+	d = 0
 	try:
-		d = int(open("/sys/class/thermal/thermal_zone0/temp", "r").read().rstrip())
+		sensor = coretemp
+		path = "/sys/class/hwmon"
+		hwmon = [f"{path}/{x}" for x in os.listdir(path)]
+		for sensor in hwmon:
+			if getval(f"{sensor}/name") == self.hwmon_sensor:
+				d = getval(f"{sensor}/temp1_input", True)
 	except:
 		try:
-			d = int(open("/sys/class/hwmon/hwmon0/temp1_input", "r").read().rstrip())
+			d = getval("/sys/class/thermal/thermal_zone0/temp", True)
 		except:
-			d = 0
+			pass
 	if len(str(d)) > 3:
 		d = d / 1000
 	return d
