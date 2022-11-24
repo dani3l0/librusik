@@ -697,7 +697,10 @@ async def attendances(request):
 						barclass = " danger"
 					elif pp < 65:
 						barclass = " warning"
-					subjectos += """<button class="bubble prog" onclick="showdiv('overview', '%s')"><div class="name">%s</div><div class="value">Frequency: %s%%</div><div class="bar%s"><div style="width: %s%%"></div></div></button>""" % (sub, sub, pp, barclass, pp)
+					warnicon = ""
+					if sum(persub[sub]["unexcused"]) > 0:
+						warnicon = """<div class="warnicon">!</div>"""
+					subjectos += """<button class="bubble prog" onclick="showdiv('overview', '%s')"><div class="name">%s %s</div><div class="value">Frequency: %s%%</div><div class="bar%s"><div style="width: %s%%"></div></div></button>""" % (sub, sub, warnicon, pp, barclass, pp)
 					progclass = ""
 					if pp < 50:
 						progclass = " danger"
