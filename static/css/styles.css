@@ -960,6 +960,34 @@ iframe {
 	padding: 8px;
 	border-radius: 6px;
 }
+.checkboxes > div {
+	margin: 4px;
+	display: inline-block;
+	border: 1px solid #333;
+	padding: 8px 10px;
+	cursor: pointer;
+	border-radius: 32px;
+	color: #999;
+	font-weight: bold;
+	transition: color .3s, background .3s;
+}
+.checkboxes > div:hover {
+	background: #333;
+}
+.checkboxes > div:before {
+	content: "✔";
+	color: transparent;
+	padding: 0 6px;
+	background: #444;
+	font-size: 14px;
+	margin-right: 6px;
+	border-radius: 24px;
+	transition: color .3s, background .3s;
+}
+.checkboxes > .checked:before {
+	background: #68F !important;
+	color: #222;
+}
 #darken {
 	background: #222;
 	opacity: .8;
