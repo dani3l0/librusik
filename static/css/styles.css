@@ -839,7 +839,7 @@ svg {
 .progress {
 	max-width: 360px;
 	display: flex;
-	margin: 64px 0 56px;
+	margin: 64px 0 24px;
 	align-items: center;
 	justify-content: space-around;
 	text-align: right;
