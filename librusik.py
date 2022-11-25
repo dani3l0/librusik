@@ -789,9 +789,31 @@ async def exams(request):
 				SESSIONS.saveL(data["username"], librus.headers)
 				result = (await librus.get_exams())[::-1]
 				page = ""
+				date_closest = datetime.fromtimestamp(0)
+				subject_closest = None
+				now = datetime.now()
 				for x in result:
+					dat = datetime.strptime(x["Date"], '%Y-%m-%d')
+					if dat > date_closest and now <= dat and not subject_closest:
+						date_closest = dat
+						subject_closest = x["Lesson"]
 					page += """<button class="bubble unclickable"><div class="name">%s</div><div class="value"><b>%s, %s - %s</b></div><div class="value">%s</div><div class="value"><i>%s</i></div><div class="value">Added by %s %s</div><div class="value">%s</div></button>""" % (x["Lesson"], x["Date"], x["StartTime"][:-3], x["EndTime"][:-3], x["Type"].title(), parseDumbs(x["Content"]), x["AddedBy"]["FirstName"], x["AddedBy"]["LastName"], x["AddDate"])
-				return response(resources["exams"] % (len(result), page), 200)
+				nextin = "No exams so far"
+				if subject_closest:
+					first = "Next in"
+					tm = date_closest
+					daysto = (date_closest - now).days
+					if daysto == 0:
+						first = "Today"
+						tm = ""
+					elif daysto == 1:
+						first = "Tomorrow"
+						tm = ""
+					else:
+						first = "Next in"
+						tm = "%s days" % daysto
+					nextin = "%s %s from %s" % (first, tm, subject_closest)
+				return response(resources["exams"] % (len(result), nextin, page), 200)
 			return response(resources["error"] % (mkbackbtn("/more", 2) + "Error", ERR_403, mktryagainbtn("/exams", 2)), 403)
 		return response("", 401)
 	except:
@@ -807,9 +829,25 @@ async def freedays(request):
 				SESSIONS.saveL(data["username"], librus.headers)
 				result = await librus.get_free_days()
 				page = ""
+				date_closest = datetime.fromtimestamp(0)
+				free_closest = None
+				now = datetime.now()
 				for x in result:
+					dat = datetime.strptime(x["DateFrom"], '%Y-%m-%d')
+					if dat > date_closest and now < dat and not free_closest:
+						date_closest = dat
+						free_closest = x["Name"]
 					page += """<button class="bubble unclickable"><div class="name">%s</div><div class="value"><code>From &nbsp</code>%s</div><div class="value"><code>To &nbsp&nbsp&nbsp</code>%s</div></button>""" % (x["Name"], x["DateFrom"], x["DateTo"])
-				return response(resources["freedays"] % (len(result), page), 200)
+				nextin = "No free days in the future :("
+				if free_closest:
+					nice = ""
+					daysto = (date_closest - now).days
+					if daysto == 1:
+						nice = "starts tomorrow"
+					else:
+						nice = "in %s days" % daysto
+					nextin = "%s %s" % (free_closest, nice)
+				return response(resources["freedays"] % (len(result), nextin, page), 200)
 			return response(resources["error"] % (mkbackbtn("/more", 2) + "Error", ERR_403, mktryagainbtn("/freedays", 2)), 403)
 		return response("", 401)
 	except:
