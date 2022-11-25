@@ -6,3 +6,4 @@ bs4
 soupsieve
 static/app
 static/img/profile/custom
+tools/api_dump.json

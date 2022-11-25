@@ -75,6 +75,12 @@ You can use [localhost:7777/panel](http://localhost:7777/panel) to manage your L
 
 -----
 
+## Querying the API
+
+In `tools` dir there is a `dump_full_api.py` file. It queries the whole Librus API and saves all the available data to local JSON file. Kinda helpful for further development.
+
+-----
+
 ## Some other words
 
 Because this was my first app written in Python, code quality is quite meh. Don't expect code to be super readable and flexible.
