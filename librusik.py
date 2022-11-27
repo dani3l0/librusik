@@ -812,12 +812,12 @@ async def exams(request):
 				SESSIONS.saveL(data["username"], librus.headers)
 				result = (await librus.get_exams())[::-1]
 				page = ""
-				date_closest = datetime.fromtimestamp(0)
 				subject_closest = None
 				now = datetime.now()
+				date_closest = now + timedelta(90)
 				for x in result:
 					dat = datetime.strptime(x["Date"], '%Y-%m-%d')
-					if dat > date_closest and now <= dat and not subject_closest:
+					if dat < date_closest and now <= dat:
 						date_closest = dat
 						subject_closest = x["Lesson"]
 					page += """<button class="bubble unclickable"><div class="name">%s</div><div class="value"><b>%s, %s - %s</b></div><div class="value">%s</div><div class="value"><i>%s</i></div><div class="value">Added by %s %s</div><div class="value">%s</div></button>""" % (x["Lesson"], x["Date"], x["StartTime"][:-3], x["EndTime"][:-3], x["Type"].title(), parseDumbs(x["Content"]), x["AddedBy"]["FirstName"], x["AddedBy"]["LastName"], x["AddDate"])
@@ -852,12 +852,12 @@ async def freedays(request):
 				SESSIONS.saveL(data["username"], librus.headers)
 				result = await librus.get_free_days()
 				page = ""
-				date_closest = datetime.fromtimestamp(0)
 				free_closest = None
 				now = datetime.now()
+				date_closest = now + timedelta(90)
 				for x in result:
 					dat = datetime.strptime(x["DateFrom"], '%Y-%m-%d')
-					if dat > date_closest and now < dat and not free_closest:
+					if dat < date_closest and now < dat:
 						date_closest = dat
 						free_closest = x["Name"]
 					page += """<button class="bubble unclickable"><div class="name">%s</div><div class="value"><code>From &nbsp</code>%s</div><div class="value"><code>To &nbsp&nbsp&nbsp</code>%s</div></button>""" % (x["Name"], x["DateFrom"], x["DateTo"])
