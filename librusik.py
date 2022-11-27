@@ -1047,7 +1047,7 @@ async def panelapi(request):
 				elif data["method"] == "reboot":
 					raise SystemExit
 				elif data["method"] == "chgmaxusers":
-					if "maxusers" in data and isinstance(data["maxusers"], int) and data["maxusers"] <= 64 and data["maxusers"] >= 2:
+					if "maxusers" in data and isinstance(data["maxusers"], int) and data["maxusers"] <= 128 and data["maxusers"] >= 1:
 						config["max_users"] = data["maxusers"]
 						updateconf()
 						return response("", 200)
