@@ -321,11 +321,11 @@ function reboot(mhm) {
 		showdiv("reboot", "main");
 		refresh();
 		autoupdate = setInterval(refresh, 5000);
-	}, 19000);
+	}, 11000);
 	setTimeout(function() {
 		progress.classList.remove("rebut");
 		progress.style.width = 0;
-	}, 20000);
+	}, 12000);
 }
 function changename() {
 	var newname = document.getElementById("newname").value;
