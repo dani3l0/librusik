@@ -1,0 +1,12 @@
+[Unit]
+Description="Librusik"
+
+[Service]
+Restart=always
+RestartSec=10
+User=myuser
+WorkingDirectory=/path/to/librusik
+ExecStart=python3 librusik.py
+
+[Install]
+WantedBy=multi-user.target
