@@ -70,8 +70,27 @@ __4. Done! Librusik is now running at [localhost:7777](http://localhost:7777).__
 ## Configuration
 
 Librusik will generate `data` dir upon its first boot. You can edit `data/config.json` file and adjust the preferences to your liking. Some of them can be set from Panel.
+Go to [localhost:7777/panel](http://localhost:7777/panel) to manage your Librusik instance. Default user is `admin` and password is `admin`.
 
-You can use [localhost:7777/panel](http://localhost:7777/panel) to manage your Librusik instance. Default user is `admin` and password is `admin`.
+**Config keys explained:**
+
+`max_users` - how many users can be registered on your instance
+
+`name` - an username required to log into Panel
+
+`passwd` - SHA-256 hashed password for Panel
+
+`port` - HTTP port Librusik is listening on
+
+`subdirectory` - an absolute path for running under reverse proxy (like nginx), I guess it's still broken
+
+`ssl` - whether to enable HTTPS or not
+
+`pubkey` - path to public key used for HTTPS
+
+`privkey` - path to private key used for HTTPS
+
+`readable_db` - if set to `true`, database contents will be stored as multi-line, human-readable JSON (results will appear upon first database change)
 
 -----
 
@@ -83,6 +102,6 @@ In `tools` dir there is a `dump_full_api.py` file. It queries the whole Librus A
 
 ## Some other words
 
-Because this was my first app written in Python, code quality is quite meh. Don't expect code to be super readable and flexible.
+Because this was my first app written in Python, code is a fucking mess. Don't expect it to be super readable and flexible.
 
 _It just works_
