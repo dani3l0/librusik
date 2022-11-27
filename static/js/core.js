@@ -675,3 +675,33 @@ function hideattendances(button, color) {
 		button.classList.contains("checked") ? cl.display = null : cl.display = "none";
 	}
 }
+function restoreAccount() {
+	let user = getByID("suser").value;
+	let pass = getByID("spass").value;
+	buttons(false)
+	dim("forgotpass");
+	post("api/forgotPassword", {
+		"synergia_login": user,
+		"synergia_password": pass
+	}, function(data) {
+		buttons();
+		if (data.status == 200) {
+			data = JSON.parse(data.responseText);
+			getByID("r_username").innerText = data.username;
+			getByID("r_password").innerText = data.password;
+			showdiv("forgotpass", "restored");
+		}
+		else if (data.status == 400) {
+			mkerr("err", "forgotpass", "Bad request", "There is no Librusik account associated with this login.");
+			showdiv("forgotpass", "err");
+		}
+		else if (data.status == 401) {
+			mkerr("err", "forgotpass", "Unauthorized", "Provided Synergia credentials seem to be wrong.");
+			showdiv("forgotpass", "err")
+		}
+		else {
+			mkerr("err", "forgotpass", "Error", "Your Librusik account couldn't be restored.");
+			showdiv("forgotpass", "err");
+		}		
+	});
+}

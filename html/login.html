@@ -18,7 +18,7 @@
 	<br><br>
 	<center>
 		<div class="loginbox" id="login">
-			<button onclick="showdiv('login', 'log_in')" class="moreitem" style="fill: #0D8;color: #0D8;">
+			<button onclick="showdiv('login', 'log_in')" class="moreitem" style="fill: #0D8; color: #0D8;">
 			<svg viewBox="0 0 48 48"><path d="M17.75 32.85C17.2833 32.3833 17.05 31.825 17.05 31.175C17.05 30.525 17.2833 29.9833 17.75 29.55L20.9 26.35H6.55C5.88333 26.35 5.325 26.125 4.875 25.675C4.425 25.225 4.2 24.6667 4.2 24C4.2 23.3333 4.425 22.775 4.875 22.325C5.325 21.875 5.88333 21.65 6.55 21.65H20.8L17.55 18.35C17.1167 17.95 16.9083 17.4333 16.925 16.8C16.9417 16.1667 17.1833 15.6167 17.65 15.15C18.1167 14.6833 18.675 14.4583 19.325 14.475C19.975 14.4917 20.55 14.7333 21.05 15.2L28.3 22.4C28.5 22.6333 28.6583 22.8917 28.775 23.175C28.8917 23.4583 28.95 23.75 28.95 24.05C28.95 24.35 28.8917 24.6417 28.775 24.925C28.6583 25.2083 28.5 25.4667 28.3 25.7L21.05 32.9C20.6167 33.3333 20.075 33.55 19.425 33.55C18.775 33.55 18.2167 33.3167 17.75 32.85V32.85ZM26.5 43.25C25.8333 43.25 25.275 43.025 24.825 42.575C24.375 42.125 24.15 41.5667 24.15 40.9C24.15 40.2333 24.375 39.675 24.825 39.225C25.275 38.775 25.8333 38.55 26.5 38.55H39.1V9.45H26.5C25.8333 9.45 25.275 9.225 24.825 8.775C24.375 8.325 24.15 7.76666 24.15 7.1C24.15 6.43333 24.375 5.86666 24.825 5.4C25.275 4.93333 25.8333 4.7 26.5 4.7H39.1C40.3667 4.7 41.4667 5.16666 42.4 6.1C43.3333 7.03333 43.8 8.15 43.8 9.45V38.55C43.8 39.85 43.3333 40.9583 42.4 41.875C41.4667 42.7917 40.3667 43.25 39.1 43.25H26.5Z"/></svg>
 			<div>Log in</div>
 			</button>
@@ -52,7 +52,27 @@
 			<div class="subheader">to your existing Librusik account.</div>
 			<input oninput="usernameit('user')" type="text" id="user" placeholder="Username"><br>
 			<input type="password" id="passwd" placeholder="Password"><br>
+			<button onclick="showdiv('log_in', 'forgotpass')">Forgot password?</button>
 			<button id="loginbutton" class="highlighted" onclick="login()">Log in</button><br>
+		</div>
+		<div class="loginbox hidden" style="display: none" id="forgotpass">
+			<button class="back" onclick="showdiv('forgotpass', 'log_in', true)"></button>
+			<div class="header">Forgot password</div>
+			<div class="subheader">Please fill in these fields to identify your Librusik account and verify it's you.</div>
+			<div class="subheader">Your Librusik password will be reset.</div>
+			<input type="text" id="suser" placeholder="Synergia login"><br>
+			<input type="password" id="spass" placeholder="Synergia password"><br>
+			<button id="loginbutton" class="highlighted" onclick="restoreAccount()">Restore my account</button><br>
+		</div>
+		<div class="loginbox hidden" style="display: none" id="restored">
+			<button class="back" onclick="showdiv('restored', 'log_in', true)"></button>
+			<div class="header">Account restored</div>
+			<div class="subheader">Here are your new Librusik credentials.</div>
+			<div class="subheader">Please change your password later in Settings.</div><br>
+			<div style="font-weight: bold;margin: 4px;color: #888">Your Librusik username</div>
+			<div id="r_username" class="restored"></div><br>
+			<div style="font-weight: bold;margin: 4px;color: #888">Your new password</div>
+			<div id="r_password" class="restored"></div><br>
 		</div>
 		<div class="loginbox hidden" id="register" style="display: none">
 			<button class="back" onclick="showdiv('register', 'login', true)"></button>

@@ -186,6 +186,9 @@ def checklen(string, minlen, maxlen):
 	s = len(string)
 	return s >= minlen and s <= maxlen
 
+def randompasswd():
+	return "".join(random.choice(string.ascii_lowercase + string.digits) for _ in range(8))
+
 def mktryagainbtn(location, number):
 	return """<button onclick="goto('%s', %s, 'true')" class="highlighted">Try again</button><br>""" % (location, number)
 def mkbackbtn(location, number):
@@ -404,6 +407,26 @@ async def authenticate(request):
 	except:
 		return response("", 400)
 
+async def forgot_pass(request):
+	global database
+	try:
+		data = await request.json()
+		librus = Librus(None)
+		if await librus.mktoken(data["synergia_login"], data["synergia_password"]):
+			for user in database:
+				if database[user]["l_login"] == data["synergia_login"]:
+					SESSIONS.saveL(user, librus.headers)
+					newpass = randompasswd()
+					database[user]["passwd"] = sha(newpass)
+					updatedb()
+					return JSONresponse({
+						"username": user,
+						"password": newpass
+					}, 200)
+			return response("", 400)
+		return response("", 401)
+	except:
+		return response("", 400)
 
 async def index(request):
 	return response(resources["index"], 200)
@@ -1063,7 +1086,7 @@ async def panelapi(request):
 				elif data["method"] == "genuserpass":
 					if "username" in data and isinstance(data["username"], str):
 						if data["username"] in database:
-							newpassw = "".join(random.choice(string.ascii_lowercase + string.digits) for _ in range(8))
+							newpassw = randompasswd()
 							database[data["username"]]["passwd"] = sha(newpassw);
 							updatedb()
 							return response(newpassw, 200)
@@ -1171,6 +1194,7 @@ app.add_routes([
 	web.route('POST', '/panel/api', panelapi),
 	web.route("POST", "/api/uploadProfilePic", upload_handler),
 	web.route("POST", "/api/setProfilePic", set_profile_pic),
+	web.route("POST", "/api/forgotPassword", forgot_pass),
 	web.static('/', 'static')
 ])
 
