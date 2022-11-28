@@ -2,6 +2,7 @@ import sys
 import os
 import asyncio
 import json
+import getpass
 
 current = os.path.dirname(os.path.realpath(__file__))
 parent = os.path.dirname(current)
@@ -13,7 +14,7 @@ from librus import Librus
 async def main():
 	print("---------------- Librus API Dumper ----------------")
 	_user = input("Librus Synergia login:     ")
-	_pass = input("Librus Synergia password:  ")
+	_pass = getpass.getpass("Librus Synergia password:  ")
 
 	librus = Librus(None)
 
