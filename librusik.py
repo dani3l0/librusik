@@ -1,14 +1,27 @@
-import asyncio, aiohttp, json, math, time, os, hashlib, re, subprocess, random, uuid, string, traceback, base64
-from aiohttp import web
+import asyncio
+import base64
+import hashlib
+import json
+import math
+import os
+import random
+import re
+import ssl
+import string
+import subprocess
+import time
+import traceback
+import uuid
 from datetime import datetime, date, timedelta
 from glob import glob
-from cryptography.fernet import Fernet
-from librus import Librus, Librus2
-import librus
-from sessionmanager import SessionManager
-import ssl
 from urllib.parse import unquote
 
+from aiohttp import web
+from cryptography.fernet import Fernet
+
+import librus
+from librus import Librus, Librus2
+from sessionmanager import SessionManager
 
 CONFIG_DEFAULT = {
 	"max_users": 8,
@@ -37,9 +50,9 @@ def setup():
 	db = open("%s/database.json" % DATA_DIR, "w")
 	db.write(json.dumps({}))
 	db.close()
-	key = open("%s/fernet.key" % DATA_DIR, "w")
-	key.write(base64.urlsafe_b64encode(os.urandom(32)).decode())
-	key.close()
+	k = open("%s/fernet.key" % DATA_DIR, "w")
+	k.write(base64.urlsafe_b64encode(os.urandom(32)).decode())
+	k.close()
 	os.chmod("%s/fernet.key" % DATA_DIR, 0o400)
 
 setup()
@@ -103,7 +116,7 @@ resources = {
 	"login": open("html/login.html", "r").read(),
 	"about": open("html/about.html", "r").read(),
 	"panel": open("html/panel.html", "r").read() % config["subdirectory"],
-	"panellogin": open("html/panellogin.html", "r").read() %config["subdirectory"],
+	"panellogin": open("html/panellogin.html", "r").read() % config["subdirectory"],
 	"error": open("html/error.html", "r").read(),
 	"errorpage": open("html/geterror.html", "r").read(),
 }
@@ -146,24 +159,24 @@ def getRSS():
 		pid = open("/proc/%s/status" % os.getpid(), "r").read()
 		for x in pid.split("\n"):
 			if x.startswith("VmRSS:"):
-				return round(int(re.sub("[^0-9]", "", x)) / 1000, 2);
+				return round(int(re.sub("[^0-9]", "", x)) / 1000, 2)
 		return None
 	except:
 		return None
 
-def getval(path, toInt):
-	f = open("/sys/class/hwmon/hwmon0/temp1_input", "r").read().rstrip()
+def getval(path, toInt = False):
+	f = open(path, "r").read().rstrip()
 	if toInt: f = int(f)
 	return f
 
 def gettemp():
 	d = 0
 	try:
-		sensor = coretemp
 		path = "/sys/class/hwmon"
 		hwmon = [f"{path}/{x}" for x in os.listdir(path)]
 		for sensor in hwmon:
-			if getval(f"{sensor}/name") == self.hwmon_sensor:
+			print(sensor)
+			if getval(f"{sensor}/name") == "coretemp":
 				d = getval(f"{sensor}/temp1_input", True)
 	except:
 		try:
@@ -184,7 +197,8 @@ def getrawloadavg():
 
 def checklen(string, minlen, maxlen):
 	s = len(string)
-	return s >= minlen and s <= maxlen
+	return minlen <= s <= maxlen
+
 
 def randompasswd():
 	return "".join(random.choice(string.ascii_lowercase + string.digits) for _ in range(8))
@@ -222,10 +236,10 @@ def valueGrade(ocen):
 def predictAverage(hmm):
 	fullgrade = math.floor(hmm)
 	if hmm >= fullgrade + 0.75:
-		return fullgrade + 1;
+		return fullgrade + 1
 	if hmm >= fullgrade + 0.5:
-		return fullgrade + 0.5;
-	return fullgrade;
+		return fullgrade + 0.5
+	return fullgrade
 
 async def mkaccount(data):
 	global database
@@ -643,7 +657,7 @@ async def timetable(request):
 							details += """<button class="bubble unclickable wide %s"><div class="name">%s</div><div class="value">with %s</div><div class="value">Classroom %s</div><div class="value">%s - %s</div></button>""" % (changediv, x["Subject"] + change, teacher, x["Classroom"], x["HourFrom"], x["HourTo"])
 						else:
 							details += """<button class="bubble unclickable wide %s"><div class="name">%s</div><div class="value">with %s</div><div class="value">%s - %s</div></button>""" % (changediv, x["Subject"] + change, teacher, x["HourFrom"], x["HourTo"])
-					hours = len(result[day]);
+					hours = len(result[day])
 					page += """<button class="bubble %s" onclick="showdiv('overview', '%s')"><div class="name">%s</div><div class="value">%s lesson%s</div><div class="value">%s - %s</div></button>""" % (changes, day.lower(), day, hours, "s" if (hours != 1) else "", result[day][0]["HourFrom"], result[day][hours - 1]["HourTo"])
 					details += "</div>"
 				return response(resources["timetable"] % (week, lessons, page, details), 200)
@@ -1034,7 +1048,7 @@ async def panelapi(request):
 						users.append({"first_name": database[x]["first_name"], "last_name": database[x]["last_name"], "username": x, "last_seen": last_seen, "joined": database[x]["joined"]})
 					maxusers = config["max_users"]
 					db_usage = round(len(users) / maxusers * 100)
-					db_size = round(os.stat("%s/database.json" % DATA_DIR).st_size / 10) / 100;
+					db_size = round(os.stat("%s/database.json" % DATA_DIR).st_size / 10) / 100
 					return JSONresponse({
 						"os": host["name"],
 						"cores": host["cpus"],
@@ -1087,7 +1101,7 @@ async def panelapi(request):
 					if "username" in data and isinstance(data["username"], str):
 						if data["username"] in database:
 							newpassw = randompasswd()
-							database[data["username"]]["passwd"] = sha(newpassw);
+							database[data["username"]]["passwd"] = sha(newpassw)
 							updatedb()
 							return response(newpassw, 200)
 						return response("", 403)
