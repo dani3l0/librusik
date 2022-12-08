@@ -57,13 +57,6 @@
 					<div class="subtitle">These are used to log into Panel.</div>
 				</div>
 			</button>
-			<button class="option" onclick="showdiv('main', 'dblimit')">
-				<div class="icon">storage</div>
-				<div>
-					<div class="title">Database capacity</div>
-					<div class="subtitle">Maximum number of stored accounts in database.</div>
-				</div>
-			</button>
 			<button class="option" onclick="showdiv('main', 'userlist')">
 				<div class="icon">groups</div>
 				<div>
@@ -187,7 +180,14 @@
 		<div id="userlist" class="hidden" style="display:none">
 			<button class="back" onclick="showdiv('userlist', 'main', true)"></button>
 			<div class="header" style="margin-bottom: 12px">Accounts</div>
-			<div id="accountnum">N/A</div><br>
+			<div id="accountnum">N/A</div>
+			<button class="option" onclick="showdiv('main', 'dblimit')">
+				<div class="icon">storage</div>
+				<div>
+					<div class="title">Database capacity</div>
+					<div class="subtitle">Set the maximum number of users on this instance.</div>
+				</div>
+			</button>
 			<div id="accountlist"></div>
 		</div>
 		<div id="deluserc" class="hidden" style="display:none">
