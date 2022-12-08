@@ -150,11 +150,11 @@ function login() {
 			}, 4500);
 		}
 		else if (data.status == 401) {
-			mkerr("err", "login", "Unauthorized", "Provided credentials are invalid.");
+			mkerr("err", "log_in", "Unauthorized", "Provided credentials are invalid.");
 			showdiv("log_in", "err");
 		}
 		else {
-			mkerr("err", "login", "Error", "Couldn't log in.");
+			mkerr("err", "log_in", "Error", "Couldn't log in.");
 			showdiv("log_in", "err");
 		}
 	});
@@ -398,10 +398,10 @@ function checkmsg(url) {
 		try {
 			getByID("datafetcher").classList.add("hidden");
 			var messages = getByID("messages");
-			var messagest = messages.getElementsByTagName("div")[0];
+			var messagest = messages.getElementsByTagName("div")[1];
 			if (!messages) return;
 			var lucky = getByID("luckynum");
-			var luckyt = lucky.getElementsByTagName("div")[0];
+			var luckyt = lucky.getElementsByTagName("div")[1];
 			if (data.status == 200) {
 				var k = JSON.parse(data.responseText);
 				if (k.messages > 0) {
@@ -476,7 +476,7 @@ function goto(url, page, force, back) {
 	xhr.open("POST", url);
 	xhr.timeout = 7000;
 	xhr.setRequestHeader("Content-Type", "application/json");
-	var svg = '<svg class="svge" viewBox="0 0 24 24"><path d="M11 15h2v2h-2v-2zm0-8h2v6h-2V7zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/></svg>';
+	var svg = '<div class="icon svge">priority_high</div>';
 	xhr.onreadystatechange = function() {
 		if (this.readyState !== 4) return;
 		var fasten = 450 - (((new Date()).getTime()) - xhrstart);

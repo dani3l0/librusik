@@ -175,7 +175,6 @@ def gettemp():
 		path = "/sys/class/hwmon"
 		hwmon = [f"{path}/{x}" for x in os.listdir(path)]
 		for sensor in hwmon:
-			print(sensor)
 			if getval(f"{sensor}/name") == "coretemp":
 				d = getval(f"{sensor}/temp1_input", True)
 	except:
@@ -492,7 +491,7 @@ async def home(request):
 		return response("", 401)
 	except:
 		tr = traceback.format_exc().replace(LIBRUSIK_PATH, "")
-		return response(resources["error"] % ("Internal server error", tr, mktryagainbtn("/home", 0)), 500)
+		return response(resources["error"] % ("", "Internal server error", tr, mktryagainbtn("/home", 0)), 500)
 
 async def grades(request):
 	try:
@@ -574,11 +573,11 @@ async def grades(request):
 				for ocen in allocens:
 					rcnt += ocen["string"]
 				return response(resources["grades"] % (avg, grades, page, avg, len(avgdict), score, averages, len(allocens), rcnt, divz), 200)
-			return response(resources["error"] % ("Error", ERR_403, mktryagainbtn("/grades", 1)), 403)
+			return response(resources["error"] % ("", "Error", ERR_403, mktryagainbtn("/grades", 1)), 403)
 		return response("", 401)
 	except:
 		tr = traceback.format_exc().replace(LIBRUSIK_PATH, "")
-		return response(resources["error"] % ("Internal server error", tr, mktryagainbtn("/grades", 1)), 500)
+		return response(resources["error"] % ("", "Internal server error", tr, mktryagainbtn("/grades", 1)), 500)
 
 async def more(request):
 	try:
@@ -588,7 +587,7 @@ async def more(request):
 		return response("", 401)
 	except:
 		tr = traceback.format_exc().replace(LIBRUSIK_PATH, "")
-		return response(resources["error"] % ("Internal server error", tr, mktryagainbtn("/more", 2)), 500)
+		return response(resources["error"] % ("", "Internal server error", tr, mktryagainbtn("/more", 2)), 500)
 
 async def settings(request):
 	try:
@@ -619,7 +618,7 @@ async def settings(request):
 		return response("", 401)
 	except:
 		tr = traceback.format_exc().replace(LIBRUSIK_PATH, "")
-		return response(resources["error"] % ("Internal server error", tr, mktryagainbtn("/settings", 3)), 500)
+		return response(resources["error"] % ("", "Internal server error", tr, mktryagainbtn("/settings", 3)), 500)
 
 async def timetable(request):
 	try:
@@ -661,11 +660,11 @@ async def timetable(request):
 					page += """<button class="bubble %s" onclick="showdiv('overview', '%s')"><div class="name">%s</div><div class="value">%s lesson%s</div><div class="value">%s - %s</div></button>""" % (changes, day.lower(), day, hours, "s" if (hours != 1) else "", result[day][0]["HourFrom"], result[day][hours - 1]["HourTo"])
 					details += "</div>"
 				return response(resources["timetable"] % (week, lessons, page, details), 200)
-			return response(resources["error"] % (mkbackbtn("/more", 2) + "Error", ERR_403, mktryagainbtn("/timetable", 2)), 403)
+			return response(resources["error"] % (mkbackbtn("/more", 2), "Error", ERR_403, mktryagainbtn("/timetable", 2)), 403)
 		return response("", 401)
 	except:
 		tr = traceback.format_exc().replace(LIBRUSIK_PATH, "")
-		return response(resources["error"] % (mkbackbtn("/more", 2) + "Internal server error", tr, mktryagainbtn("/timetable", 2)), 500)
+		return response(resources["error"] % (mkbackbtn("/more", 2), "Internal server error", tr, mktryagainbtn("/timetable", 2)), 500)
 
 async def attendances_old(request):
 	try:
@@ -696,11 +695,11 @@ async def attendances_old(request):
 					return response(resources["attendancesold"] % (round((presences / lessons) * 100, 1), "%", presences, absences, lessons, wasted, page), 200)
 				else:
 					return response(resources["attendancesold"] % ("Unavailable", "", presences, absences, lessons, wasted, page), 200)
-			return response(resources["error"] % (mkbackbtn("/more", 2) + "Error", ERR_403, mktryagainbtn("/attendancesold", 2)), 403)
+			return response(resources["error"] % (mkbackbtn("/more", 2), "Error", ERR_403, mktryagainbtn("/attendancesold", 2)), 403)
 		return response("", 401)
 	except:
 		tr = traceback.format_exc().replace(LIBRUSIK_PATH, "")
-		return response(resources["error"] % (mkbackbtn("/attendances", 2) + "Internal server error", tr, mktryagainbtn("/attendancesold", 2)), 500)
+		return response(resources["error"] % (mkbackbtn("/attendances", 2), "Internal server error", tr, mktryagainbtn("/attendancesold", 2)), 500)
 
 async def attendances(request):
 	try:
@@ -811,11 +810,11 @@ async def attendances(request):
 					progclass = " warning"
 
 				return response(resources["attendances"] % (progclass, pp, wasted, pp, presences_total, tots, absences_total, unexcused_total, subjectos, html), 200)
-			return response(resources["error"] % (mkbackbtn("/more", 2) + "Error", ERR_403, mktryagainbtn("/attendances", 2)), 403)
+			return response(resources["error"] % (mkbackbtn("/more", 2), "Error", ERR_403, mktryagainbtn("/attendances", 2)), 403)
 		return response("", 401)
 	except:
 		tr = traceback.format_exc().replace(LIBRUSIK_PATH, "")
-		return response(resources["error"] % (mkbackbtn("/more", 2) + "Internal server error", tr, mktryagainbtn("/attendances", 2)), 500)
+		return response(resources["error"] % (mkbackbtn("/more", 2), "Internal server error", tr, mktryagainbtn("/attendances", 2)), 500)
 
 async def exams(request):
 	try:
@@ -851,11 +850,11 @@ async def exams(request):
 						tm = "%s days" % daysto
 					nextin = "%s %s from %s" % (first, tm, subject_closest)
 				return response(resources["exams"] % (len(result), nextin, page), 200)
-			return response(resources["error"] % (mkbackbtn("/more", 2) + "Error", ERR_403, mktryagainbtn("/exams", 2)), 403)
+			return response(resources["error"] % (mkbackbtn("/more", 2), "Error", ERR_403, mktryagainbtn("/exams", 2)), 403)
 		return response("", 401)
 	except:
 		tr = traceback.format_exc().replace(LIBRUSIK_PATH, "")
-		return response(resources["error"] % (mkbackbtn("/more", 2) + "Internal server error", tr, mktryagainbtn("/exams", 2)), 500)
+		return response(resources["error"] % (mkbackbtn("/more", 2), "Internal server error", tr, mktryagainbtn("/exams", 2)), 500)
 
 async def freedays(request):
 	try:
@@ -885,11 +884,11 @@ async def freedays(request):
 						nice = "in %s days" % daysto
 					nextin = "%s %s" % (free_closest, nice)
 				return response(resources["freedays"] % (len(result), nextin, page), 200)
-			return response(resources["error"] % (mkbackbtn("/more", 2) + "Error", ERR_403, mktryagainbtn("/freedays", 2)), 403)
+			return response(resources["error"] % (mkbackbtn("/more", 2), "Error", ERR_403, mktryagainbtn("/freedays", 2)), 403)
 		return response("", 401)
 	except:
 		tr = traceback.format_exc().replace(LIBRUSIK_PATH, "")
-		return response(resources["error"] % (mkbackbtn("/more", 2) + "Internal server error", tr, mktryagainbtn("/freedays", 2)), 500)
+		return response(resources["error"] % (mkbackbtn("/more", 2), "Internal server error", tr, mktryagainbtn("/freedays", 2)), 500)
 
 async def teacherfreedays(request):
 	try:
@@ -907,11 +906,11 @@ async def teacherfreedays(request):
 					else:
 						page += """<button class="bubble unclickable"><div class="name">%s</div><div class="value"><code>From &nbsp</code>%s</div><div class="value"><code>To &nbsp&nbsp&nbsp</code>%s</div></button>""" % (teacher, x["DateFrom"], x["DateTo"])
 				return response(resources["teacherfreedays"] % (len(result), page), 200)
-			return response(resources["error"] % (mkbackbtn("/more", 2) + "Error", ERR_403, mktryagainbtn("/teacherfreedays", 2)), 403)
+			return response(resources["error"] % (mkbackbtn("/more", 2), "Error", ERR_403, mktryagainbtn("/teacherfreedays", 2)), 403)
 		return response("", 401)
 	except:
 		tr = traceback.format_exc().replace(LIBRUSIK_PATH, "")
-		return response(resources["error"] % (mkbackbtn("/more", 2) + "Internal server error", tr, mktryagainbtn("/teacherfreedays", 2)), 500)
+		return response(resources["error"] % (mkbackbtn("/more", 2), "Internal server error", tr, mktryagainbtn("/teacherfreedays", 2)), 500)
 
 async def parentteacherconferences(request):
 	try:
@@ -925,11 +924,11 @@ async def parentteacherconferences(request):
 				for x in result:
 					page += """<button class="bubble unclickable wide"><div class="name">%s</div><div class="value"><i>%s</i></div><div class="value">Classroom %s</div><div class="value">%s at %s</div></button>""" % (x["Name"], x["Topic"], x["Room"], x["Date"], (x["Time"])[:-3])
 				return response(resources["parentteacherconferences"] % (len(result), page), 200)
-			return response(resources["error"] % (mkbackbtn("/more", 2) + "Error", ERR_403, mktryagainbtn("/parentteacherconferences", 2)), 403)
+			return response(resources["error"] % (mkbackbtn("/more", 2), "Error", ERR_403, mktryagainbtn("/parentteacherconferences", 2)), 403)
 		return response("", 401)
 	except:
 		tr = traceback.format_exc().replace(LIBRUSIK_PATH, "")
-		return response(resources["error"] % (mkbackbtn("/more", 2) + "Internal server error", tr, mktryagainbtn("/parentteacherconferences", 2)), 500)
+		return response(resources["error"] % (mkbackbtn("/more", 2), "Internal server error", tr, mktryagainbtn("/parentteacherconferences", 2)), 500)
 
 async def school(request):
 	global database
@@ -952,11 +951,11 @@ async def school(request):
 				sendz = datetime.strptime(me["SchoolYearMiddles"], '%Y-%m-%d').strftime("%d %B %Y")
 				endz = datetime.strptime(me["SchoolYearEnds"], '%Y-%m-%d').strftime("%d %B %Y")
 				return response(resources["school"] % (result["Name"], address, student, tutor, me["Class"], me["Type"], sendz, endz), 200)
-			return response(resources["error"] % (mkbackbtn("/more", 2) + "Error", ERR_403, mktryagainbtn("/school", 2)), 403)
+			return response(resources["error"] % (mkbackbtn("/more", 2), "Error", ERR_403, mktryagainbtn("/school", 2)), 403)
 		return response("", 401)
 	except:
 		tr = traceback.format_exc().replace(LIBRUSIK_PATH, "")
-		return response(resources["error"] % (mkbackbtn("/more", 2) + "Internal server error", tr, mktryagainbtn("/school", 2)), 500)
+		return response(resources["error"] % (mkbackbtn("/more", 2), "Internal server error", tr, mktryagainbtn("/school", 2)), 500)
 
 async def messages(request):
 	global database
@@ -971,11 +970,11 @@ async def messages(request):
 				for mesg in inbox:
 					html += """<button class="bubble wide" onclick="goto('message/%s', 2, true)"><div class="name">%s</div><div class="value">from <b>%s</b></div><div class="value">%s</div></div>""" % (mesg["link"], mesg["subject"], mesg["from"], mesg["date"])
 				return response(resources["messages"] % (len(inbox), html), 200)
-			return response(resources["error"] % (mkbackbtn("messages", 2) + "Error", ERR_403, mktryagainbtn("/messages", 2)), 403)
+			return response(resources["error"] % (mkbackbtn("messages", 2), "Error", ERR_403, mktryagainbtn("/messages", 2)), 403)
 		return response("", 401)
 	except:
 		tr = traceback.format_exc().replace(LIBRUSIK_PATH, "")
-		return response(resources["error"] % (mkbackbtn("messages", 2) + "Internal server error", tr, mktryagainbtn("/messages", 2)), 500)
+		return response(resources["error"] % (mkbackbtn("messages", 2), "Internal server error", tr, mktryagainbtn("/messages", 2)), 500)
 
 async def traffic(request):
 	return response(resources["traffic"], 200)
@@ -1000,11 +999,11 @@ async def message(request):
 					attachments += """<div onclick="downloadMsgFile(this, '%s')">%s</div>""" % (file["nice"].replace("/", "-"), parseDumbs(file["name"]))
 
 				return response(resources["message"] % (mesg["subject"], mesg["from"], mesg["date"], mesg["content"], attachments, mesg["read"]), 200)
-			return response(resources["error"] % (mkbackbtn(uri_full, 2) + "Error", ERR_403, mktryagainbtn(uri_full, 2)), 403)
+			return response(resources["error"] % (mkbackbtn(uri_full, 2), "Error", ERR_403, mktryagainbtn(uri_full, 2)), 403)
 		return response("", 401)
 	except:
 		tr = traceback.format_exc().replace(LIBRUSIK_PATH, "")
-		return response(resources["error"] % (mkbackbtn(uri_full, 2) + "Internal server error", tr, mktryagainbtn(uri_full, 2)), 500)
+		return response(resources["error"] % (mkbackbtn(uri_full, 2), "Internal server error", tr, mktryagainbtn(uri_full, 2)), 500)
 
 async def message_download_file(request):
 	global database
