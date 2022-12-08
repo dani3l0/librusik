@@ -13,11 +13,11 @@
 			<div class="subtitle">Adjust stuff here and there.</div>
 		</div>
 	</button>
-	<button class="option" onclick="showdiv('settings', 'chgpasswd')">
-		<div class="icon">key</div>
+	<button class="option" onclick="showdiv('settings', 'librusik')">
+		<div class="icon">person</div>
 		<div>
-			<div class="title">Change password</div>
-			<div class="subtitle">Password used to log into Librusik.</div>
+			<div class="title">Librusik account</div>
+			<div class="subtitle">Update password or delete account.</div>
 		</div>
 	</button>
 	<button class="option" onclick="showdiv('settings', 'synergie')">
@@ -25,13 +25,6 @@
 		<div>
 			<div class="title">Synergia account</div>
 			<div class="subtitle">Manage your Librus Synergia credentials.</div>
-		</div>
-	</button>
-	<button class="option" onclick="showdiv('settings', 'rmaccountc')">
-		<div class="icon">delete</div>
-		<div>
-			<div class="title">Delete account</div>
-			<div class="subtitle">If you no longer enjoy using Librusik...</div>
 		</div>
 	</button>
 	<button class="option" onclick="showdiv('settings', 'about')">
@@ -59,6 +52,7 @@
 <div class="hidden" id="synergie" style="display:none">
 	<button class="back" onclick="showdiv('synergie', 'settings', true)"></button>
 	<div class="header">Synergia credentials</div>
+	<div class="subheader">Manage Synergia account connected to Librusik.</div>
 	<div class="credentials">
 		<div class="name">Login</div>
 		<div class="value">%s</div>
@@ -80,6 +74,25 @@
 		<div>
 			<div class="title">Change account</div>
 			<div class="subtitle">Use another Synergia account for fetching data.</div>
+		</div>
+	</button>
+</div>
+<div class="hidden" id="librusik" style="display:none">
+	<button class="back" onclick="showdiv('librusik', 'settings', true)"></button>
+	<div class="header">Librusik account</div>
+	<div class="subheader">Secure it or delete it.</div>
+	<button class="option" onclick="showdiv('librusik', 'chgpasswd')">
+		<div class="icon">key</div>
+		<div>
+			<div class="title">Change password</div>
+			<div class="subtitle">Password used to log in.</div>
+		</div>
+	</button>
+	<button class="option" onclick="showdiv('librusik', 'rmaccountc')">
+		<div class="icon">delete</div>
+		<div>
+			<div class="title">Delete account</div>
+			<div class="subtitle">If you no longer enjoy using Librusik...</div>
 		</div>
 	</button>
 </div>
@@ -120,7 +133,7 @@
 	</button>
 </div>
 <div class="hidden" id="chgpasswd" style="display:none">
-	<button class="back" onclick="showdiv('chgpasswd', 'settings', true)"></button>
+	<button class="back" onclick="showdiv('chgpasswd', 'librusik', true)"></button>
 	<div class="header">Change password</div>
 	<input id="pass" type="password" placeholder="Current password" maxlength="32"><br>
 	<input id="newpass" type="password" placeholder="New password" maxlength="32"><br>
@@ -129,14 +142,14 @@
 	<button onclick="changepasswd()" class="highlighted">Submit</button>
 </div>
 <div class="hidden" id="rmaccountc" style="display:none">
-	<button class="back" onclick="showdiv('rmaccountc', 'settings', true)"></button>
+	<button class="back" onclick="showdiv('rmaccountc', 'librusik', true)"></button>
 	<div class="header">Delete account</div>
 	<div class="brighten">Please note that all your data will be wiped out from database and <b>this cannot be undone.</b></div>
 	<br>
 	<button onclick="showdiv('rmaccountc', 'rmaccount')" class="highlighted danger">Delete my account</button>
 </div>
 <div class="hidden" id="rmaccount" style="display:none">
-	<button class="back" onclick="showdiv('rmaccount', 'settings', true)"></button>
+	<button class="back" onclick="showdiv('rmaccount', 'librusik', true)"></button>
 	<div class="header">Delete account</div>
 	<input id="delaccpasswd" type="password" placeholder="Password" maxlength="32"><br>
 	<input id="delaccconf" type="text" placeholder="'Yes, I am totally sure.'" maxlength="32"><br>
