@@ -110,7 +110,6 @@ resources = {
 	"freedays": open("html/freedays.html", "r").read(),
 	"teacherfreedays": open("html/teacherfreedays.html", "r").read(),
 	"parentteacherconferences": open("html/parentteacherconferences.html", "r").read(),
-	"traffic": open("html/traffic.html", "r").read(),
 	"school": open("html/school.html", "r").read(),
 	"settings": open("html/settings.html", "r").read(),
 	"login": open("html/login.html", "r").read(),
