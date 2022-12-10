@@ -473,7 +473,7 @@ async def home(request):
 			addon = "s"
 			if daysleft == 1:
 				addon = ""
-			if daysleft < 0:
+			if daysleft <= 0:
 				daysleft = "--"
 			a = date(date.today().year, 1, 1)
 			b = date(date.today().year, 12, 31)
@@ -837,7 +837,7 @@ async def exams(request):
 				if subject_closest:
 					first = "Next in"
 					tm = date_closest
-					daysto = (date_closest - now).days
+					daysto = (date_closest - now).days + 1
 					if daysto == 0:
 						first = "Today"
 						tm = ""
@@ -876,7 +876,7 @@ async def freedays(request):
 				nextin = "No free days in the future :("
 				if free_closest:
 					nice = ""
-					daysto = (date_closest - now).days
+					daysto = (date_closest - now).days + 1
 					if daysto == 1:
 						nice = "starts tomorrow"
 					else:

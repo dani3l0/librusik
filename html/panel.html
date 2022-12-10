@@ -112,7 +112,7 @@
 			<button onclick="changepass()" class="highlighted">Change</button>
 		</div>
 		<div id="dblimit" class="hidden" style="display:none">
-			<button class="back" onclick="showdiv('dblimit', 'main', true)"></button>
+			<button class="back" onclick="showdiv('dblimit', 'userlist', true)"></button>
 			<div class="header">Database capacity</div>
 			<div id="userlimit">Current limit: N/A</div>
 			<button onclick="setmaxusers('-')" class="moreless">-</button>
@@ -181,13 +181,7 @@
 			<button class="back" onclick="showdiv('userlist', 'main', true)"></button>
 			<div class="header" style="margin-bottom: 12px">Accounts</div>
 			<div id="accountnum">N/A</div>
-			<button class="option" onclick="showdiv('main', 'dblimit')">
-				<div class="icon">storage</div>
-				<div>
-					<div class="title">Database capacity</div>
-					<div class="subtitle">Set the maximum number of users on this instance.</div>
-				</div>
-			</button>
+			<button onclick="showdiv('userlist', 'dblimit')">Database capacity</button>
 			<div id="accountlist"></div>
 		</div>
 		<div id="deluserc" class="hidden" style="display:none">
