@@ -841,7 +841,7 @@ svg {
 	background: #F46;
 }
 .option.checkbox > .check::after {
-	content: "✔";
+	content: "âœ”";
 	transform: translate(-50%, -50%) scale(0) rotateZ(180deg);
 	color: #222;
 	top: calc(50% + 1px);
@@ -1003,7 +1003,7 @@ iframe {
 	background: #333;
 }
 .checkboxes > div:before {
-	content: "✔";
+	content: "âœ”";
 	color: transparent;
 	padding: 0 6px;
 	background: #444;
@@ -1069,6 +1069,9 @@ iframe {
 		height: 150px;
 		width: 150px;
 	}
+	.moreitem > .icon {
+		font-size: 88px !important;
+	}
 	.moreitem > div {
 		font-weight: bold;
 		font-size: 13px;
@@ -1085,6 +1088,9 @@ iframe {
 	.moreitem {
 		height: 136px;
 		width: 136px;
+	}
+	.moreitem > .icon {
+		font-size: 72px !important;
 	}
 	.credentials {
 		width: 124px;
