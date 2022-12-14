@@ -810,7 +810,7 @@ a {
 	background: #F46;
 }
 .option.checkbox > .check::after {
-	content: "âœ”";
+	content: "✔";
 	transform: translate(-50%, -50%) scale(0) rotateZ(180deg);
 	color: #222;
 	top: calc(50% + 1px);
@@ -972,7 +972,7 @@ iframe {
 	background: #333;
 }
 .checkboxes > div:before {
-	content: "âœ”";
+	content: "✔";
 	color: transparent;
 	padding: 0 6px;
 	background: #444;
