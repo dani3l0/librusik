@@ -277,9 +277,9 @@ class Librus:
 			return None
 		exams = []
 		for x in r["HomeWorks"]:
-			if "Subject" in x:
+			try:
 				leson = subjects[x["Subject"]["Id"]]
-			else:
+			except KeyError:
 				leson = "Lesson %s" % x["LessonNo"]
 			exams.append({
 				"Lesson": leson,
