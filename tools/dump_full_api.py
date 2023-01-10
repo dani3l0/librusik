@@ -44,6 +44,9 @@ async def main():
 			res_big[x] = item
 	else:
 		data = await librus.get_data(_api_path)
+		if not data:
+			print(f"Error: Couldn't find '{_api_path}' in API, exiting...")
+			raise SystemExit
 		res_big[_api_path] = data
 
 	print("Saving data to JSON...")
