@@ -1,5 +1,7 @@
 <img src="screenshots/librusik.png" alt="Status" width="600"/>
 
+**As I am graduating from school this year, after June 2023 I will lose access to Librus.**
+
 ## Features
 
 ### Librus Synergia:
@@ -42,8 +44,6 @@
 -----
 
 ## Installation
-
-This app __will not run on Windows__. And no support for it, ever.
 
 __1. Install required dependencies:__
 
@@ -97,6 +97,16 @@ Go to [localhost:7777/panel](http://localhost:7777/panel) to manage your Librusi
 ## Querying the API
 
 In `tools` dir there is a `dump_full_api.py` file. It queries the whole Librus API and saves all the available data to local JSON file. Kinda helpful for further development.
+
+-----
+
+## Reporting a bug
+
+Feel free to open new issues when something doesn't work or you want to ask for new features/improvements.
+
+If you encounter a bug, remember to attach some logs (exception traceback or just a detailed description).
+
+**After June 2023, only merge requests will be accepted.**
 
 -----
 
