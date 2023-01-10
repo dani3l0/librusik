@@ -48,7 +48,7 @@ async def main():
 
 	print("Saving data to JSON...")
 	result = open("api_dump.json", "w")
-	result.write(json.dumps(res_big))
+	result.write(json.dumps(res_big, indent = 4))
 	result.close()
 	print("Done.")
 
