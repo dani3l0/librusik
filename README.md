@@ -45,17 +45,16 @@
 
 ## Installation
 
-__1. Install required dependencies:__
-
-```
-pip install -r requirements.txt
-```
-
-
-__2. Clone the repo:__
+__1. Clone the repo:__
 ```
 git clone https://gitlab.com/dani3l0/librusik Librusik
 cd Librusik
+```
+
+__2. Install required dependencies:__
+
+```
+pip install -r requirements.txt
 ```
 
 __3. And, finally run it:__
