@@ -180,10 +180,8 @@ function refresh() {
 	}, function(data) {
 		if (data.status == 200) {
 			var resp = JSON.parse(data.responseText);
-			var sos = document.getElementById("sos");
 			var dbsize = document.getElementById("dbsize");
 			var scpu = document.getElementById("scpu");
-			var smemory = document.getElementById("smemory");
 			var sstorage = document.getElementById("sstorage");
 			var loadtext = document.getElementById("loadavg").getElementsByClassName("value")[0];
 			var dbtext = document.getElementById("dbusage").getElementsByClassName("value")[0];
@@ -218,12 +216,10 @@ function refresh() {
 			if (resp.db_usage > 100) setBar("dbusagep", 100);
 			else setBar("dbusagep", resp.db_usage);
 			suptime.innerText = mktime(resp.uptime);
-			sos.innerText = resp.os;
 			dbsize.innerText = resp.userscount + "/" + resp.max_users + " (" + resp.db_size + " KB)";
-			scpu.innerText = resp.cores + "x " + resp.cpu_freq + " GHz";
-			smemory.innerText = resp.memory + " GB";
+			scpu.innerText = resp.cores + " core" + (resp.cores == 1 ? "" : "s");
 			sstorage.innerText = resp.storage + " GB";
-			rss.innerText = resp.rss + " MB";
+			rss.innerText = resp.rss ? (resp.rss + " MB") : "N/A";
 			var lastref = new Date();
 			clearInterval(runningtimex);
 			runningtimex = setInterval(function() {

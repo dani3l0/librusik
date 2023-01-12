@@ -8,7 +8,6 @@ import random
 import re
 import ssl
 import string
-import subprocess
 import time
 import traceback
 import uuid
@@ -63,13 +62,10 @@ BOOT = round(time.time())
 ERR_403 = "Couldn't fetch data from Synergia."
 ERR_500 = "Server wasn't able to parse this request."
 
-statvfs = os.statvfs("/")
+statvfs = os.statvfs(".")
 host = {
-	"name": subprocess.check_output(". /etc/os-release; echo -n $PRETTY_NAME", shell = True).decode(),
-	"cpus": int(subprocess.check_output("echo -n `nproc --all`", shell = True).decode()),
-	"memory": round(int(subprocess.check_output("cat /proc/meminfo | grep 'MemTotal' | grep -o '[0-9]*'", shell = True).rstrip().decode()) / 1000 / 1000, 2),
-	"freq": round(int(subprocess.check_output("lscpu | grep 'CPU max MHz:' | grep -o '[0-9]*' | sed -n 1p", shell = True).rstrip().decode()) / 1000, 2),
-	"storage": round(statvfs.f_bsize * statvfs.f_blocks / 1000 / 1000 / 1000, 2)
+	"storage": round(statvfs.f_bsize * statvfs.f_blocks / 1000 / 1000 / 1000, 2),
+	"cpus": os.cpu_count()
 }
 
 welcomes = ["Hello", "Hi", "Hey"]
@@ -185,13 +181,19 @@ def gettemp():
 		d = d / 1000
 	return d
 def getloadavg():
-	d = open("/proc/loadavg", "r").read()
-	d = d.split()
-	return float(d[0])
+	try:
+		d = open("/proc/loadavg", "r").read()
+		d = d.split()
+		return float(d[0])
+	except:
+		return 0
 def getrawloadavg():
-	d = open("/proc/loadavg", "r").read()
-	d = d.split()
-	return "%s %s %s" % (d[0], d[1], d[2])
+	try:
+		d = open("/proc/loadavg", "r").read()
+		d = d.split()
+		return "%s %s %s" % (d[0], d[1], d[2])
+	except:
+		return "N/A"
 
 def checklen(string, minlen, maxlen):
 	s = len(string)
@@ -1048,10 +1050,7 @@ async def panelapi(request):
 					db_usage = round(len(users) / maxusers * 100)
 					db_size = round(os.stat("%s/database.json" % DATA_DIR).st_size / 10) / 100
 					return JSONresponse({
-						"os": host["name"],
 						"cores": host["cpus"],
-						"cpu_freq": host["freq"],
-						"memory": host["memory"],
 						"rss": getRSS(),
 						"storage": host["storage"],
 						"loadavg_raw": getrawloadavg(),
