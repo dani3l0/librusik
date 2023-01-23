@@ -442,7 +442,7 @@ async def api(request):
 						}), 200)
 					return response("", 403)
 				elif method == "delaccount":
-					if not check_tier(data["username"], "free"):
+					if database[data["username"]]["tier"] == "demo":
 						return response("", 401)
 					demo = demo_err(data["username"])
 					if demo != False: return demo
@@ -1121,7 +1121,12 @@ async def message(request):
 				for file in mesg["attachments"]:
 					attachments += """<div onclick="downloadMsgFile(this, '%s')">%s</div>""" % (file["nice"].replace("/", "-"), parseDumbs(file["name"]))
 
-				return response(resources["message"] % (mesg["subject"], mesg["from"], mesg["date"], mesg["content"], attachments, mesg["read"]), 200)
+				pro1 = ""
+				pro2 = ""
+				if not check_tier(data["username"], "pro"):
+					pro1 = "Available in <div class=\"tier pro\"></div>"
+					pro2 = "display:none"
+				return response(resources["message"] % (mesg["subject"], mesg["from"], mesg["date"], mesg["content"], attachments, mesg["read"], pro1, pro2), 200)
 			return response(resources["error"] % (mkbackbtn(uri_full, 2), "Error", ERR_403, mktryagainbtn(uri_full, 2)), 403)
 		return response("", 401)
 	except:
@@ -1142,6 +1147,8 @@ async def message_download_file(request):
 		if auth(data):
 			demo = demo_err(data["username"])
 			if demo != False: return demo
+			if not check_tier(data["username"], "pro"):
+				return response("", 700)
 			librus = Librus2(SESSIONS.getL2(data["username"]))
 			if await librus.mktoken(database[data["username"]]["l_login"], decrypt(database[data["username"]]["l_passwd"])):
 				SESSIONS.saveL2(data["username"], librus.cookies)
