@@ -192,7 +192,7 @@ button.back {
 	width: 64px !important;
 }
 .unclickable {
-	cursor: default;
+	cursor: default !important;
 	background: transparent !important;
 }
 .unclickable:hover {
@@ -1051,12 +1051,14 @@ iframe {
 	opacity: 0;
 }
 .tier {
-	margin-left: 4px;
+	margin: 0 4px;
 	font-size: 10px;
 	text-transform: uppercase;
 	color: #222;
+	font-weight: bold;
 	border-radius: 6px;
 	padding: 4px 6px;
+	display: inline-block;
 }
 .demo {
 	background: linear-gradient(35deg, #FB0, #6F0) !important;

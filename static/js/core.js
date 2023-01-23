@@ -411,7 +411,8 @@ function checkmsg(url) {
 					messagest.innerText =  k.messages + " new message" + addon;
 					messages.classList.add("unread");
 				}
-				else messagest.innerText = "No new messages"
+				else if (k.messages == -1) messagest.innerHTML = `Messages are available in <div class="tier plus"></div> tier.`
+				else messagest.innerText = "No new messages";
 				messages.classList.remove("hidden");
 				if (k.luckynum == "None") luckyt.innerText = "It seems there is no lucky number at this moment.";
 				else {

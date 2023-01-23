@@ -110,6 +110,7 @@ resources = {
 	"settings": open("html/settings.html", "r").read(),
 	"login": open("html/login.html", "r").read(),
 	"about": open("html/about.html", "r").read(),
+	"tiers": open("html/tiers.html", "r").read(),
 	"panel": open("html/panel.html", "r").read() % config["subdirectory"],
 	"panellogin": open("html/panellogin.html", "r").read() % config["subdirectory"],
 	"error": open("html/error.html", "r").read(),
@@ -249,7 +250,18 @@ def check_tier(user, required_tier):
 		return True if required <= current else False
 	else:
 		return True
-
+def tierror(REQ_TIER, backpath, button, where):
+	if where:
+		button = "<button onclick=\"goto('" + where + "', 2, true)\">" + button + "</button>"
+	else:
+		button = ""
+	if not backpath:
+		backpath = ""
+	else:
+		backpath = mkbackbtn(backpath, 2)
+	return resources["error"] % (backpath, "Feature unavailable", "This feature is available in <div class=\"tier " + REQ_TIER + "\"></div> tier.", "<button onclick=\"goto('tiers', 3, true)\" class=\"highlighted\">Upgrade tier</button>" + button)
+def tierror_resp(REQ_TIER, backpath, button, where):
+	return response(tierror(REQ_TIER, backpath, button, where), 700)
 
 async def mkaccount(data):
 	global database
@@ -401,7 +413,10 @@ async def api(request):
 								updatedb()
 						except:
 							pass
-						mesgs = await librus.get_messages()
+						if not check_tier(data["username"], "plus"):
+							mesgs = -1
+						else:
+							mesgs = await librus.get_messages()
 						return response(json.dumps({
 							"messages": mesgs,
 							"luckynum": lucky
@@ -570,7 +585,11 @@ async def grades(request):
 						tempavg = round(sum(savgarr) / len(savgarr), 2)
 						if not koniec:
 							avgdict[s] = round(tempavg)
-						savg = "<code> | </code>Average: %.02f" % tempavg
+						if not check_tier(data["username"], "plus"):
+							tempavg = '<div class="tier plus"></div>'
+						else:
+							tempavg = "%.02f" % tempavg
+						savg = "<code> | </code>Average: %s" % tempavg
 					divz += """<div id="%s" class="hidden" style="display: none"><button class="back" onclick="showdiv('%s', 'main', true)"></button><br><div class="header">%s</div><div class="subheader grades">Grades: %s%s</div>%s""" % (s.lower(), s.lower(), s, len(result[s]), savg, sdivz)
 				score = 0
 				if len(avgdict) >= 3:
@@ -585,7 +604,23 @@ async def grades(request):
 				allocens = allocens[:50]
 				for ocen in allocens:
 					rcnt += ocen["string"]
-				return response(resources["grades"] % (avg, grades, page, avg, len(avgdict), score, averages, len(allocens), rcnt, divz), 200)
+				subjects = len(avgdict)
+				allocens = len(allocens)
+				hideavg = ""
+				hidercnt =""
+				REQ_TIER = "plus"
+				if not check_tier(data["username"], REQ_TIER):
+					rcnt = "<br>" + tierror(REQ_TIER, False, False, False)
+					allocens = "N/A"
+					grades = "Available in <div class=\"tier %s\"></div>" % REQ_TIER
+					hidercnt = "display:none"
+				REQ_TIER = "pro"
+				if not check_tier(data["username"], REQ_TIER):
+					averages = "<br>" + tierror(REQ_TIER, False, False, False)
+					score = avg = "Available in <div class=\"tier %s\"></div>" % REQ_TIER
+					subjects = "N/A"
+					hideavg = "display:none"
+				return response(resources["grades"] % (avg, grades, page, hideavg, avg, subjects, score, averages, hidercnt, allocens, rcnt, divz), 200)
 			return response(resources["error"] % ("", "Error", ERR_403, mktryagainbtn("/grades", 1)), 403)
 		return response("", 401)
 	except:
@@ -704,10 +739,27 @@ async def attendances_old(request):
 							color = "red"
 					page += """<button class="bubble unclickable %s"><div class="name">%s</div><div class="value"><i>%s</i>, %s</div><div class="value">Added by %s %s</div><div class="value">%s</div></button>""" % (color, x["Lesson"], x["Type"], x["Date"], x["AddedBy"]["FirstName"], x["AddedBy"]["LastName"], x["Added"])
 				wasted = "%sh %sm" % (math.floor(presences * 45 / 60), (presences * 45 % 60))
-				if lessons > 0:
-					return response(resources["attendancesold"] % (round((presences / lessons) * 100, 1), "%", presences, absences, lessons, wasted, page), 200)
-				else:
-					return response(resources["attendancesold"] % ("Unavailable", "", presences, absences, lessons, wasted, page), 200)
+				try:
+					pp = round((presences / lessons) * 100, 1)
+				except:
+					pp = "N/A "
+				op = ""
+				tier = ""
+				buttons = ""
+				REQ_TIER = "plus"
+				PLUS_TIER = check_tier(data["username"], REQ_TIER)
+				categs = ["Presences", "Excused absences", "Unexcused absences"]
+				colors = ["green", "yellow", "red"]
+				for x in colors:
+					onclick = ""
+					if PLUS_TIER:
+						onclick = 'onclick="hideattendances(this, \'' + x + '\')"'
+					clickable = "" if PLUS_TIER else "unclickable"
+					buttons += """<div %s class="checked %s">%s</div>""" % (onclick, clickable, categs[colors.index(x)])
+				if not PLUS_TIER:
+					op = "opacity: .4"
+					tier = REQ_TIER
+				return response(resources["attendancesold"] % (pp, "%", presences, absences, lessons, wasted, tier, op, buttons, page), 200)
 			return response(resources["error"] % (mkbackbtn("/more", 2), "Error", ERR_403, mktryagainbtn("/attendancesold", 2)), 403)
 		return response("", 401)
 	except:
@@ -718,6 +770,9 @@ async def attendances(request):
 	try:
 		data = await request.json()
 		if auth(data):
+			REQ_TIER = "pro"
+			if not check_tier(data["username"], REQ_TIER):
+				return tierror_resp(REQ_TIER, "/more", "Go to old Attendances", "attendancesold")
 			librus = Librus(SESSIONS.getL(data["username"]))
 			if await librus.mktoken(database[data["username"]]["l_login"], decrypt(database[data["username"]]["l_passwd"])):
 				SESSIONS.saveL(data["username"], librus.headers)
@@ -975,6 +1030,9 @@ async def messages(request):
 	try:
 		data = await request.json()
 		if auth(data):
+			REQ_TIER = "plus"
+			if not check_tier(data["username"], REQ_TIER):
+				return tierror_resp(REQ_TIER, "/more", False, False)
 			librus = Librus2(SESSIONS.getL2(data["username"]))
 			if await librus.mktoken(database[data["username"]]["l_login"], decrypt(database[data["username"]]["l_passwd"])):
 				SESSIONS.saveL2(data["username"], librus.cookies)
@@ -1003,6 +1061,9 @@ async def message(request):
 	try:
 		data = await request.json()
 		if auth(data):
+			REQ_TIER = "plus"
+			if not check_tier(data["username"], REQ_TIER):
+				return tierror_resp(REQ_TIER, "/more", False, False)
 			librus = Librus2(SESSIONS.getL2(data["username"]))
 			if await librus.mktoken(database[data["username"]]["l_login"], decrypt(database[data["username"]]["l_passwd"])):
 				SESSIONS.saveL2(data["username"], librus.cookies)
