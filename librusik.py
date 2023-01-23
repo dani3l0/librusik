@@ -14,13 +14,12 @@ import uuid
 from datetime import datetime, date, timedelta
 from glob import glob
 from urllib.parse import unquote
-
 from aiohttp import web
 from cryptography.fernet import Fernet
-
 import librus
 from librus import Librus, Librus2
 from sessionmanager import SessionManager
+
 
 CONFIG_DEFAULT = {
 	"max_users": 8,
@@ -31,7 +30,8 @@ CONFIG_DEFAULT = {
 	"ssl": False,
 	"readable_db": False,
 	"pubkey": "/etc/letsencrypt/live/my.domain.com/fullchain.pem",
-	"privkey": "/etc/letsencrypt/live/my.domain.com/privkey.pem"
+	"privkey": "/etc/letsencrypt/live/my.domain.com/privkey.pem",
+	"enable_tiers": False
 }
 
 
@@ -93,7 +93,7 @@ async def updatetitles():
 asyncio.gather(updatetitles())
 
 resources = {
-	"index": open("html/index.html", "r").read() % (config["subdirectory"]),
+	"index": open("html/index.html", "r").read() % (config["subdirectory"], ".tiers{display:none !important}" if config["enable_tiers"] else ""),
 	"home": open("html/home.html", "r").read(),
 	"grades": open("html/grades.html", "r").read(),
 	"more": open("html/more.html", "r").read(),
@@ -241,6 +241,16 @@ def predictAverage(hmm):
 		return fullgrade + 0.5
 	return fullgrade
 
+TIERS = ["demo", "free", "plus", "pro"]
+def check_tier(user, required_tier):
+	if config["enable_tiers"]:
+		required = TIERS.index(required_tier)
+		current = TIERS.index(database[user]["tier"])
+		return True if required <= current else False
+	else:
+		return True
+
+
 async def mkaccount(data):
 	global database
 	if config["max_users"] <= len(database):
@@ -274,6 +284,7 @@ async def mkaccount(data):
 		database[data["username"]]["grades_cleanup"] = False
 		database[data["username"]]["attendances_cleanup"] = False
 		database[data["username"]]["confetti"] = False
+		database[data["username"]]["tier"] = TIERS[0]
 		database[data["username"]]["joined"] = datetime.now().strftime('%d %b %Y')
 		timgs = glob("static/img/profile/*")
 		timg = []
@@ -353,7 +364,8 @@ async def api(request):
 						return response("", 200)
 				elif method == "get_me":
 					return JSONresponse({
-						"confetti": database[data["username"]]["confetti"]
+						"confetti": database[data["username"]]["confetti"],
+						"tier": database[data["username"]]["tier"]
 					}, 200)
 				elif method == "confetti":
 					if "value" in data and isinstance(data["value"], bool):
@@ -1045,7 +1057,7 @@ async def panelapi(request):
 						last_seen = -1
 						if x in LAST_SEEN_PEPS:
 							last_seen = LAST_SEEN_PEPS[x]
-						users.append({"first_name": database[x]["first_name"], "last_name": database[x]["last_name"], "username": x, "last_seen": last_seen, "joined": database[x]["joined"]})
+						users.append({"first_name": database[x]["first_name"], "last_name": database[x]["last_name"], "username": x, "last_seen": last_seen, "joined": database[x]["joined"], "tier": database[x]["tier"]})
 					maxusers = config["max_users"]
 					db_usage = round(len(users) / maxusers * 100)
 					db_size = round(os.stat("%s/database.json" % DATA_DIR).st_size / 10) / 100
@@ -1091,6 +1103,13 @@ async def panelapi(request):
 							if database[data["username"]]["custom_pic"]:
 								os.remove("static/img/profile/custom/%s" % (database[data["username"]]["custom_pic"]))
 							del database[data["username"]]
+							updatedb()
+							return response("", 200)
+						return response("", 403)
+				elif data["method"] == "changetier":
+					if "username" in data and isinstance(data["username"], str) and "tier" in data and data["tier"] in TIERS:
+						if data["username"] in database:
+							database[data["username"]]["tier"] = data["tier"]
 							updatedb()
 							return response("", 200)
 						return response("", 403)

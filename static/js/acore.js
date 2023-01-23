@@ -196,7 +196,7 @@ function refresh() {
 			accountnum.innerText = resp.userscount + " in total";
 			var accounts = "";
 			for (var i = 0; i < resp.userscount; i++) {
-				accounts += '<div class="user">' + resp.users[i].first_name + ' ' + resp.users[i].last_name + '<div class="username">' + resp.users[i].username + '</div><p class="last_seen">' + last_seen(resp.users[i].last_seen) + '</p><p class="joined">Joined ' + resp.users[i].joined + '</p><button onclick="deluser(\'' + resp.users[i].username + '\', \'' + resp.users[i].first_name + ' ' + resp.users[i].last_name + '\')">Delete</button><button onclick="resetpass(\'' + resp.users[i].username + '\', \'' + resp.users[i].first_name + ' ' + resp.users[i].last_name + '\')">Reset password</button></div>';
+				accounts += '<div class="user"><div class="fullname">' + resp.users[i].first_name + ' ' + resp.users[i].last_name + '</div><div class="username"><div class="tier ' + resp.users[i].tier + '"></div><div>' + resp.users[i].username + '</div></div><p class="last_seen">' + last_seen(resp.users[i].last_seen) + '</p><p class="joined">Joined ' + resp.users[i].joined + '</p><button onclick="deluser(\'' + resp.users[i].username + '\', \'' + resp.users[i].first_name + ' ' + resp.users[i].last_name + '\')">Delete</button><button onclick="resetpass(\'' + resp.users[i].username + '\', \'' + resp.users[i].first_name + ' ' + resp.users[i].last_name + '\')">Reset password</button><button onclick="show_tiers(this)">Set tier</button></div>';
 			}
 			if (accounts != accountlist.innerHTML) accountlist.innerHTML = accounts;
 			maxusers = resp.max_users;
@@ -231,6 +231,52 @@ function refresh() {
 		}
 		else if (data.status == 401) {
 			rmCookie();
+		}
+	});
+}
+function show_tiers(div) {
+	let username = div.parentNode.getElementsByClassName("username")[0].innerText;
+	let fullname = div.parentNode.getElementsByClassName("fullname")[0].innerText;
+	let tier = div.parentNode.getElementsByClassName("tier")[0].className.split(" ")[1];
+	let x = document.getElementById("selectos").children;
+	for (let i = 0; i < x.length; i++) {
+		if (x[i].innerText == tier) x[i].classList.add("selected");
+		else x[i].classList.remove("selected");
+	}
+	document.getElementById("tieruser").innerText = username;
+	document.getElementById("tieruser2").innerText = `(${fullname})`;
+	showdiv("userlist", "tiers");
+}
+function select_tier(e) {
+	let tier = e.innerText;
+	let x = e.parentNode.children;
+	for (let i = 0; i < x.length; i++) {
+		if (x[i].innerText == tier) x[i].classList.add("selected");
+		else x[i].classList.remove("selected");
+	}
+}
+function set_tier() {
+	let selected_tier = document.getElementById("selectos");
+	selected_tier = selected_tier.getElementsByClassName("selected")[0].innerText.toLowerCase();
+	let user = document.getElementById("tieruser").innerText;
+	console.log(selected_tier)
+	console.log(user)
+	buttons(false);
+	let cookie = getCookie();
+	post("panel/api", {
+		"method": "changetier",
+		"username": user,
+		"tier": selected_tier,
+		"name": cookie["name"],
+		"password": cookie["password"]
+	}, function(data) {
+		buttons();
+		if (data.status == 200) {
+			showdiv("tiers", "userlist");
+		}
+		else {
+			mkerr("err", "userlist", "Error", "Couldn't change desired user's tier.");
+			showdiv("tiers", "err");
 		}
 	});
 }

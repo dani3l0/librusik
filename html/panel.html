@@ -169,6 +169,19 @@
 			<br>
 			<button onclick="rmCookie()" class="highlighted">Yes, end session</button>
 		</div>
+		<div id="tiers" class="hidden" style="display:none">
+			<button class="back" onclick="showdiv('tiers', 'userlist', true)"></button>
+			<div class="header">Select tier</div>
+			<div class="subheader">Re-selecting demo tier will reset its countdown timer.</div>
+			<div class="forwho">For:&nbsp;&nbsp;&nbsp;<b id="tieruser"></b> <b id="tieruser2"></b></div>
+			<div class="selectos" id="selectos">
+				<div class="demo" onclick="select_tier(this)">demo</div>
+				<div class="free" onclick="select_tier(this)">free</div>
+				<div class="plus" onclick="select_tier(this)">plus</div>
+				<div class="pro" onclick="select_tier(this)">pro</div>
+			</div>
+			<button class="highlighted" onclick="set_tier()">Save & return</button><br>
+		</div>
 		<div id="userlist" class="hidden" style="display:none">
 			<button class="back" onclick="showdiv('userlist', 'main', true)"></button>
 			<div class="header" style="margin-bottom: 12px">Accounts</div>

@@ -69,6 +69,7 @@ function indexpage() {
 	}, function(data) {
 		let resp = JSON.parse(data.responseText);
 		if (resp.confetti) konfeti();
+		getByID("tier").classList.add(resp.tier);
 	});
 }
 function loginpage() {

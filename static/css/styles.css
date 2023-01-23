@@ -7,12 +7,12 @@
 	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 @font-face {
-  font-family: 'Quicksand';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url(../font/Quicksand_ext.woff2) format('woff2');
-  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+	font-family: 'Quicksand';
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	src: url(../font/Quicksand_ext.woff2) format('woff2');
+	unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 @font-face {
 	font-family: 'Quicksand';
@@ -23,12 +23,12 @@
 	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 @font-face {
-  font-family: 'Quicksand';
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url(../font/Quicksand-Bold_ext.woff2) format('woff2');
-  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+	font-family: 'Quicksand';
+	font-style: normal;
+	font-weight: 700;
+	font-display: swap;
+	src: url(../font/Quicksand-Bold_ext.woff2) format('woff2');
+	unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 @font-face {
 	font-family: 'Material Symbols Rounded';
@@ -457,7 +457,7 @@ svg {
 }
 .item > .name {
 	text-align: left;
-    max-width: calc(100% - 36px);
+		max-width: calc(100% - 36px);
 }
 .item > .value {
 	font-weight: bold;
@@ -645,16 +645,16 @@ svg {
 	transition: opacity .3s;
 }
 #userpic:after {
-    content: "Click to change";
-    position: absolute;
-    font-size: 14px;
-    top: 50%;
-    left: 50%;
-    z-index: 1;
-    opacity: 0;
-    transform: translate(-50%, -50%) scale(1.15);
-    color: #DDD !important;
-    transition: opacity .3s, transform .3s;
+		content: "Click to change";
+		position: absolute;
+		font-size: 14px;
+		top: 50%;
+		left: 50%;
+		z-index: 1;
+		opacity: 0;
+		transform: translate(-50%, -50%) scale(1.15);
+		color: #DDD !important;
+		transition: opacity .3s, transform .3s;
 }
 #userpic:hover:before {
 	opacity: .6;
@@ -693,10 +693,10 @@ svg {
 	border-radius: 1000px;
 	display: inline-block;
 	overflow: hidden;
-    margin: 8px;
-    padding: 0;
-    cursor: pointer;
-    transition: width .3s, height .3s, background .3s;
+		margin: 8px;
+		padding: 0;
+		cursor: pointer;
+		transition: width .3s, height .3s, background .3s;
 }
 .pplist > button:hover > img {
 	transform: scale(1.13);
@@ -739,10 +739,10 @@ svg {
 	transform: translate(-50%, -150%);
 }
 .credentials > .value {
-    opacity: 0.7;
-    overflow-x: hidden;
+		opacity: 0.7;
+		overflow-x: hidden;
 	white-space: nowrap;
-    user-select: text;
+		user-select: text;
 }
 .credentials:hover {
 	border-radius: 0 0 26px 26px;
@@ -1050,6 +1050,38 @@ iframe {
 #darken.hidden {
 	opacity: 0;
 }
+.tier {
+	margin-left: 4px;
+	font-size: 10px;
+	text-transform: uppercase;
+	color: #222;
+	border-radius: 6px;
+	padding: 4px 6px;
+}
+.demo {
+	background: linear-gradient(35deg, #FB0, #6F0) !important;
+}
+.tier.demo:after {
+	content: "demo";
+}
+.free {
+	background: linear-gradient(35deg, #F33, #FB0) !important;
+}
+.tier.free:after {
+	content: "free";
+}
+.plus {
+	background: linear-gradient(35deg, #96F, #F46) !important;
+}
+.tier.plus:after {
+	content: "plus";
+}
+.pro {
+	background: linear-gradient(35deg, #0F4, #0FF) !important;
+}
+.tier.pro:after {
+	content: "pro";
+}
 @media (max-width: 420px) {
 	.circ {
 		width: 180px;
@@ -1061,10 +1093,10 @@ iframe {
 	.circ > .tooltip {
 		font-size: 11px;
 	}
-  .pplist > button {
-  	width: 92px;
-  	height: 92px;
-  }
+	.pplist > button {
+		width: 92px;
+		height: 92px;
+	}
 	.moreitem {
 		height: 150px;
 		width: 150px;
