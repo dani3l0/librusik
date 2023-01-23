@@ -126,6 +126,11 @@
 	width: 0;
 	margin-right: auto;
 }
+.demos {
+	color: #666;
+	margin-top: -6px;
+	font-size: 11px;
+}
 .selectos > div {
 	display: inline-block;
 	background: #333;

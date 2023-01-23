@@ -196,7 +196,9 @@ function refresh() {
 			accountnum.innerText = resp.userscount + " in total";
 			var accounts = "";
 			for (var i = 0; i < resp.userscount; i++) {
-				accounts += '<div class="user"><div class="fullname">' + resp.users[i].first_name + ' ' + resp.users[i].last_name + '</div><div class="username"><div class="tier ' + resp.users[i].tier + '"></div><div>' + resp.users[i].username + '</div></div><p class="last_seen">' + last_seen(resp.users[i].last_seen) + '</p><p class="joined">Joined ' + resp.users[i].joined + '</p><button onclick="deluser(\'' + resp.users[i].username + '\', \'' + resp.users[i].first_name + ' ' + resp.users[i].last_name + '\')">Delete</button><button onclick="resetpass(\'' + resp.users[i].username + '\', \'' + resp.users[i].first_name + ' ' + resp.users[i].last_name + '\')">Reset password</button><button onclick="show_tiers(this)">Set tier</button></div>';
+				let demos = '<p class="demos">' + resp.users[i].demotier + ' days left</p>'
+				if (resp.users[i].demotier == -1) demos = "";
+				accounts += '<div class="user"><div class="fullname">' + resp.users[i].first_name + ' ' + resp.users[i].last_name + '</div><div class="username"><div class="tier ' + resp.users[i].tier + '"></div><div>' + resp.users[i].username + '</div></div><p class="last_seen">' + last_seen(resp.users[i].last_seen) + '</p><p class="joined">Joined ' + resp.users[i].joined + '</p>' + demos + '<button onclick="deluser(\'' + resp.users[i].username + '\', \'' + resp.users[i].first_name + ' ' + resp.users[i].last_name + '\')">Delete</button><button onclick="resetpass(\'' + resp.users[i].username + '\', \'' + resp.users[i].first_name + ' ' + resp.users[i].last_name + '\')">Reset password</button><button onclick="show_tiers(this)">Set tier</button></div>';
 			}
 			if (accounts != accountlist.innerHTML) accountlist.innerHTML = accounts;
 			maxusers = resp.max_users;

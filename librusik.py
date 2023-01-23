@@ -245,6 +245,8 @@ def predictAverage(hmm):
 TIERS = ["demo", "free", "plus", "pro"]
 def check_tier(user, required_tier):
 	if config["enable_tiers"]:
+		if database[user]["tier"] == "demo":
+			return True
 		required = TIERS.index(required_tier)
 		current = TIERS.index(database[user]["tier"])
 		return True if required <= current else False
@@ -259,9 +261,23 @@ def tierror(REQ_TIER, backpath, button, where):
 		backpath = ""
 	else:
 		backpath = mkbackbtn(backpath, 2)
-	return resources["error"] % (backpath, "Feature unavailable", "This feature is available in <div class=\"tier " + REQ_TIER + "\"></div> tier.", "<button onclick=\"goto('tiers', 3, true)\" class=\"highlighted\">Upgrade tier</button>" + button)
+	return resources["error"] % (backpath, "Feature unavailable", "This feature is available in <div class=\"tier " + REQ_TIER + "\"></div> tier.", "<button onclick=\"goto('settings', 3, true)\" class=\"highlighted\">Upgrade tier</button>" + button)
 def tierror_resp(REQ_TIER, backpath, button, where):
 	return response(tierror(REQ_TIER, backpath, button, where), 700)
+
+def demoleft(user):
+	if database[user]["tier"] == TIERS[0]:
+		joined = datetime.strptime(database[user]["joined"], '%d %b %Y')
+		now = datetime.now()
+		diff = 7 - (now - joined).days
+		return 0 if diff <= 0 else diff
+	return -1
+def demo_has_access(user):
+	return not demoleft(user) == 0
+def demo_err(user):
+	if not demo_has_access(user):
+		return tierror_resp("free", False, False, False)
+	return False
 
 async def mkaccount(data):
 	global database
@@ -377,7 +393,8 @@ async def api(request):
 				elif method == "get_me":
 					return JSONresponse({
 						"confetti": database[data["username"]]["confetti"],
-						"tier": database[data["username"]]["tier"]
+						"tier": database[data["username"]]["tier"],
+						"demoleft": demoleft(data["username"])
 					}, 200)
 				elif method == "confetti":
 					if "value" in data and isinstance(data["value"], bool):
@@ -398,6 +415,8 @@ async def api(request):
 							return response("", 200)
 						return response(make, 403)
 				elif method == "getstuff":
+					demo = demo_err(data["username"])
+					if demo != False: return demo
 					librus = Librus(SESSIONS.getL(data["username"]))
 					if await librus.mktoken(database[data["username"]]["l_login"], decrypt(database[data["username"]]["l_passwd"])):
 						SESSIONS.saveL(data["username"], librus.headers)
@@ -423,6 +442,10 @@ async def api(request):
 						}), 200)
 					return response("", 403)
 				elif method == "delaccount":
+					if not check_tier(data["username"], "free"):
+						return response("", 401)
+					demo = demo_err(data["username"])
+					if demo != False: return demo
 					if data["username"] in LAST_SEEN_PEPS:
 						del LAST_SEEN_PEPS[data["username"]]
 					try:
@@ -487,6 +510,8 @@ async def home(request):
 	try:
 		data = await request.json()
 		if auth(data):
+			demo = demo_err(data["username"])
+			if demo != False: return demo
 			now = datetime.now()
 			day = now.strftime("%d")
 			month = now.strftime("%B, %Y")
@@ -525,6 +550,8 @@ async def grades(request):
 	try:
 		data = await request.json()
 		if auth(data):
+			demo = demo_err(data["username"])
+			if demo != False: return demo
 			librus = Librus(SESSIONS.getL(data["username"]))
 			if await librus.mktoken(database[data["username"]]["l_login"], decrypt(database[data["username"]]["l_passwd"])):
 				SESSIONS.saveL(data["username"], librus.headers)
@@ -631,6 +658,8 @@ async def more(request):
 	try:
 		data = await request.json()
 		if auth(data):
+			demo = demo_err(data["username"])
+			if demo != False: return demo
 			return response(resources["more"], 200)
 		return response("", 401)
 	except:
@@ -662,7 +691,7 @@ async def settings(request):
 			confeti = ""
 			if database[data["username"]]["confetti"]:
 				confeti = "ed"
-			return response(resources["settings"] % (f + database[data["username"]]["profile_pic"], database[data["username"]]["first_name"], database[data["username"]]["last_name"], data["username"], resources["about"], imgs, parseDumbs(database[data["username"]]["l_login"]), parseDumbs(decrypt(database[data["username"]]["l_passwd"])), confeti, grades_cleanup, atends_cleanup), 200)
+			return response(resources["settings"] % (f + database[data["username"]]["profile_pic"], database[data["username"]]["first_name"], database[data["username"]]["last_name"], data["username"], resources["tiers"], resources["about"], imgs, parseDumbs(database[data["username"]]["l_login"]), parseDumbs(decrypt(database[data["username"]]["l_passwd"])), confeti, grades_cleanup, atends_cleanup), 200)
 		return response("", 401)
 	except:
 		tr = traceback.format_exc().replace(LIBRUSIK_PATH, "")
@@ -672,6 +701,8 @@ async def timetable(request):
 	try:
 		data = await request.json()
 		if auth(data):
+			demo = demo_err(data["username"])
+			if demo != False: return demo
 			librus = Librus(SESSIONS.getL(data["username"]))
 			if await librus.mktoken(database[data["username"]]["l_login"], decrypt(database[data["username"]]["l_passwd"])):
 				SESSIONS.saveL(data["username"], librus.headers)
@@ -718,6 +749,8 @@ async def attendances_old(request):
 	try:
 		data = await request.json()
 		if auth(data):
+			demo = demo_err(data["username"])
+			if demo != False: return demo
 			librus = Librus(SESSIONS.getL(data["username"]))
 			if await librus.mktoken(database[data["username"]]["l_login"], decrypt(database[data["username"]]["l_passwd"])):
 				SESSIONS.saveL(data["username"], librus.headers)
@@ -770,6 +803,8 @@ async def attendances(request):
 	try:
 		data = await request.json()
 		if auth(data):
+			demo = demo_err(data["username"])
+			if demo != False: return demo
 			REQ_TIER = "pro"
 			if not check_tier(data["username"], REQ_TIER):
 				return tierror_resp(REQ_TIER, "/more", "Go to old Attendances", "attendancesold")
@@ -888,6 +923,8 @@ async def exams(request):
 	try:
 		data = await request.json()
 		if auth(data):
+			demo = demo_err(data["username"])
+			if demo != False: return demo
 			librus = Librus(SESSIONS.getL(data["username"]))
 			if await librus.mktoken(database[data["username"]]["l_login"], decrypt(database[data["username"]]["l_passwd"])):
 				SESSIONS.saveL(data["username"], librus.headers)
@@ -928,6 +965,8 @@ async def freedays(request):
 	try:
 		data = await request.json()
 		if auth(data):
+			demo = demo_err(data["username"])
+			if demo != False: return demo
 			librus = Librus(SESSIONS.getL(data["username"]))
 			if await librus.mktoken(database[data["username"]]["l_login"], decrypt(database[data["username"]]["l_passwd"])):
 				SESSIONS.saveL(data["username"], librus.headers)
@@ -962,6 +1001,8 @@ async def teacherfreedays(request):
 	try:
 		data = await request.json()
 		if auth(data):
+			demo = demo_err(data["username"])
+			if demo != False: return demo
 			librus = Librus(SESSIONS.getL(data["username"]))
 			if await librus.mktoken(database[data["username"]]["l_login"], decrypt(database[data["username"]]["l_passwd"])):
 				SESSIONS.saveL(data["username"], librus.headers)
@@ -984,6 +1025,8 @@ async def parentteacherconferences(request):
 	try:
 		data = await request.json()
 		if auth(data):
+			demo = demo_err(data["username"])
+			if demo != False: return demo
 			librus = Librus(SESSIONS.getL(data["username"]))
 			if await librus.mktoken(database[data["username"]]["l_login"], decrypt(database[data["username"]]["l_passwd"])):
 				SESSIONS.saveL(data["username"], librus.headers)
@@ -1003,6 +1046,8 @@ async def school(request):
 	try:
 		data = await request.json()
 		if auth(data):
+			demo = demo_err(data["username"])
+			if demo != False: return demo
 			librus = Librus(SESSIONS.getL(data["username"]))
 			if await librus.mktoken(database[data["username"]]["l_login"], decrypt(database[data["username"]]["l_passwd"])):
 				SESSIONS.saveL(data["username"], librus.headers)
@@ -1030,6 +1075,8 @@ async def messages(request):
 	try:
 		data = await request.json()
 		if auth(data):
+			demo = demo_err(data["username"])
+			if demo != False: return demo
 			REQ_TIER = "plus"
 			if not check_tier(data["username"], REQ_TIER):
 				return tierror_resp(REQ_TIER, "/more", False, False)
@@ -1061,6 +1108,8 @@ async def message(request):
 	try:
 		data = await request.json()
 		if auth(data):
+			demo = demo_err(data["username"])
+			if demo != False: return demo
 			REQ_TIER = "plus"
 			if not check_tier(data["username"], REQ_TIER):
 				return tierror_resp(REQ_TIER, "/more", False, False)
@@ -1091,6 +1140,8 @@ async def message_download_file(request):
 			"password": cookie["password"][::-1]
 		}
 		if auth(data):
+			demo = demo_err(data["username"])
+			if demo != False: return demo
 			librus = Librus2(SESSIONS.getL2(data["username"]))
 			if await librus.mktoken(database[data["username"]]["l_login"], decrypt(database[data["username"]]["l_passwd"])):
 				SESSIONS.saveL2(data["username"], librus.cookies)
@@ -1118,7 +1169,7 @@ async def panelapi(request):
 						last_seen = -1
 						if x in LAST_SEEN_PEPS:
 							last_seen = LAST_SEEN_PEPS[x]
-						users.append({"first_name": database[x]["first_name"], "last_name": database[x]["last_name"], "username": x, "last_seen": last_seen, "joined": database[x]["joined"], "tier": database[x]["tier"]})
+						users.append({"first_name": database[x]["first_name"], "last_name": database[x]["last_name"], "username": x, "last_seen": last_seen, "joined": database[x]["joined"], "tier": database[x]["tier"], "demotier": demoleft(x)})
 					maxusers = config["max_users"]
 					db_usage = round(len(users) / maxusers * 100)
 					db_size = round(os.stat("%s/database.json" % DATA_DIR).st_size / 10) / 100

@@ -70,6 +70,13 @@ function indexpage() {
 		let resp = JSON.parse(data.responseText);
 		if (resp.confetti) konfeti();
 		getByID("tier").classList.add(resp.tier);
+		if (resp.tier == "demo") {
+			getByID("demotier").style.display = null;
+			if (resp.demoleft != 0) getByID("demodays").innerText = resp.demoleft;
+			else {
+				getByID("demotext").innerHTML = "Your subscription has ended. You can't use Librusik for now.<br>To upgrade your tier, please <a style=\"color: #68F;text-decoration:underline;cursor:pointer;font-weight:bold\" href='path/to/somewhere.html'>leave a message</b>.";
+			}
+		}
 	});
 }
 function loginpage() {

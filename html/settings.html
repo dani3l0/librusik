@@ -5,6 +5,7 @@
 	<div class="headline">%s %s</div>
 	<div class="username">%s</div>
 	<button onclick="showdiv('settings', 'logout')" class="highlighted">Log out</button>
+	<button onclick="showdiv('settings', 'tiers')" style="background: #FB0;color: #222;">Upgrade tier</button>
 	<br>
 	<button class="option" onclick="showdiv('settings', 'features')">
 		<div class="icon">auto_awesome</div>
@@ -35,6 +36,7 @@
 		</div>
 	</button>
 </div>
+<div class="hidden" id="tiers" style="display:none"><button class="back" onclick="showdiv('tiers', 'settings', true)"></button><br>%s</div>
 <div class="hidden" id="about" style="display:none"><button class="back" onclick="showdiv('about', 'settings', true)"></button><br>%s</div>
 <div class="hidden" id="profilepic" style="display:none">
 	<button class="back" onclick="showdiv('profilepic', 'settings', true)"></button>

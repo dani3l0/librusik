@@ -1084,6 +1084,13 @@ iframe {
 .tier.pro:after {
 	content: "pro";
 }
+#demotier {
+	background: #FB0;
+	border-radius: 16px;
+	padding: 14px 16px;
+	color: #222;
+	margin-top: 12px;
+}
 @media (max-width: 420px) {
 	.circ {
 		width: 180px;
