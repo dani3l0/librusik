@@ -1037,6 +1037,10 @@ iframe {
 	font-size: 14px;
 	margin-bottom: 12px;
 }
+.next > * {
+	display: inline-block;
+	vertical-align: middle;
+}
 #darken {
 	background: #222;
 	opacity: .8;

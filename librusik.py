@@ -940,7 +940,9 @@ async def exams(request):
 						subject_closest = x["Lesson"]
 					page += """<button class="bubble unclickable"><div class="name">%s</div><div class="value"><b>%s, %s - %s</b></div><div class="value">%s</div><div class="value"><i>%s</i></div><div class="value">Added by %s %s</div><div class="value">%s</div></button>""" % (x["Lesson"], x["Date"], x["StartTime"][:-3], x["EndTime"][:-3], x["Type"].title(), parseDumbs(x["Content"]), x["AddedBy"]["FirstName"], x["AddedBy"]["LastName"], x["AddDate"])
 				nextin = "No exams so far"
-				if subject_closest:
+				if not check_tier(data["username"], "plus"):
+					nextin = 'Countdown available in <div class="tier plus"></div> tier.'
+				elif subject_closest:
 					first = "Next in"
 					tm = date_closest
 					daysto = (date_closest - now).days + 1
@@ -982,7 +984,9 @@ async def freedays(request):
 						free_closest = x["Name"]
 					page += """<button class="bubble unclickable"><div class="name">%s</div><div class="value"><code>From &nbsp</code>%s</div><div class="value"><code>To &nbsp&nbsp&nbsp</code>%s</div></button>""" % (x["Name"], x["DateFrom"], x["DateTo"])
 				nextin = "No free days in the future :("
-				if free_closest:
+				if not check_tier(data["username"], "plus"):
+					nextin = 'Countdown available in <div class="tier plus"></div> tier.'
+				elif free_closest:
 					nice = ""
 					daysto = (date_closest - now).days + 1
 					if daysto == 1:
