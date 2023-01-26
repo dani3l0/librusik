@@ -261,8 +261,6 @@ function set_tier() {
 	let selected_tier = document.getElementById("selectos");
 	selected_tier = selected_tier.getElementsByClassName("selected")[0].innerText.toLowerCase();
 	let user = document.getElementById("tieruser").innerText;
-	console.log(selected_tier)
-	console.log(user)
 	buttons(false);
 	let cookie = getCookie();
 	post("panel/api", {

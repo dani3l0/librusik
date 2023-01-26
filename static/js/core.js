@@ -680,7 +680,6 @@ function hideattendances(button, color) {
 	c.contains("checked") ? c.remove("checked") : c.add("checked");
 	for (let i = 0; i < elements.length; i++) {
 		let cl = elements[i].style;
-		console.log(cl)
 		button.classList.contains("checked") ? cl.display = null : cl.display = "none";
 	}
 }
