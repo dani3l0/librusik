@@ -92,8 +92,10 @@ async def updatetitles():
 
 asyncio.gather(updatetitles())
 
+hidetiers = "" if config["enable_tiers"] else ".tiers{display:none !important}"
+
 resources = {
-	"index": open("html/index.html", "r").read() % (config["subdirectory"], ".tiers{display:none !important}" if config["enable_tiers"] else ""),
+	"index": open("html/index.html", "r").read() % (config["subdirectory"], hidetiers),
 	"home": open("html/home.html", "r").read(),
 	"grades": open("html/grades.html", "r").read(),
 	"more": open("html/more.html", "r").read(),
@@ -111,7 +113,7 @@ resources = {
 	"login": open("html/login.html", "r").read(),
 	"about": open("html/about.html", "r").read(),
 	"tiers": open("html/tiers.html", "r").read(),
-	"panel": open("html/panel.html", "r").read() % config["subdirectory"],
+	"panel": open("html/panel.html", "r").read() % (config["subdirectory"], hidetiers),
 	"panellogin": open("html/panellogin.html", "r").read() % config["subdirectory"],
 	"error": open("html/error.html", "r").read(),
 	"errorpage": open("html/geterror.html", "r").read(),
