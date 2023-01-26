@@ -239,7 +239,7 @@ function refresh() {
 function show_tiers(div) {
 	let username = div.parentNode.getElementsByClassName("username")[0].innerText;
 	let fullname = div.parentNode.getElementsByClassName("fullname")[0].innerText;
-	let tier = div.parentNode.getElementsByClassName("tier")[0].className.split(" ")[1];
+	let tier = div.parentNode.getElementsByClassName("tier")[0].className.split(" ")[2];
 	let x = document.getElementById("selectos").children;
 	for (let i = 0; i < x.length; i++) {
 		if (x[i].innerText == tier) x[i].classList.add("selected");
