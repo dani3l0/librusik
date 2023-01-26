@@ -91,6 +91,27 @@ Go to [localhost:7777/panel](http://localhost:7777/panel) to manage your Librusi
 
 `readable_db` - if set to `true`, database contents will be stored as multi-line, human-readable JSON (results will appear upon first database change)
 
+`enable_tiers` - when `true`, Librusik will show a special UI for managing available features for each user.
+
+-----
+
+## Tiers
+
+Tiers is a per-user feature management system that can be used to prevent random people from using your instance (well, that wasn't the original purpose actually).
+
+So, users can be classed in a different categories, 
+
+- `DEMO` - Default for new users. Has access to all features available in `PRO` for 7 days. After this period, all features become unavailable and tier upgrade is required to continue using Librusik.
+
+- `FREE` - all basic features are available like grades, timetable, free days etc. It has no time limit.
+
+- `PLUS` - includes some extra features, like per-subject average calculation, countdowns in Exams & Free days and a possibility to list & read messages.
+
+- `PRO` - has access to all implemented features available in Librusik. Those include final average calculation, AttendancesExtendedUI and message attachments.
+
+
+You can provide your tier requirements in `html/tiers.html` file.
+
 -----
 
 ## Querying the API
