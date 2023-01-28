@@ -560,9 +560,10 @@ svg {
 	text-align: left;
 	font-family: monospace;
 }
-.message > a {
+a {
 	color: #68F;
-	text-decoration: none;
+	text-decoration: underline;
+	cursor: pointer;
 }
 .message > a:hover {
 	text-decoration: underline;

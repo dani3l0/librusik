@@ -1,4 +1,4 @@
-<img src="screenshots/librusik.png" alt="Status" width="600"/>
+<img src="screenshots/librusik.png" alt="Preview photo" width="600"/>
 
 **As I am graduating from school this year, after June 2023 I will lose access to Librus.**
 
@@ -45,6 +45,8 @@
 
 ## Installation
 
+**WARNING:** If you update your existing Librusik installation be careful, as config and database structures might change. Missing config/database entries will lead to app crash. So, **always do a backup before updating.**
+
 __1. Clone the repo:__
 ```
 git clone https://gitlab.com/dani3l0/librusik Librusik
@@ -83,15 +85,22 @@ Go to [localhost:7777/panel](http://localhost:7777/panel) to manage your Librusi
 
 `subdirectory` - an absolute path for running under reverse proxy (like nginx), I guess it's still broken
 
+`readable_db` - if set to `true`, database contents will be stored as multi-line, human-readable JSON (results will appear upon first database change)
+
 `ssl` - whether to enable HTTPS or not
 
 `pubkey` - path to public key used for HTTPS
 
 `privkey` - path to private key used for HTTPS
 
-`readable_db` - if set to `true`, database contents will be stored as multi-line, human-readable JSON (results will appear upon first database change)
+`contact_uri` - URI (a link) where user can contact with you. As it's passed directly to `a` HTML element, values can be like `mailto:`, `tel:`, `https://`, `tg://`, `mumble://` etc.
 
 `enable_tiers` - when `true`, Librusik will show a special UI for managing available features for each user.
+
+`tiers_text` - a bottom text shown below tier list in _Settings -> Upgrade tier_.
+
+`tiers_requirements` - a list of requirements for each tier. Those will be shown under _Settings -> Upgrade tier_.
+
 
 -----
 

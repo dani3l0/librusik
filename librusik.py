@@ -27,11 +27,18 @@ CONFIG_DEFAULT = {
 	"passwd": "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918",
 	"port": 7777,
 	"subdirectory": "/",
-	"ssl": False,
 	"readable_db": False,
+	"ssl": False,
 	"pubkey": "/etc/letsencrypt/live/my.domain.com/fullchain.pem",
 	"privkey": "/etc/letsencrypt/live/my.domain.com/privkey.pem",
-	"enable_tiers": False
+	"contact_uri": "mailto:librusik@my.domain",
+	"enable_tiers": False,
+	"tiers_text": "Tiers are enabled to prevent random people using this instance.",
+	"tiers_requirements": {
+		"free": "To get, say thank you.",
+		"plus": "To get, buy me a beer.",
+		"pro": "To get, solve the <a target='blank' href='https://www.youtube.com/watch?v=dQw4w9WgXcQ'>puzzle</a>."
+	}
 }
 
 
@@ -111,8 +118,8 @@ resources = {
 	"school": open("html/school.html", "r").read(),
 	"settings": open("html/settings.html", "r").read(),
 	"login": open("html/login.html", "r").read(),
-	"about": open("html/about.html", "r").read(),
-	"tiers": open("html/tiers.html", "r").read(),
+	"about": open("html/about.html", "r").read() % config["contact_uri"],
+	"tiers": open("html/tiers.html", "r").read() % (config["tiers_requirements"]["free"], config["tiers_requirements"]["plus"], config["tiers_requirements"]["pro"], config["tiers_text"]),
 	"panel": open("html/panel.html", "r").read() % (config["subdirectory"], hidetiers),
 	"panellogin": open("html/panellogin.html", "r").read() % config["subdirectory"],
 	"error": open("html/error.html", "r").read(),
@@ -268,7 +275,7 @@ def tierror_resp(REQ_TIER, backpath, button, where):
 	return response(tierror(REQ_TIER, backpath, button, where), 700)
 
 def demoleft(user):
-	if database[user]["tier"] == TIERS[0]:
+	if database[user]["tier"] == TIERS[0] and config["enable_tiers"]:
 		joined = datetime.strptime(database[user]["joined"], '%d %b %Y')
 		now = datetime.now()
 		diff = 7 - (now - joined).days
@@ -396,7 +403,8 @@ async def api(request):
 					return JSONresponse({
 						"confetti": database[data["username"]]["confetti"],
 						"tier": database[data["username"]]["tier"],
-						"demoleft": demoleft(data["username"])
+						"demoleft": demoleft(data["username"]),
+						"contact": config["contact_uri"]
 					}, 200)
 				elif method == "confetti":
 					if "value" in data and isinstance(data["value"], bool):
