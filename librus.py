@@ -1,4 +1,5 @@
 import asyncio, aiohttp, json, os
+import traceback
 from bs4 import BeautifulSoup
 from datetime import datetime, timedelta
 
@@ -7,31 +8,93 @@ PATH_ = os.path.dirname(os.path.abspath(__file__)) + "/"
 
 class Librus:
 	def __init__(self, session):
-		self.host = "https://api.librus.pl/"
-		self.headers = {"Authorization": "Basic Mjg6ODRmZGQzYTg3YjAzZDNlYTZmZmU3NzdiNThiMzMyYjE="}
+		self.host = "https://synergia.librus.pl/gateway/api/2.0/"
+		self.headers = None
 		if session != None:
 			self.headers = session
 
-	async def request(self, link, postdata):
+	# Used in deprecated auth method
+	# async def request(self, link, postdata):
+	# 	arr_index = datetime.now().weekday()
+	# 	for i in range(0, 5):
+	# 		try:
+	# 			async with aiohttp.ClientSession(headers = self.headers) as session:
+	# 				async with session.post(link, data = postdata, timeout = 5) as resp:
+	# 					REQUESTS[arr_index] += 1
+	# 					if resp.status == 200:
+	# 						return {"code": resp.status, "text": await resp.text()}
+	# 					elif resp.status == 401:
+	# 						return {"code": 000, "text": None}
+	# 		except:
+	# 			pass
+	# 	return {"code": 000, "text": None}
+
+	# Old auth method (stopped working on 27 January 2023)
+	# async def mktoken(self, login, passw):
+	# 	if (await self.get_data("Me")):
+	# 		return True
+	# 	try:
+	# 		self.headers = {"Authorization": "Basic Mjg6ODRmZGQzYTg3YjAzZDNlYTZmZmU3NzdiNThiMzMyYjE="}
+	# 		response = await self.request(self.host + "OAuth/Token", {
+	# 			"username": login,
+	# 			"password": passw,
+	# 			"librus_long_term_token": "1",
+	# 			"grant_type": "password"
+	# 		})
+	# 		if response["code"] == 200:
+	# 			token = json.loads(response["text"])["access_token"]
+	# 			self.headers["Authorization"] = "Bearer " + token
+	# 			return True
+	# 		return False
+	# 	except:
+	# 		return False
+
+	async def activate_api_access(self):
 		arr_index = datetime.now().weekday()
 		for i in range(0, 5):
 			try:
-				async with aiohttp.ClientSession(headers = self.headers) as session:
-					async with session.post(link, data = postdata, timeout = 5) as resp:
-						REQUESTS[arr_index] += 1
-						if resp.status == 200:
-							return {"code": resp.status, "text": await resp.text()}
-						elif resp.status == 401:
-							return {"code": 000, "text": None}
+				async with aiohttp.ClientSession(cookies = self.headers, headers={"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36"}) as session:
+					resp = await session.get("https://synergia.librus.pl/gateway/api/2.0/Auth/TokenInfo", timeout = 5)
+					REQUESTS[arr_index] += 1
+					identifier =  (await resp.json())["UserIdentifier"]
+					resp2 = await session.get("https://synergia.librus.pl/gateway/api/2.0/Auth/UserInfo/" + identifier, timeout = 5)
+					REQUESTS[arr_index] += 1
+					return await resp2.status == 200
+
 			except:
 				pass
 		return {"code": 000, "text": None}
+
+	async def mktoken(self, login, passw):
+		if (await self.get_data("Me")):
+			return True
+		try:
+			async with aiohttp.ClientSession() as session:
+				arr_index = datetime.now().weekday()
+				REQUESTS[arr_index] += 1
+				resp = await session.get("https://api.librus.pl/OAuth/Authorization?client_id=46&response_type=code&scope=mydata")
+				form = aiohttp.FormData()
+				form.add_field("action", "login")
+				form.add_field("login", login)
+				form.add_field("pass", passw)
+				REQUESTS[arr_index] += 1
+				resp = await session.post("https://api.librus.pl/OAuth/Authorization?client_id=46", data = form)
+				REQUESTS[arr_index] += 1
+				resp = await session.get("https://api.librus.pl/OAuth/Authorization/Grant?client_id=46")
+				self.headers = resp.cookies
+				ok = resp.status == 200
+				res = False
+				if ok:
+					res = await self.activate_api_access()
+				return res
+		except:
+			return False
 
 	async def curl(self, link):
 		arr_index = datetime.now().weekday()
 		for i in range(0, 5):
 			try:
-				async with aiohttp.ClientSession(headers = self.headers) as session:
+				async with aiohttp.ClientSession(cookies = self.headers) as session:
 					async with session.get(link, timeout = 5) as resp:
 						REQUESTS[arr_index] += 1
 						if resp.status == 200:
@@ -42,27 +105,8 @@ class Librus:
 				pass
 		return {"code": 000, "text": None}
 
-	async def mktoken(self, login, passw):
-		if (await self.get_data("")):
-			return True
-		try:
-			self.headers = {"Authorization": "Basic Mjg6ODRmZGQzYTg3YjAzZDNlYTZmZmU3NzdiNThiMzMyYjE="}
-			response = await self.request(self.host + "OAuth/Token", {
-				"username": login,
-				"password": passw,
-				"librus_long_term_token": "1",
-				"grant_type": "password"
-			})
-			if response["code"] == 200:
-				token = json.loads(response["text"])["access_token"]
-				self.headers["Authorization"] = "Bearer " + token
-				return True
-			return False
-		except:
-			return False
-
 	async def get_data(self, method):
-		r = await self.curl(self.host + "2.0/" + method)
+		r = await self.curl(self.host + method)
 		if r["code"] != 200:
 			return None
 		return json.loads(r["text"])
