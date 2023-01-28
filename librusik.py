@@ -44,12 +44,15 @@ CONFIG_DEFAULT = {
 
 DATA_DIR = "data"
 
+PROFILE_PIC_DIR = "%s/profile_pics" % DATA_DIR
+
 def setup():
 	first_run = not os.path.exists(DATA_DIR)
 	if not first_run:
 		return
 	print("It seems this is the first run. Initializing data...")
 	os.mkdir(DATA_DIR)
+	os.mkdir(PROFILE_PIC_DIR)
 	conf = open("%s/config.json" % DATA_DIR, "w")
 	conf.write(json.dumps(CONFIG_DEFAULT, indent = 4))
 	conf.close()
@@ -459,7 +462,7 @@ async def api(request):
 					if data["username"] in LAST_SEEN_PEPS:
 						del LAST_SEEN_PEPS[data["username"]]
 					try:
-						os.remove("static/img/profile/custom/%s" % (database[data["username"]]["custom_pic"]))
+						os.remove("%s/%s" % (PROFILE_PIC_DIR, database[data["username"]]["custom_pic"]))
 					except FileNotFoundError:
 						pass
 					del database[data["username"]]
@@ -1234,7 +1237,7 @@ async def panelapi(request):
 					if "username" in data and isinstance(data["username"], str):
 						if data["username"] in database:
 							if database[data["username"]]["custom_pic"]:
-								os.remove("static/img/profile/custom/%s" % (database[data["username"]]["custom_pic"]))
+								os.remove("%s/%s" % (PROFILE_PIC_DIR, database[data["username"]]["custom_pic"]))
 							del database[data["username"]]
 							updatedb()
 							return response("", 200)
@@ -1278,17 +1281,18 @@ async def upload_handler(request):
 			return response("File is way too big!", 401)
 		img = data["file"]
 		headers = img.headers["Content-Type"]
+		ext = img.filename.split(".")[-1]
 		if headers not in ["image/png", "image/jpeg"]:
 			return response("Attached file is not a photo.", 400)
 		uid = str(uuid.uuid1())
 		filename = uid[0:uid.rindex("-")]
-		filename = filename.replace("-", "")
-		if not os.path.exists('static/img/profile/custom'):
-			os.mkdir('static/img/profile/custom')
-		with open(os.path.join("static/img/profile/custom/", filename), "wb") as f:
+		filename = "%s.%s" % (filename.replace("-", ""), ext)
+		if not os.path.exists(PROFILE_PIC_DIR):
+			os.mkdir(PROFILE_PIC_DIR)
+		with open(os.path.join(PROFILE_PIC_DIR, filename), "wb") as f:
 			f.write(img.file.read())
 		if database[data["username"]]["custom_pic"]:
-			os.remove("static/img/profile/custom/%s" % (database[data["username"]]["custom_pic"]))
+			os.remove("%s/%s" % (PROFILE_PIC_DIR, database[data["username"]]["custom_pic"]))
 		database[data["username"]]["custom_pic"] = filename
 		database[data["username"]]["profile_pic"] = filename
 		updatedb()
@@ -1358,6 +1362,7 @@ app.add_routes([
 	web.route("POST", "/api/uploadProfilePic", upload_handler),
 	web.route("POST", "/api/setProfilePic", set_profile_pic),
 	web.route("POST", "/api/forgotPassword", forgot_pass),
+	web.static('/img/profile/custom', PROFILE_PIC_DIR),
 	web.static('/', 'static')
 ])
 
