@@ -1089,6 +1089,9 @@ iframe {
 .tier.pro:after {
 	content: "pro";
 }
+#demodays {
+	display: inline;
+}
 #demotier {
 	background: #FB0;
 	border-radius: 16px;
