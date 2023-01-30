@@ -1,6 +1,6 @@
 <img src="screenshots/librusik.png" alt="Preview photo" width="600"/>
 
-**As I am graduating from school this year, after June 2023 I will lose access to Librus.**
+**As I am graduating from school this year, after May 2023 I will lose access to Librus.**
 
 ## Features
 
@@ -14,9 +14,9 @@
 
 ✅ Presences & Absences (with per-semester per-subject frequency %% calculation)
 
-✏️ Exams
+✏️ Exams (with countdown to next one)
 
-🏠 School free days
+🏠 School free days (with countdown to next holiday)
 
 🧑‍🏫 Teacher free days
 
@@ -45,7 +45,7 @@
 
 ## Installation
 
-**WARNING:** If you update your existing Librusik installation be careful, as config and database structures might change. Missing config/database entries will lead to app crash. So, **always do a backup before updating.**
+**WARNING:** If you update your existing Librusik installation be careful, as our pseudo-database structure might change. Missing database entries will lead to app crash. So, **always do a backup before updating.**. Config changes won't crash the app.
 
 __1. Clone the repo:__
 ```
@@ -71,6 +71,7 @@ __4. Done! Librusik is now running at [localhost:7777](http://localhost:7777).__
 ## Configuration
 
 Librusik will generate `data` dir upon its first boot. You can edit `data/config.json` file and adjust the preferences to your liking. Some of them can be set from Panel.
+
 Go to [localhost:7777/panel](http://localhost:7777/panel) to manage your Librusik instance. Default user is `admin` and password is `admin`.
 
 **Config keys explained:**
@@ -93,7 +94,7 @@ Go to [localhost:7777/panel](http://localhost:7777/panel) to manage your Librusi
 
 `privkey` - path to private key used for HTTPS
 
-`contact_uri` - URI (a link) where user can contact with you. As it's passed directly to `a` HTML element, values can be like `mailto:`, `tel:`, `https://`, `tg://`, `mumble://` etc.
+`contact_uri` - URI (a link) where user can contact with you. As it's passed directly to `a` HTML element, values can be like `mailto:`, `tel:`, `https://`, `tg://`, `mumble://` etc. This will be shown in About page and Tiers (if enabled)
 
 `enable_tiers` - when `true`, Librusik will show a special UI for managing available features for each user.
 
@@ -106,9 +107,9 @@ Go to [localhost:7777/panel](http://localhost:7777/panel) to manage your Librusi
 
 ## Tiers
 
-Tiers is a per-user feature management system that can be used to prevent random people from using your instance (well, that wasn't the original purpose actually).
+Tiers is a per-user feature management system that can be used to prevent random people from using your instance. Well, I'm not sure why did I implement this.
 
-So, users can be classed in a different categories, 
+With this, users can be classed in a different categories:
 
 - `DEMO` - Default for new users. Has access to all features available in `PRO` for 7 days. After this period, all features become unavailable and tier upgrade is required to continue using Librusik.
 
@@ -118,14 +119,11 @@ So, users can be classed in a different categories,
 
 - `PRO` - has access to all implemented features available in Librusik. Those include final average calculation, AttendancesExtendedUI and message attachments.
 
-
-You can provide your tier requirements in `html/tiers.html` file.
-
 -----
 
 ## Querying the API
 
-In `tools` dir there is a `dump_full_api.py` file. It queries the whole Librus API and saves all the available data to local JSON file. Kinda helpful for further development.
+In `tools` dir there is a `dump_full_api.py` file. It queries the whole Librus API and saves all the available data to local JSON file. Kinda helpful for further development or some research.
 
 -----
 
@@ -135,12 +133,12 @@ Feel free to open new issues when something doesn't work or you want to ask for 
 
 If you encounter a bug, remember to attach some logs (exception traceback or just a detailed description).
 
-**After June 2023, only merge requests will be accepted.**
+**After May 2023, only merge requests will be accepted.**
 
 -----
 
 ## Some other words
 
-Because this was my first app written in Python, code is a fucking mess. Don't expect it to be super readable and flexible.
+Because this was my first app written in Python, code is a terrible mess. Don't expect it to be super readable and flexible.
 
-_It just works_
+_It just works_ (It actually worked since 2020 xD)
