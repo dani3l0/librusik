@@ -46,26 +46,6 @@ DATA_DIR = "data"
 
 PROFILE_PIC_DIR = "%s/profile_pics" % DATA_DIR
 
-def setup():
-	first_run = not os.path.exists(DATA_DIR)
-	if not first_run:
-		return
-	print("It seems this is the first run. Initializing data...")
-	os.mkdir(DATA_DIR)
-	os.mkdir(PROFILE_PIC_DIR)
-	conf = open("%s/config.json" % DATA_DIR, "w")
-	conf.write(json.dumps(CONFIG_DEFAULT, indent = 4))
-	conf.close()
-	db = open("%s/database.json" % DATA_DIR, "w")
-	db.write(json.dumps({}))
-	db.close()
-	k = open("%s/fernet.key" % DATA_DIR, "w")
-	k.write(base64.urlsafe_b64encode(os.urandom(32)).decode())
-	k.close()
-	os.chmod("%s/fernet.key" % DATA_DIR, 0o400)
-
-setup()
-
 LIBRUSIK_PATH = os.path.dirname(os.path.abspath(__file__)) + "/"
 
 BOOT = round(time.time())
@@ -82,8 +62,37 @@ welcomes = ["Hello", "Hi", "Hey"]
 greetings = ["How are you doing?", "Good to see you again.", "How are things?", "Librusik is awesome, isn't it?", "Too lazy to log into Synergia? :D", "Have a wonderful day!", "Nice to see you.", "Synergia still sucks? :D"]
 
 LAST_SEEN_PEPS = {}
-database = json.loads(open("%s/database.json" % DATA_DIR, "r").read())
-config = json.loads(open("%s/config.json" % DATA_DIR, "r").read())
+database = {}
+config = {}
+
+def setup():
+	global database, config
+	first_run = not os.path.exists(DATA_DIR)
+	if not first_run:
+		config = json.loads(open("%s/config.json" % DATA_DIR, "r").read())
+		for key in CONFIG_DEFAULT:
+			if key not in config:
+				config[key] = CONFIG_DEFAULT[key]
+		database = json.loads(open("%s/database.json" % DATA_DIR, "r").read())
+		return
+	print("It seems this is the first run. Initializing data...")
+	os.mkdir(DATA_DIR)
+	os.mkdir(PROFILE_PIC_DIR)
+	conf = open("%s/config.json" % DATA_DIR, "w")
+	conf.write(json.dumps(CONFIG_DEFAULT, indent = 4))
+	conf.close()
+	config = {}
+	db = open("%s/database.json" % DATA_DIR, "w")
+	db.write(json.dumps({}))
+	db.close()
+	database = {}
+	k = open("%s/fernet.key" % DATA_DIR, "w")
+	k.write(base64.urlsafe_b64encode(os.urandom(32)).decode())
+	k.close()
+	os.chmod("%s/fernet.key" % DATA_DIR, 0o400)
+
+setup()
+
 
 SESSIONS = SessionManager(database)
 
@@ -705,7 +714,7 @@ async def settings(request):
 			if database[data["username"]]["confetti"]:
 				confeti = "ed"
 			showupgrade = ""
-			if check_tier(data["username"], "pro"):
+			if database[data["username"]]["tier"] == "pro":
 				showupgrade = "display:none"
 			return response(resources["settings"] % (f + database[data["username"]]["profile_pic"], database[data["username"]]["first_name"], database[data["username"]]["last_name"], data["username"], showupgrade, resources["tiers"], resources["about"], imgs, parseDumbs(database[data["username"]]["l_login"]), parseDumbs(decrypt(database[data["username"]]["l_passwd"])), confeti, grades_cleanup, atends_cleanup), 200)
 		return response("", 401)
@@ -1332,7 +1341,6 @@ async def error_middleware(request, handler):
 
 
 app = web.Application(middlewares = [error_middleware], client_max_size = 1024**2*4)
-
 
 # DEBUG ONLY
 #app = web.Application(client_max_size=1024**2*4)
