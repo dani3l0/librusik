@@ -6,10 +6,7 @@ class SessionManager:
 	def updatedb(self, database):
 		for user in database:
 			if user not in self.sessions:
-				self.sessions[user] = {
-					"librus": None,
-					"librus2": None
-				}
+				self.sessions[user] = None
 		s_ = self.sessions.copy()
 		for user in s_:
 			if user not in database:
@@ -17,24 +14,24 @@ class SessionManager:
 
 	def getL(self, user):
 		try:
-			return self.sessions[user]["librus"]
+			return self.sessions[user]
 		except:
 			return None
 
 	def saveL(self, user, session):
 		try:
-			self.sessions[user]["librus"] = session
+			self.sessions[user] = session
 		except:
 			pass
 
 	def getL2(self, user):
 		try:
-			return self.sessions[user]["librus2"]
+			return self.sessions[user]
 		except:
 			return None
 
 	def saveL2(self, user, session):
 		try:
-			self.sessions[user]["librus2"] = session
+			self.sessions[user] = session
 		except:
 			pass
