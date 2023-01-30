@@ -1,11 +1,7 @@
 class SessionManager:
 	def __init__(self, database):
 		self.sessions = {}
-		for user in database:
-			self.sessions[user] = {
-				"librus": None,
-				"librus2": None
-			}
+		self.updatedb(database)
 
 	def updatedb(self, database):
 		for user in database:
