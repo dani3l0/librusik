@@ -19,6 +19,7 @@ from utils import *
 
 
 CONFIG_DEFAULT = {
+	"enable_registration": True,
 	"max_users": 8,
 	"name": "admin",
 	"passwd": "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918",
@@ -192,6 +193,8 @@ async def api(request):
 		if "method" in data and data["method"] in ["mkaccount", "delaccount", "chgpasswd", "chglibrus", "chglibruspasswd", "getstuff", "grades_cleanup", "attendances_cleanup", "confetti", "get_me"]:
 			method = data["method"]
 			if method == "mkaccount":
+				if not config["enable_registration"]:
+					return response("", 401)
 				if "username" in data and "password" in data and "librusLogin" in data and "librusPassword" in data:
 					if isinstance(data["username"], str) and isinstance(data["password"], str) and isinstance(data["librusLogin"], str) and isinstance(data["librusPassword"], str):
 						reg = re.compile("[a-z0-9]+")
@@ -337,7 +340,8 @@ async def login(request):
 	c = f.read().split("\n")[0]
 	m = os.path.getctime("static/app/version")
 	m = datetime.fromtimestamp(m).strftime("%d %B %Y")
-	return response(resources["login"] % (resources["about"], c, m, c), 200)
+	show_register = "" if config["enable_registration"] else "display:none"
+	return response(resources["login"] % (show_register, resources["about"], c, m, c), 200)
 
 
 ####################################################################################################################################################################################################

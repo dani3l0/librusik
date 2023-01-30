@@ -76,6 +76,8 @@ Go to [localhost:7777/panel](http://localhost:7777/panel) to manage your Librusi
 
 **Config keys explained:**
 
+`enable_registration` - enable registration of new users
+
 `max_users` - how many users can be registered on your instance
 
 `name` - an username required to log into Panel
