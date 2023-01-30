@@ -296,7 +296,7 @@ async def api(request):
 			return response("", 401)
 		return response("", 400)
 	except:
-		return response("", 500)
+		return response(traceback.format_exc().replace(LIBRUSIK_PATH, ""), 500)
 
 async def authenticate(request):
 	try:
@@ -1008,8 +1008,7 @@ async def message_download_file(request):
 				return web.Response(body = file["content"], status = 200, headers = file["headers"])
 		return response("", 401)
 	except:
-		tr = traceback.format_exc().replace(LIBRUSIK_PATH, "")
-		return response("", 500)
+		return response(traceback.format_exc().replace(LIBRUSIK_PATH, ""), 500)
 
 
 ####################################################################################################################################################################################################
@@ -1098,7 +1097,7 @@ async def panelapi(request):
 	except SystemExit:
 		raise SystemExit
 	except:
-		return response("", 500)
+		return response(traceback.format_exc().replace(LIBRUSIK_PATH, ""), 500)
 
 
 async def panel(request):
@@ -1147,7 +1146,7 @@ async def set_profile_pic(request):
 			return response("", 200)
 		return response("", 401)
 	except:
-		return response("", 500)
+		return response(traceback.format_exc().replace(LIBRUSIK_PATH, ""), 500)
 
 
 @web.middleware
