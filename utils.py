@@ -79,18 +79,6 @@ def load_html_resources(config):
     }
 
 
-# Config & pseudo-database
-def updatedb():
-	beautified = json.dumps(database, indent = 4) if config["readable_db"] else json.dumps(database)
-	if open("%s/database.json" % DATA_DIR).read() != beautified:
-		open("%s/database.json" % DATA_DIR, "w").write(beautified)
-
-def updateconf():
-	beautified = json.dumps(config, indent = 4)
-	if open("%s/config.json" % DATA_DIR).read() != beautified:
-		open("%s/config.json" % DATA_DIR, "w").write(beautified)
-
-
 # Encryption & passwords
 key = open("%s/fernet.key" % DATA_DIR, "r").read()
 frt = Fernet(key.encode())

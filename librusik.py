@@ -66,6 +66,16 @@ async def updatetitles():
 asyncio.gather(updatetitles())
 
 
+def updatedb():
+	beautified = json.dumps(database, indent = 4) if config["readable_db"] else json.dumps(database)
+	if open("%s/database.json" % DATA_DIR).read() != beautified:
+		open("%s/database.json" % DATA_DIR, "w").write(beautified)
+
+def updateconf():
+	beautified = json.dumps(config, indent = 4)
+	if open("%s/config.json" % DATA_DIR).read() != beautified:
+		open("%s/config.json" % DATA_DIR, "w").write(beautified)
+
 def auth(data):
 	if "username" in data and "password" in data:
 		if data["username"] in database:
@@ -1165,7 +1175,7 @@ async def error_middleware(request, handler):
 		return respons
 	except Exception as ex:
 		exc = traceback.format_exc().replace(LIBRUSIK_PATH, "")
-		status = 500
+		status = ex.status
 		return response(resources["errorpage"] % (str(status), str(exc)), status)
 
 
@@ -1174,7 +1184,7 @@ if not config["debug"]:
 	middlewares.append(error_middleware)
 
 app = web.Application(middlewares = middlewares, client_max_size = 1024**2*4)
-app.logger.manager.disable = 100 * config["debug"]
+app.logger.manager.disable = 100 - 100 * config["debug"]
 
 
 app.add_routes([
