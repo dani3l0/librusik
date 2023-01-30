@@ -102,6 +102,8 @@ Go to [localhost:7777/panel](http://localhost:7777/panel) to manage your Librusi
 
 `tiers_requirements` - a list of requirements for each tier. Those will be shown under _Settings -> Upgrade tier_.
 
+`debug` - enables/disables some verbose information (like aiohttp exceptions) and stuff related to debugging.
+
 
 -----
 

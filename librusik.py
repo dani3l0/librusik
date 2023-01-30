@@ -38,7 +38,8 @@ CONFIG_DEFAULT = {
 		"free": "To get, say thank you.",
 		"plus": "To get, buy me a beer.",
 		"pro": "To get, solve the <a target='blank' href='https://www.youtube.com/watch?v=dQw4w9WgXcQ'>puzzle</a>."
-	}
+	},
+	"debug": False
 }
 
 
@@ -92,7 +93,6 @@ def setup():
 	os.chmod("%s/fernet.key" % DATA_DIR, 0o400)
 
 setup()
-
 
 SESSIONS = SessionManager(database)
 
@@ -1341,6 +1341,7 @@ async def error_middleware(request, handler):
 
 
 app = web.Application(middlewares = [error_middleware], client_max_size = 1024**2*4)
+app.logger.manager.disable = 100 * config["debug"]
 
 # DEBUG ONLY
 #app = web.Application(client_max_size=1024**2*4)
