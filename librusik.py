@@ -15,10 +15,10 @@ from datetime import datetime, date, timedelta
 from glob import glob
 from urllib.parse import unquote
 from aiohttp import web
-from cryptography.fernet import Fernet
 import librus
 from librus import Librus, Librus2
 from sessionmanager import SessionManager
+from utils import *
 
 
 CONFIG_DEFAULT = {
@@ -43,58 +43,12 @@ CONFIG_DEFAULT = {
 }
 
 
-DATA_DIR = "data"
-
-PROFILE_PIC_DIR = "%s/profile_pics" % DATA_DIR
-
+config, database = setup(CONFIG_DEFAULT)
+resources = load_html_resources(config)
 LIBRUSIK_PATH = os.path.dirname(os.path.abspath(__file__)) + "/"
-
-BOOT = round(time.time())
-ERR_403 = "Couldn't fetch data from Synergia."
-ERR_500 = "Server wasn't able to parse this request."
-
-statvfs = os.statvfs(".")
-host = {
-	"storage": round(statvfs.f_bsize * statvfs.f_blocks / 1000 / 1000 / 1000, 2),
-	"cpus": os.cpu_count()
-}
-
-welcomes = ["Hello", "Hi", "Hey"]
-greetings = ["How are you doing?", "Good to see you again.", "How are things?", "Librusik is awesome, isn't it?", "Too lazy to log into Synergia? :D", "Have a wonderful day!", "Nice to see you.", "Synergia still sucks? :D"]
-
-LAST_SEEN_PEPS = {}
-database = {}
-config = {}
-
-def setup():
-	global database, config
-	first_run = not os.path.exists(DATA_DIR)
-	if not first_run:
-		config = json.loads(open("%s/config.json" % DATA_DIR, "r").read())
-		for key in CONFIG_DEFAULT:
-			if key not in config:
-				config[key] = CONFIG_DEFAULT[key]
-		database = json.loads(open("%s/database.json" % DATA_DIR, "r").read())
-		return
-	print("It seems this is the first run. Initializing data...")
-	os.mkdir(DATA_DIR)
-	os.mkdir(PROFILE_PIC_DIR)
-	conf = open("%s/config.json" % DATA_DIR, "w")
-	conf.write(json.dumps(CONFIG_DEFAULT, indent = 4))
-	conf.close()
-	config = {}
-	db = open("%s/database.json" % DATA_DIR, "w")
-	db.write(json.dumps({}))
-	db.close()
-	database = {}
-	k = open("%s/fernet.key" % DATA_DIR, "w")
-	k.write(base64.urlsafe_b64encode(os.urandom(32)).decode())
-	k.close()
-	os.chmod("%s/fernet.key" % DATA_DIR, 0o400)
-
-setup()
-
 SESSIONS = SessionManager(database)
+BOOT = round(time.time())
+
 
 async def updatetitles():
 	global welcome
@@ -111,53 +65,6 @@ async def updatetitles():
 
 asyncio.gather(updatetitles())
 
-hidetiers = "" if config["enable_tiers"] else ".tiers{display:none !important}"
-
-resources = {
-	"index": open("html/index.html", "r").read() % (config["subdirectory"], hidetiers),
-	"home": open("html/home.html", "r").read(),
-	"grades": open("html/grades.html", "r").read(),
-	"more": open("html/more.html", "r").read(),
-	"timetable": open("html/timetable.html", "r").read(),
-	"messages": open("html/messages.html", "r").read(),
-	"message": open("html/message.html", "r").read(),
-	"attendances": open("html/attendances.html", "r").read(),
-	"attendancesold": open("html/attendancesold.html", "r").read(),
-	"exams": open("html/exams.html", "r").read(),
-	"freedays": open("html/freedays.html", "r").read(),
-	"teacherfreedays": open("html/teacherfreedays.html", "r").read(),
-	"parentteacherconferences": open("html/parentteacherconferences.html", "r").read(),
-	"school": open("html/school.html", "r").read(),
-	"settings": open("html/settings.html", "r").read(),
-	"login": open("html/login.html", "r").read(),
-	"about": open("html/about.html", "r").read() % config["contact_uri"],
-	"tiers": open("html/tiers.html", "r").read() % (config["tiers_requirements"]["free"], config["tiers_requirements"]["plus"], config["tiers_requirements"]["pro"], config["tiers_text"]),
-	"panel": open("html/panel.html", "r").read() % (config["subdirectory"], hidetiers),
-	"panellogin": open("html/panellogin.html", "r").read() % config["subdirectory"],
-	"error": open("html/error.html", "r").read(),
-	"errorpage": open("html/geterror.html", "r").read(),
-}
-
-def updatedb():
-	beautified = json.dumps(database, indent = 4) if config["readable_db"] else json.dumps(database)
-	if open("%s/database.json" % DATA_DIR).read() != beautified:
-		open("%s/database.json" % DATA_DIR, "w").write(beautified)
-
-def updateconf():
-	beautified = json.dumps(config, indent = 4)
-	if open("%s/config.json" % DATA_DIR).read() != beautified:
-		open("%s/config.json" % DATA_DIR, "w").write(beautified)
-
-key = open("%s/fernet.key" % DATA_DIR, "r").read()
-frt = Fernet(key.encode())
-def encrypt(what):
-	coded = frt.encrypt(what.encode())
-	return coded.decode()
-def decrypt(what):
-	coded = frt.decrypt(what.encode())
-	return coded.decode()
-def sha(what):
-	return hashlib.sha256(what.encode()).hexdigest()
 
 def auth(data):
 	if "username" in data and "password" in data:
@@ -165,103 +72,6 @@ def auth(data):
 			return sha(data["password"]) == database[data["username"]]["passwd"]
 	return False
 
-def response(text, code):
-	return web.Response(text = text, status = code, headers = {'Content-Type': 'text/html'})
-
-def JSONresponse(text, code):
-	return web.Response(text = json.dumps(text), status = code, headers = {'Content-Type': 'application/json'})
-
-def getRSS():
-	try:
-		pid = open("/proc/%s/status" % os.getpid(), "r").read()
-		for x in pid.split("\n"):
-			if x.startswith("VmRSS:"):
-				return round(int(re.sub("[^0-9]", "", x)) / 1000, 2)
-		return None
-	except:
-		return None
-
-def getval(path, toInt = False):
-	f = open(path, "r").read().rstrip()
-	if toInt: f = int(f)
-	return f
-
-def gettemp():
-	d = 0
-	try:
-		path = "/sys/class/hwmon"
-		hwmon = [f"{path}/{x}" for x in os.listdir(path)]
-		for sensor in hwmon:
-			if getval(f"{sensor}/name") == "coretemp":
-				d = getval(f"{sensor}/temp1_input", True)
-	except:
-		try:
-			d = getval("/sys/class/thermal/thermal_zone0/temp", True)
-		except:
-			pass
-	if len(str(d)) > 3:
-		d = d / 1000
-	return d
-def getloadavg():
-	try:
-		d = open("/proc/loadavg", "r").read()
-		d = d.split()
-		return float(d[0])
-	except:
-		return 0
-def getrawloadavg():
-	try:
-		d = open("/proc/loadavg", "r").read()
-		d = d.split()
-		return "%s %s %s" % (d[0], d[1], d[2])
-	except:
-		return "N/A"
-
-def checklen(string, minlen, maxlen):
-	s = len(string)
-	return minlen <= s <= maxlen
-
-
-def randompasswd():
-	return "".join(random.choice(string.ascii_lowercase + string.digits) for _ in range(8))
-
-def mktryagainbtn(location, number):
-	return """<button onclick="goto('%s', %s, 'true')" class="highlighted">Try again</button><br>""" % (location, number)
-def mkbackbtn(location, number):
-	return """<button class="back" onclick="goto('%s', %s, true, true)"></button><br>""" % (location, number)
-
-def parseDumbs(strink):
-	strink = strink.replace("&", "&amp;")
-	strink = strink.replace("<", "&lt;")
-	strink = strink.replace(">", "&gt;")
-	strink = strink.replace("\n", "<br>")
-	return strink
-
-def gradeValue(ocen):
-	if ocen[:1] in ["1", "2", "3", "4", "5", "6"]:
-		if "+" in ocen:
-			return int(ocen[:1]) + 0.5
-		elif "-" in ocen:
-			return int(ocen[:1]) - 0.25
-		else:
-			return int(ocen)
-	return None
-
-def valueGrade(ocen):
-	if ".5" in ocen:
-		return "%s+" % ocen[:1]
-	elif ".75" in ocen:
-		return "%s-" % ocen[:1]
-	else:
-		return ocen
-
-def predictAverage(hmm):
-	fullgrade = math.floor(hmm)
-	if hmm >= fullgrade + 0.75:
-		return fullgrade + 1
-	if hmm >= fullgrade + 0.5:
-		return fullgrade + 0.5
-	return fullgrade
 
 TIERS = ["demo", "free", "plus", "pro"]
 def check_tier(user, required_tier):
@@ -273,6 +83,7 @@ def check_tier(user, required_tier):
 		return True if required <= current else False
 	else:
 		return True
+
 def tierror(REQ_TIER, backpath, button, where):
 	if where:
 		button = "<button onclick=\"goto('" + where + "', 2, true)\">" + button + "</button>"
@@ -283,6 +94,7 @@ def tierror(REQ_TIER, backpath, button, where):
 	else:
 		backpath = mkbackbtn(backpath, 2)
 	return resources["error"] % (backpath, "Feature unavailable", "This feature is available in <div class=\"tier " + REQ_TIER + "\"></div> tier.", "<button onclick=\"goto('settings', 3, true)\" class=\"highlighted\">Upgrade tier</button>" + button)
+
 def tierror_resp(REQ_TIER, backpath, button, where):
 	return response(tierror(REQ_TIER, backpath, button, where), 700)
 
@@ -293,12 +105,15 @@ def demoleft(user):
 		diff = 7 - (now - joined).days
 		return 0 if diff <= 0 else diff
 	return -1
+
 def demo_has_access(user):
 	return not demoleft(user) == 0
+
 def demo_err(user):
 	if not demo_has_access(user):
 		return tierror_resp("free", False, False, False)
 	return False
+
 
 async def mkaccount(data):
 	global database
@@ -514,6 +329,7 @@ async def forgot_pass(request):
 	except:
 		return response("", 400)
 
+
 async def index(request):
 	return response(resources["index"], 200)
 
@@ -567,6 +383,7 @@ async def home(request):
 	except:
 		tr = traceback.format_exc().replace(LIBRUSIK_PATH, "")
 		return response(resources["error"] % ("", "Internal server error", tr, mktryagainbtn("/home", 0)), 500)
+
 
 async def grades(request):
 	try:
@@ -676,6 +493,7 @@ async def grades(request):
 		tr = traceback.format_exc().replace(LIBRUSIK_PATH, "")
 		return response(resources["error"] % ("", "Internal server error", tr, mktryagainbtn("/grades", 1)), 500)
 
+
 async def more(request):
 	try:
 		data = await request.json()
@@ -687,6 +505,7 @@ async def more(request):
 	except:
 		tr = traceback.format_exc().replace(LIBRUSIK_PATH, "")
 		return response(resources["error"] % ("", "Internal server error", tr, mktryagainbtn("/more", 2)), 500)
+
 
 async def settings(request):
 	try:
@@ -721,6 +540,7 @@ async def settings(request):
 	except:
 		tr = traceback.format_exc().replace(LIBRUSIK_PATH, "")
 		return response(resources["error"] % ("", "Internal server error", tr, mktryagainbtn("/settings", 3)), 500)
+
 
 async def timetable(request):
 	try:
@@ -769,6 +589,7 @@ async def timetable(request):
 	except:
 		tr = traceback.format_exc().replace(LIBRUSIK_PATH, "")
 		return response(resources["error"] % (mkbackbtn("/more", 2), "Internal server error", tr, mktryagainbtn("/timetable", 2)), 500)
+
 
 async def attendances_old(request):
 	try:
@@ -823,6 +644,7 @@ async def attendances_old(request):
 	except:
 		tr = traceback.format_exc().replace(LIBRUSIK_PATH, "")
 		return response(resources["error"] % (mkbackbtn("/attendances", 2), "Internal server error", tr, mktryagainbtn("/attendancesold", 2)), 500)
+
 
 async def attendances(request):
 	try:
@@ -944,6 +766,7 @@ async def attendances(request):
 		tr = traceback.format_exc().replace(LIBRUSIK_PATH, "")
 		return response(resources["error"] % (mkbackbtn("/more", 2), "Internal server error", tr, mktryagainbtn("/attendances", 2)), 500)
 
+
 async def exams(request):
 	try:
 		data = await request.json()
@@ -988,6 +811,7 @@ async def exams(request):
 		tr = traceback.format_exc().replace(LIBRUSIK_PATH, "")
 		return response(resources["error"] % (mkbackbtn("/more", 2), "Internal server error", tr, mktryagainbtn("/exams", 2)), 500)
 
+
 async def freedays(request):
 	try:
 		data = await request.json()
@@ -1026,6 +850,7 @@ async def freedays(request):
 		tr = traceback.format_exc().replace(LIBRUSIK_PATH, "")
 		return response(resources["error"] % (mkbackbtn("/more", 2), "Internal server error", tr, mktryagainbtn("/freedays", 2)), 500)
 
+
 async def teacherfreedays(request):
 	try:
 		data = await request.json()
@@ -1050,6 +875,7 @@ async def teacherfreedays(request):
 		tr = traceback.format_exc().replace(LIBRUSIK_PATH, "")
 		return response(resources["error"] % (mkbackbtn("/more", 2), "Internal server error", tr, mktryagainbtn("/teacherfreedays", 2)), 500)
 
+
 async def parentteacherconferences(request):
 	try:
 		data = await request.json()
@@ -1069,6 +895,7 @@ async def parentteacherconferences(request):
 	except:
 		tr = traceback.format_exc().replace(LIBRUSIK_PATH, "")
 		return response(resources["error"] % (mkbackbtn("/more", 2), "Internal server error", tr, mktryagainbtn("/parentteacherconferences", 2)), 500)
+
 
 async def school(request):
 	global database
@@ -1099,6 +926,7 @@ async def school(request):
 		tr = traceback.format_exc().replace(LIBRUSIK_PATH, "")
 		return response(resources["error"] % (mkbackbtn("/more", 2), "Internal server error", tr, mktryagainbtn("/school", 2)), 500)
 
+
 async def messages(request):
 	global database
 	try:
@@ -1122,6 +950,7 @@ async def messages(request):
 	except:
 		tr = traceback.format_exc().replace(LIBRUSIK_PATH, "")
 		return response(resources["error"] % (mkbackbtn("messages", 2), "Internal server error", tr, mktryagainbtn("/messages", 2)), 500)
+
 
 async def traffic(request):
 	return response(resources["traffic"], 200)
@@ -1161,6 +990,7 @@ async def message(request):
 	except:
 		tr = traceback.format_exc().replace(LIBRUSIK_PATH, "")
 		return response(resources["error"] % (mkbackbtn(uri_full, 2), "Internal server error", tr, mktryagainbtn(uri_full, 2)), 500)
+
 
 async def message_download_file(request):
 	global database
@@ -1277,11 +1107,13 @@ async def panelapi(request):
 	except:
 		return response("", 500)
 
+
 async def panel(request):
 	return response(resources["panel"], 200)
 
 async def panell(request):
 	return response(resources["panellogin"], 200)
+
 
 async def upload_handler(request):
 	try:
@@ -1312,6 +1144,7 @@ async def upload_handler(request):
 	except:
 		return response("File is invalid!", 500)
 
+
 async def set_profile_pic(request):
 	try:
 		data = await request.json()
@@ -1340,11 +1173,13 @@ async def error_middleware(request, handler):
 	return response(resources["errorpage"] % (str(status), str(exc)), status)
 
 
-app = web.Application(middlewares = [error_middleware], client_max_size = 1024**2*4)
+middlewares = []
+if not config["debug"]:
+	middlewares.append(error_middleware)
+
+app = web.Application(middlewares = middlewares, client_max_size = 1024**2*4)
 app.logger.manager.disable = 100 * config["debug"]
 
-# DEBUG ONLY
-#app = web.Application(client_max_size=1024**2*4)
 
 app.add_routes([
 	web.route('GET', '/', index),
