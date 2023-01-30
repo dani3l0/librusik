@@ -1159,18 +1159,14 @@ async def set_profile_pic(request):
 
 @web.middleware
 async def error_middleware(request, handler):
-	exc = None
 	try:
 		respons = await handler(request)
 		status = respons.status
 		return respons
-	except web.HTTPException as ex:
-		status = ex.status
-		exc = ex
 	except Exception as ex:
-		exc = ex
+		exc = traceback.format_exc().replace(LIBRUSIK_PATH, "")
 		status = 500
-	return response(resources["errorpage"] % (str(status), str(exc)), status)
+		return response(resources["errorpage"] % (str(status), str(exc)), status)
 
 
 middlewares = []
