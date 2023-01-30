@@ -1,13 +1,10 @@
 import asyncio
-import base64
-import hashlib
 import json
 import math
 import os
 import random
 import re
 import ssl
-import string
 import time
 import traceback
 import uuid
@@ -94,20 +91,6 @@ def check_tier(user, required_tier):
 	else:
 		return True
 
-def tierror(REQ_TIER, backpath, button, where):
-	if where:
-		button = "<button onclick=\"goto('" + where + "', 2, true)\">" + button + "</button>"
-	else:
-		button = ""
-	if not backpath:
-		backpath = ""
-	else:
-		backpath = mkbackbtn(backpath, 2)
-	return resources["error"] % (backpath, "Feature unavailable", "This feature is available in <div class=\"tier " + REQ_TIER + "\"></div> tier.", "<button onclick=\"goto('settings', 3, true)\" class=\"highlighted\">Upgrade tier</button>" + button)
-
-def tierror_resp(REQ_TIER, backpath, button, where):
-	return response(tierror(REQ_TIER, backpath, button, where), 700)
-
 def demoleft(user):
 	if database[user]["tier"] == TIERS[0] and config["enable_tiers"]:
 		joined = datetime.strptime(database[user]["joined"], '%d %b %Y')
@@ -115,6 +98,12 @@ def demoleft(user):
 		diff = 7 - (now - joined).days
 		return 0 if diff <= 0 else diff
 	return -1
+
+def tierror(REQ_TIER, backpath, button, where):
+	return resources["error"] % tierror_(REQ_TIER, backpath, button, where)
+
+def tierror_resp(REQ_TIER, backpath, button, where):
+	return response(tierror(REQ_TIER, backpath, button, where), 700)
 
 def demo_has_access(user):
 	return not demoleft(user) == 0
@@ -361,8 +350,6 @@ async def home(request):
 			demo = demo_err(data["username"])
 			if demo != False: return demo
 			now = datetime.now()
-			day = now.strftime("%d")
-			month = now.strftime("%B, %Y")
 			scholstarts = datetime.strptime(database[data["username"]]["year_starts"], '%Y-%m-%d')
 			scholends = datetime.strptime(database[data["username"]]["year_ends"], '%Y-%m-%d')
 			dayspassed = (now - scholstarts).days
@@ -538,7 +525,6 @@ async def settings(request):
 			atends_cleanup = ""
 			if database[data["username"]]["attendances_cleanup"]:
 				atends_cleanup = "ed"
-
 			confeti = ""
 			if database[data["username"]]["confetti"]:
 				confeti = "ed"
@@ -926,7 +912,6 @@ async def school(request):
 					database[data["username"]]["last_name"] = me["LastName"]
 				tutor = "%s %s" % (me["Tutor"]["FirstName"], me["Tutor"]["LastName"])
 				address = "%s %s, %s %s" % (result["Street"], result["BuildingNumber"], result["PostCode"], result["Town"])
-				scholends = datetime.strptime(database[data["username"]]["year_ends"], '%Y-%m-%d')
 				sendz = datetime.strptime(me["SchoolYearMiddles"], '%Y-%m-%d').strftime("%d %B %Y")
 				endz = datetime.strptime(me["SchoolYearEnds"], '%Y-%m-%d').strftime("%d %B %Y")
 				return response(resources["school"] % (result["Name"], address, student, tutor, me["Class"], me["Type"], sendz, endz), 200)
@@ -988,7 +973,6 @@ async def message(request):
 				attachments = ""
 				for file in mesg["attachments"]:
 					attachments += """<div onclick="downloadMsgFile(this, '%s')">%s</div>""" % (file["nice"].replace("/", "-"), parseDumbs(file["name"]))
-
 				pro1 = ""
 				pro2 = ""
 				if not check_tier(data["username"], "pro"):
@@ -1006,7 +990,6 @@ async def message_download_file(request):
 	global database
 	uri = request.match_info["uri"]
 	uri = uri.replace("-", "/")
-	uri_full = "message_download_file/%s" % uri
 	cookie = json.loads(unquote(request.cookies["librusik_u"]))
 	try:
 		data = {

@@ -211,3 +211,14 @@ def mktryagainbtn(location, number):
 
 def mkbackbtn(location, number):
 	return """<button class="back" onclick="goto('%s', %s, true, true)"></button><br>""" % (location, number)
+
+def tierror_(REQ_TIER, backpath, button, where):
+	if where:
+		button = "<button onclick=\"goto('" + where + "', 2, true)\">" + button + "</button>"
+	else:
+		button = ""
+	if not backpath:
+		backpath = ""
+	else:
+		backpath = mkbackbtn(backpath, 2)
+	return (backpath, "Feature unavailable", "This feature is available in <div class=\"tier " + REQ_TIER + "\"></div> tier.", "<button onclick=\"goto('settings', 3, true)\" class=\"highlighted\">Upgrade tier</button>" + button)
