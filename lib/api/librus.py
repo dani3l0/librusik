@@ -1,10 +1,12 @@
-import asyncio, aiohttp, json, os
+import aiohttp
+import json
+import os
 import traceback
 from bs4 import BeautifulSoup
 from datetime import datetime, timedelta
 
 REQUESTS = [0] * 7
-PATH_ = os.path.dirname(os.path.abspath(__file__)) + "/"
+PATH_ = os.getcwd()
 
 class Librus:
 	def __init__(self, session):

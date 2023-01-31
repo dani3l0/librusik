@@ -12,10 +12,10 @@ from datetime import datetime, date, timedelta
 from glob import glob
 from urllib.parse import unquote
 from aiohttp import web
-import librus
-from librus import Librus, Librus2
-from sessionmanager import SessionManager
-from utils import *
+from lib.api import librus
+from lib.api import Librus, Librus2
+from lib.api import SessionManager
+from lib.utils import *
 
 
 CONFIG_DEFAULT = {

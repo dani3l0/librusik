@@ -15,14 +15,14 @@ greetings = ["How are you doing?", "Good to see you again.", "How are things?", 
 
 
 # Data location
-DATA_DIR = "data"
+PATH = os.getcwd()
+DATA_DIR = os.path.join(PATH, "data")
 PROFILE_PIC_DIR = "%s/profile_pics" % DATA_DIR
 
 
 # Some constant globals
 ERR_403 = "Couldn't fetch data from Synergia."
 ERR_500 = "Server wasn't able to parse this request."
-
 
 # Some dynamic globals
 LAST_SEEN_PEPS = {}
@@ -44,7 +44,7 @@ def setup(CONFIG_DEFAULT):
 		conf = open("%s/config.json" % DATA_DIR, "w")
 		conf.write(json.dumps(CONFIG_DEFAULT, indent = 4))
 		conf.close()
-		config = {}
+		config = CONFIG_DEFAULT
 		db = open("%s/database.json" % DATA_DIR, "w")
 		db.write(json.dumps({}))
 		db.close()
@@ -53,6 +53,7 @@ def setup(CONFIG_DEFAULT):
 		k.write(base64.urlsafe_b64encode(os.urandom(32)).decode())
 		k.close()
 		os.chmod("%s/fernet.key" % DATA_DIR, 0o400)
+	load_encryption_keys()
 	return (config, database)
 
 def load_html_resources(config):
@@ -84,8 +85,11 @@ def load_html_resources(config):
 
 
 # Encryption & passwords
-key = open("%s/fernet.key" % DATA_DIR, "r").read()
-frt = Fernet(key.encode())
+frt = None
+def load_encryption_keys():
+	global frt
+	key = open("%s/fernet.key" % DATA_DIR, "r").read()
+	frt = Fernet(key.encode())
 
 def encrypt(what):
 	coded = frt.encrypt(what.encode())
