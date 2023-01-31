@@ -13,7 +13,7 @@ from glob import glob
 from urllib.parse import unquote
 from aiohttp import web
 from lib.api import librus
-from lib.api import Librus, Librus2
+from lib.api import Librus
 from lib.api import SessionManager
 from lib.utils import *
 
@@ -124,7 +124,7 @@ async def mkaccount(data):
 	for x in database:
 		if data["librusLogin"] == database[x]["l_login"]:
 			return "Provided login is already in use."
-	librus = Librus(SESSIONS.getL(data["username"]))
+	librus = Librus(SESSIONS.get(data["username"]))
 	if await librus.mktoken(data["librusLogin"], data["librusPassword"]):
 		userInfo = await librus.get_me()
 		if userInfo == None:
@@ -167,7 +167,7 @@ async def scaccount(data):
 	for x in database:
 		if data["librusLogin"] == database[x]["l_login"] and x != data["username"]:
 			return "Provided login is already in use."
-	librus = Librus(SESSIONS.getL(data["username"]))
+	librus = Librus(SESSIONS.get(data["username"]))
 	if await librus.mktoken(data["librusLogin"], data["librusPassword"]):
 		userInfo = await librus.get_me()
 		if userInfo == None:
@@ -256,9 +256,9 @@ async def api(request):
 				elif method == "getstuff":
 					demo = demo_err(data["username"])
 					if demo != False: return demo
-					librus = Librus(SESSIONS.getL(data["username"]))
+					librus = Librus(SESSIONS.get(data["username"]))
 					if await librus.mktoken(database[data["username"]]["l_login"], decrypt(database[data["username"]]["l_passwd"])):
-						SESSIONS.saveL(data["username"], librus.headers)
+						SESSIONS.save(data["username"], librus.headers)
 						try:
 							lucky = (await librus.get_data("LuckyNumbers"))["LuckyNumber"]["LuckyNumber"]
 						except:
@@ -274,7 +274,7 @@ async def api(request):
 						if not check_tier(data["username"], "plus"):
 							mesgs = -1
 						else:
-							mesgs = await librus.get_messages()
+							mesgs = await librus.whats_new()
 						return response(json.dumps({
 							"messages": mesgs,
 							"luckynum": lucky
@@ -318,7 +318,7 @@ async def forgot_pass(request):
 		if await librus.mktoken(data["synergia_login"], data["synergia_password"]):
 			for user in database:
 				if database[user]["l_login"] == data["synergia_login"]:
-					SESSIONS.saveL(user, librus.headers)
+					SESSIONS.save(user, librus.headers)
 					newpass = randompasswd()
 					database[user]["passwd"] = sha(newpass)
 					updatedb()
@@ -392,9 +392,9 @@ async def grades(request):
 		if auth(data):
 			demo = demo_err(data["username"])
 			if demo != False: return demo
-			librus = Librus(SESSIONS.getL(data["username"]))
+			librus = Librus(SESSIONS.get(data["username"]))
 			if await librus.mktoken(database[data["username"]]["l_login"], decrypt(database[data["username"]]["l_passwd"])):
-				SESSIONS.saveL(data["username"], librus.headers)
+				SESSIONS.save(data["username"], librus.headers)
 				result = await librus.get_grades()
 				grades = 0
 				page = ""
@@ -548,9 +548,9 @@ async def timetable(request):
 		if auth(data):
 			demo = demo_err(data["username"])
 			if demo != False: return demo
-			librus = Librus(SESSIONS.getL(data["username"]))
+			librus = Librus(SESSIONS.get(data["username"]))
 			if await librus.mktoken(database[data["username"]]["l_login"], decrypt(database[data["username"]]["l_passwd"])):
-				SESSIONS.saveL(data["username"], librus.headers)
+				SESSIONS.save(data["username"], librus.headers)
 				res = await librus.get_timetable()
 				week = "This week"
 				if res["nextWeek"]:
@@ -597,9 +597,9 @@ async def attendances_old(request):
 		if auth(data):
 			demo = demo_err(data["username"])
 			if demo != False: return demo
-			librus = Librus(SESSIONS.getL(data["username"]))
+			librus = Librus(SESSIONS.get(data["username"]))
 			if await librus.mktoken(database[data["username"]]["l_login"], decrypt(database[data["username"]]["l_passwd"])):
-				SESSIONS.saveL(data["username"], librus.headers)
+				SESSIONS.save(data["username"], librus.headers)
 				result = (await librus.get_attendances())[::-1]
 				page = ""
 				lessons = 0
@@ -655,9 +655,9 @@ async def attendances(request):
 			REQ_TIER = "pro"
 			if not check_tier(data["username"], REQ_TIER):
 				return tierror_resp(REQ_TIER, "/more", "Go to old Attendances", "attendancesold")
-			librus = Librus(SESSIONS.getL(data["username"]))
+			librus = Librus(SESSIONS.get(data["username"]))
 			if await librus.mktoken(database[data["username"]]["l_login"], decrypt(database[data["username"]]["l_passwd"])):
-				SESSIONS.saveL(data["username"], librus.headers)
+				SESSIONS.save(data["username"], librus.headers)
 				result = (await librus.get_attendances())[::-1]
 				semesterEnds = (await librus.get_data("Classes"))["Class"]["EndFirstSemester"]
 				semesterEnds = datetime.strptime(semesterEnds, '%Y-%m-%d')
@@ -773,9 +773,9 @@ async def exams(request):
 		if auth(data):
 			demo = demo_err(data["username"])
 			if demo != False: return demo
-			librus = Librus(SESSIONS.getL(data["username"]))
+			librus = Librus(SESSIONS.get(data["username"]))
 			if await librus.mktoken(database[data["username"]]["l_login"], decrypt(database[data["username"]]["l_passwd"])):
-				SESSIONS.saveL(data["username"], librus.headers)
+				SESSIONS.save(data["username"], librus.headers)
 				result = (await librus.get_exams())[::-1]
 				page = ""
 				subject_closest = None
@@ -818,9 +818,9 @@ async def freedays(request):
 		if auth(data):
 			demo = demo_err(data["username"])
 			if demo != False: return demo
-			librus = Librus(SESSIONS.getL(data["username"]))
+			librus = Librus(SESSIONS.get(data["username"]))
 			if await librus.mktoken(database[data["username"]]["l_login"], decrypt(database[data["username"]]["l_passwd"])):
-				SESSIONS.saveL(data["username"], librus.headers)
+				SESSIONS.save(data["username"], librus.headers)
 				result = await librus.get_free_days()
 				page = ""
 				free_closest = None
@@ -857,9 +857,9 @@ async def teacherfreedays(request):
 		if auth(data):
 			demo = demo_err(data["username"])
 			if demo != False: return demo
-			librus = Librus(SESSIONS.getL(data["username"]))
+			librus = Librus(SESSIONS.get(data["username"]))
 			if await librus.mktoken(database[data["username"]]["l_login"], decrypt(database[data["username"]]["l_passwd"])):
-				SESSIONS.saveL(data["username"], librus.headers)
+				SESSIONS.save(data["username"], librus.headers)
 				result = (await librus.get_teacher_free_days())[::-1]
 				page = ""
 				for x in result:
@@ -882,9 +882,9 @@ async def parentteacherconferences(request):
 		if auth(data):
 			demo = demo_err(data["username"])
 			if demo != False: return demo
-			librus = Librus(SESSIONS.getL(data["username"]))
+			librus = Librus(SESSIONS.get(data["username"]))
 			if await librus.mktoken(database[data["username"]]["l_login"], decrypt(database[data["username"]]["l_passwd"])):
-				SESSIONS.saveL(data["username"], librus.headers)
+				SESSIONS.save(data["username"], librus.headers)
 				result = (await librus.get_parent_teacher_conferences())[::-1]
 				page = ""
 				for x in result:
@@ -904,9 +904,9 @@ async def school(request):
 		if auth(data):
 			demo = demo_err(data["username"])
 			if demo != False: return demo
-			librus = Librus(SESSIONS.getL(data["username"]))
+			librus = Librus(SESSIONS.get(data["username"]))
 			if await librus.mktoken(database[data["username"]]["l_login"], decrypt(database[data["username"]]["l_passwd"])):
-				SESSIONS.saveL(data["username"], librus.headers)
+				SESSIONS.save(data["username"], librus.headers)
 				result = await librus.get_school()
 				me = await librus.get_me()
 				student = "%s %s" % (database[data["username"]]["first_name"], database[data["username"]]["last_name"])
@@ -936,9 +936,9 @@ async def messages(request):
 			REQ_TIER = "plus"
 			if not check_tier(data["username"], REQ_TIER):
 				return tierror_resp(REQ_TIER, "/more", False, False)
-			librus = Librus2(SESSIONS.getL2(data["username"]))
+			librus = Librus(SESSIONS.get(data["username"]))
 			if await librus.mktoken(database[data["username"]]["l_login"], decrypt(database[data["username"]]["l_passwd"])):
-				SESSIONS.saveL2(data["username"], librus.cookies)
+				SESSIONS.save(data["username"], librus.headers)
 				inbox = await librus.get_messages()
 				html = ""
 				for mesg in inbox:
@@ -970,9 +970,9 @@ async def message(request):
 			REQ_TIER = "plus"
 			if not check_tier(data["username"], REQ_TIER):
 				return tierror_resp(REQ_TIER, "/more", False, False)
-			librus = Librus2(SESSIONS.getL2(data["username"]))
+			librus = Librus(SESSIONS.get(data["username"]))
 			if await librus.mktoken(database[data["username"]]["l_login"], decrypt(database[data["username"]]["l_passwd"])):
-				SESSIONS.saveL2(data["username"], librus.cookies)
+				SESSIONS.save(data["username"], librus.headers)
 				mesg = await librus.get_message(uri)
 				attachments = ""
 				for file in mesg["attachments"]:
@@ -1005,9 +1005,9 @@ async def message_download_file(request):
 			if demo != False: return demo
 			if not check_tier(data["username"], "pro"):
 				return response("", 700)
-			librus = Librus2(SESSIONS.getL2(data["username"]))
+			librus = Librus(SESSIONS.get(data["username"]))
 			if await librus.mktoken(database[data["username"]]["l_login"], decrypt(database[data["username"]]["l_passwd"])):
-				SESSIONS.saveL2(data["username"], librus.cookies)
+				SESSIONS.save(data["username"], librus.headers)
 				file = await librus.download_file(uri)
 				return web.Response(body = file["content"], status = 200, headers = file["headers"])
 		return response("", 401)

@@ -12,25 +12,13 @@ class SessionManager:
 			if user not in database:
 				del self.sessions[user]
 
-	def getL(self, user):
+	def get(self, user):
 		try:
 			return self.sessions[user]
 		except:
 			return None
 
-	def saveL(self, user, session):
-		try:
-			self.sessions[user] = session
-		except:
-			pass
-
-	def getL2(self, user):
-		try:
-			return self.sessions[user]
-		except:
-			return None
-
-	def saveL2(self, user, session):
+	def save(self, user, session):
 		try:
 			self.sessions[user] = session
 		except:

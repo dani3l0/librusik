@@ -1,2 +1,2 @@
-from .librus import Librus, Librus2
+from .librus import Librus
 from .sessionmanager import SessionManager

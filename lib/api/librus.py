@@ -11,6 +11,7 @@ PATH_ = os.getcwd()
 class Librus:
 	def __init__(self, session):
 		self.host = "https://synergia.librus.pl/gateway/api/2.0/"
+		self.msg_host = "https://synergia.librus.pl"
 		self.headers = None
 		if session != None:
 			self.headers = session
@@ -382,7 +383,7 @@ class Librus:
 			return None
 		return ptc["ParentTeacherConferences"]
 
-	async def get_messages(self):
+	async def whats_new(self):
 		try:
 			k = await self.get_data("WhatsNew")
 			if k and "WhatsNew" in k:
@@ -391,38 +392,12 @@ class Librus:
 		except:
 			return "-"
 
-
-class Librus2:
-	def __init__(self, session):
-		self.cookies = session
-		self.host = "https://synergia.librus.pl"
-
-	async def mktoken(self, login, password):
-		if await self.get_messages():
-			return True
-		self.cookies = None
-		async with aiohttp.ClientSession() as session:
-			arr_index = datetime.now().weekday()
-			REQUESTS[arr_index] += 1
-			resp = await session.get("https://api.librus.pl/OAuth/Authorization?client_id=46&response_type=code&scope=mydata")
-			form = aiohttp.FormData()
-			form.add_field("action", "login")
-			form.add_field("login", login)
-			form.add_field("pass", password)
-			REQUESTS[arr_index] += 1
-			resp = await session.post("https://api.librus.pl/OAuth/Authorization?client_id=46", data = form)
-			REQUESTS[arr_index] += 1
-			resp = await session.get("https://api.librus.pl/OAuth/Authorization/Grant?client_id=46")
-			self.cookies = resp.cookies
-			return resp.status == 200
-		return False
-
 	async def get_messages(self):
 		try:
-			async with aiohttp.ClientSession(cookies = self.cookies) as session:
+			async with aiohttp.ClientSession(cookies = self.headers) as session:
 				arr_index = datetime.now().weekday()
 				REQUESTS[arr_index] += 1
-				resp = await session.get("%s/wiadomosci" % (self.host))
+				resp = await session.get("%s/wiadomosci" % (self.msg_host))
 				html = await resp.text()
 				messages = []
 				soup = BeautifulSoup(html, "html.parser")
@@ -446,10 +421,10 @@ class Librus2:
 
 	async def get_message(self, link):
 		try:
-			async with aiohttp.ClientSession(cookies = self.cookies) as session:
+			async with aiohttp.ClientSession(cookies = self.headers) as session:
 				arr_index = datetime.now().weekday()
 				REQUESTS[arr_index] += 1
-				resp = await session.get("%s/wiadomosci/%s" % (self.host, link.replace("-", "/")))
+				resp = await session.get("%s/wiadomosci/%s" % (self.msg_host, link.replace("-", "/")))
 				html = await resp.text()
 				soup = BeautifulSoup(html, "html.parser")
 				main = soup.find("table", class_ = "stretch container-message")
@@ -465,7 +440,7 @@ class Librus2:
 						for img in imgs:
 							cl = str(img.get("onclick")).strip().replace(" ", "").replace("\n", "").replace("\\", "")
 							if cl.startswith("otworz"):
-								cl = self.host + cl.split('("')[1].split('",')[0]
+								cl = self.msg_host + cl.split('("')[1].split('",')[0]
 						name = f[0].text.strip()
 						if "." in name:
 							files.append({
@@ -499,10 +474,10 @@ class Librus2:
 
 	async def download_file(self, link):
 		try:
-			async with aiohttp.ClientSession(cookies = self.cookies) as session:
+			async with aiohttp.ClientSession(cookies = self.headers) as session:
 				arr_index = datetime.now().weekday()
 				REQUESTS[arr_index] += 1
-				resp = await session.get("%s/wiadomosci/pobierz_zalacznik/%s" % (self.host, link))
+				resp = await session.get("%s/wiadomosci/pobierz_zalacznik/%s" % (self.msg_host, link))
 				respF = await session.get("%s/get" % (resp.url))
 				headers = respF.headers
 				file_I_guess = await respF.read()
