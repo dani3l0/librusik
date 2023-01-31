@@ -8,7 +8,7 @@ current = os.path.dirname(os.path.realpath(__file__))
 parent = os.path.dirname(current)
 sys.path.append(parent)
 
-from librus import Librus
+from lib.api import Librus
 
 
 async def main():
@@ -34,14 +34,16 @@ async def main():
 	res = (await librus.get_data(""))["Resources"]
 	res_big = res.copy()
 	i = 0
+	l = len(res)
 
 	if _full_dump:
-		for x in res:
+		for method in res:
 			i += 1
-			l = len(res)
-			print(f"[{str(round(i * 100 / l)).rjust(3)}%  {str(i).rjust(len(str(l)))}/{l}]  Requesting '{x}'")
-			item = await librus.get_data(x)
-			res_big[x] = item
+			print(f"[{str(round(i * 100 / l)).rjust(3)}%  {str(i).rjust(len(str(l)))}/{l}]  Requesting '{method}'")
+			try:
+				res_big[method] = await librus.get_data(method)
+			except:
+				res_big[method] = "Failed to parse result"
 	else:
 		data = await librus.get_data(_api_path)
 		if not data:
