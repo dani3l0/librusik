@@ -40,15 +40,14 @@ async def main():
 		for method in res:
 			i += 1
 			print(f"[{str(round(i * 100 / l)).rjust(3)}%  {str(i).rjust(len(str(l)))}/{l}]  Requesting '{method}'")
-			try:
-				res_big[method] = await librus.get_data(method)
-			except:
-				res_big[method] = "Failed to parse result"
+			resp = (await librus.get_data(method)) or "Failed to parse result"
+			res_big[method] = resp
 	else:
 		data = await librus.get_data(_api_path)
 		if not data:
 			print(f"Error: Couldn't find '{_api_path}' in API, exiting...")
 			raise SystemExit
+		print(f"Dumping '{_api_path}' successful.")
 		res_big[_api_path] = data
 
 	print("Saving data to JSON...")

@@ -73,10 +73,12 @@ class Librus:
 		return {"code": status, "text": None}
 
 	async def get_data(self, method):
-		r = await self.curl(self.host + method)
-		if r["code"] != 200:
+		try:
+			r = await self.curl(self.host + method)
+			if r["code"] == 200:
+				return json.loads(r["text"])
+		except:
 			return None
-		return json.loads(r["text"])
 
 	async def get_subjects(self):
 		r = await self.get_data("Subjects")
