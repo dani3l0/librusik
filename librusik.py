@@ -259,9 +259,8 @@ async def api(request):
 					librus = Librus(SESSIONS.get(data["username"]))
 					if await librus.mktoken(database[data["username"]]["l_login"], decrypt(database[data["username"]]["l_passwd"])):
 						SESSIONS.save(data["username"], librus.headers)
-						try:
-							lucky = (await librus.get_data("LuckyNumbers"))["LuckyNumber"]["LuckyNumber"]
-						except:
+						lucky = (await librus.get_data("LuckyNumbers"))["LuckyNumber"]["LuckyNumber"]
+						if not lucky:
 							lucky = "None"
 						try:
 							m = (await librus.get_data("Classes"))["Class"]
@@ -274,7 +273,7 @@ async def api(request):
 						if not check_tier(data["username"], "plus"):
 							mesgs = -1
 						else:
-							mesgs = await librus.whats_new()
+							mesgs = await librus.get_messages()
 						return response(json.dumps({
 							"messages": mesgs,
 							"luckynum": lucky

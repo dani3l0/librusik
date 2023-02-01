@@ -9,12 +9,10 @@ REQUESTS = [0] * 7
 PATH_ = os.getcwd()
 
 class Librus:
-	def __init__(self, session):
+	def __init__(self, session=None):
 		self.host = "https://synergia.librus.pl/gateway/api/2.0/"
 		self.msg_host = "https://synergia.librus.pl"
-		self.headers = None
-		if session != None:
-			self.headers = session
+		self.headers = session
 
 	async def activate_api_access(self):
 		arr_index = datetime.now().weekday()
@@ -211,6 +209,12 @@ class Librus:
 #			i["Type"] = types[i["Type"]["Id"]]
 		return r["TeacherFreeDays"]
 
+	async def geet_lucky_number(self):
+		try:
+			return (await self.get_data("LuckyNumbers"))["LuckyNumber"]["LuckyNumber"]
+		except:
+			return None
+
 	async def get_behaviour_grade(self):
 		try:
 			grade_ids = ["nothing","wzorowe","bardzo dobre","dobre","poprawne","nieodpowiednie","naganne","nothing"]
@@ -345,11 +349,16 @@ class Librus:
 
 	async def get_parent_teacher_conferences(self):
 		ptc = await self.get_data("ParentTeacherConferences")
-		if ptc == None:
-			return None
 		return ptc["ParentTeacherConferences"]
 
-	async def whats_new(self):
+	async def get_notifications(self):
+		try:
+			k = await self.get_data("WhatsNew")
+			return k["WhatsNew"]
+		except:
+			return None
+
+	async def get_unread_messages(self):
 		try:
 			k = await self.get_data("WhatsNew")
 			if k and "WhatsNew" in k:
