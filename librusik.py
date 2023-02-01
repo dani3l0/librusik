@@ -259,7 +259,7 @@ async def api(request):
 					librus = Librus(SESSIONS.get(data["username"]))
 					if await librus.mktoken(database[data["username"]]["l_login"], decrypt(database[data["username"]]["l_passwd"])):
 						SESSIONS.save(data["username"], librus.headers)
-						lucky = (await librus.get_data("LuckyNumbers"))["LuckyNumber"]["LuckyNumber"]
+						lucky = await librus.get_lucky_number()
 						if not lucky:
 							lucky = "None"
 						try:

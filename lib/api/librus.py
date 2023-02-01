@@ -209,7 +209,7 @@ class Librus:
 #			i["Type"] = types[i["Type"]["Id"]]
 		return r["TeacherFreeDays"]
 
-	async def geet_lucky_number(self):
+	async def get_lucky_number(self):
 		try:
 			return (await self.get_data("LuckyNumbers"))["LuckyNumber"]["LuckyNumber"]
 		except:
