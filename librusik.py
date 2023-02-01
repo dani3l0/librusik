@@ -1157,7 +1157,7 @@ async def set_profile_pic(request):
 async def error_middleware(request, handler):
 	try:
 		respons = await handler(request)
-		status = respons.status
+		respons.headers["Cache-Control"] = "no-cache"
 		return respons
 	except Exception as ex:
 		exc = traceback.format_exc().replace(LIBRUSIK_PATH, "")
