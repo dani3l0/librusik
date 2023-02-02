@@ -52,6 +52,7 @@ function rmCookie() {
 	document.cookie = "librusik_u={}; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
 	agou("login");
 }
+
 function indexpage() {
 	buttons(true);
 	var cokie = getCookie();
@@ -85,12 +86,66 @@ function indexpage() {
 	}, function(data) {
 		if (data.status == 200) {
 			let resp = JSON.parse(data.responseText);
+			let n = resp["notifications"]
+			getByID("notifications").innerHTML = ""
+			for (let i = 0; i < n.length; i++) {
+				getByID("notifications").innerHTML += parse_notification(n[i])
+			}
 		}
 		else {
-			
+
 		}
 	}, 15);
 }
+
+var NOTIFS_SHOWN = false;
+function toggle_notifications(show) {
+	btn = document.getElementsByClassName("notif_button")[0];
+	if (show && !NOTIFS_SHOWN) {
+		btn.classList.add("expanded");
+		setTimeout(function() {NOTIFS_SHOWN = true}, 500);
+	}
+	else if (!show && NOTIFS_SHOWN) {
+		btn.classList.remove("expanded");
+		setTimeout(function() {NOTIFS_SHOWN = false}, 500);
+	}
+}
+
+function parse_notification(item) {
+	console.log(item.type);
+	let icon, title, text = "";
+	if (item.type == "message") {
+		icon = "email";
+		title = `New message from ${item.from}`;
+		text = `${item.subject}<br>Sent ${item.date}`
+	}
+	else if (item.type == "grade") {
+		icon = "book";
+		title = `You got ${item.Grade} from ${item.Lesson}`;
+		let comment = item.Comment;
+		if (comment == "No comment") comment = "";
+		else comment = " for " + comment;
+		text = `${item.AddedBy.FirstName} ${item.AddedBy.LastName} added it with ${item.Weight} weight, as '${item.Category}${comment}'.<br>Added ${item.AddDate}`
+	}
+	else if (item.type == "attendance") {
+		icon = "person_remove";
+		title = `New absence on ${item.Lesson}`;
+		text = `${item.AddedBy.FirstName} ${item.AddedBy.LastName} marked you as absent on ${item.Date}.<br>Added ${item.AddDate}`
+	}
+	else if (item.type == "exam") {
+		icon = "edit";
+		title = `New exam from ${item.Lesson}`;
+		text = `${item.AddedBy.FirstName} ${item.AddedBy.LastName} added a new exam on ${item.Date}<br>Sent ${item.AddDate}`
+	}
+	return `<div>
+		<div class="icon">${icon}</div>
+		<div class="text">
+			<div class="title">${title}</div>
+			<div class="text">${text}</div>
+		</div>
+	</div>`
+}
+
 function loginpage() {
 	rminputs();
 	var cokie = getCookie();

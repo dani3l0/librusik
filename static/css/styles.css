@@ -51,7 +51,8 @@ body {
 	-webkit-tap-highlight-color: transparent;
 	overflow-x: hidden;
 	padding: 0 10px 0;
-	margin: 0;
+	margin: 0 auto;
+	max-width: 1366px;
 }
 .icon {
 	font-family: 'Material Symbols Rounded';
@@ -140,7 +141,7 @@ button.highlighted.warning {
 button.highlighted:hover {
 	opacity: 0.7;
 }
-button.back {
+.back {
 	margin-bottom: 12px;
 	width: 48px;
 	height: 48px;
@@ -519,38 +520,6 @@ svg {
 .noanime {
 	transition: initial !important;
 }
-.messages {
-	height: 23px;
-	margin: 4px 0;
-	padding: 10px;
-	border: 1px solid #333;
-	border-radius: 6px;
-	max-width: 360px;
-	color: #999;
-	font-weight: bold;
-	cursor: pointer;
-	transition: all .3s;
-}
-.messages:hover {
-	background: #333;
-}
-.messages > .icon {
-	margin: 1px 8px 1px 0;
-	color: inherit;
-}
-.messages > * {
-	display: inline-block;
-	vertical-align: middle;
-}
-.messages.unread {
-	color: #222 !important;
-	background: #FB0;
-}
-.messages.hidden {
-	margin: 0;
-	padding: 0;
-	height: 0;
-}
 .message {
 	background: #111;
 	border-radius: 12px;
@@ -842,7 +811,7 @@ a {
 	background: #F46;
 }
 .option.checkbox > .check::after {
-	content: "✔";
+	content: "âœ”";
 	transform: translate(-50%, -50%) scale(0) rotateZ(180deg);
 	color: #222;
 	top: calc(50% + 1px);
@@ -1004,7 +973,7 @@ iframe {
 	background: #333;
 }
 .checkboxes > div:before {
-	content: "✔";
+	content: "âœ”";
 	color: transparent;
 	padding: 0 6px;
 	background: #444;
@@ -1098,6 +1067,89 @@ iframe {
 	padding: 14px 16px;
 	color: #222;
 	margin-top: 12px;
+}
+.notif_button {
+	position: fixed;
+	left: calc(100% - 64px);
+	top: 10px;
+	height: 42px;
+	font-size: 20px;
+	width: 48px;
+	border-radius: 100px;
+	margin: 0;
+	z-index: 100;
+	backdrop-filter: blur(0);
+	overflow: scroll;
+	max-width: 640px;
+	max-height: 720px;
+	padding: 0;
+	color: inherit;
+	transition: all .4s !important;
+}
+.notif_button::-webkit-scrollbar {
+	display: none;
+}
+.notif_button > .icon {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	font-size: 22px;
+	transition: opacity .4s;
+	transform: translate(-50%, -50%);
+}
+.notif_button > .notifications {
+	font-size: 13px;
+	opacity: 0;
+	padding: 16px 8px;
+	min-height: calc(100% - 32px);
+	transform: scale(0.9);
+	transition: opacity .4s, transform .4s;
+}
+.notif_button.expanded {
+	top: 50%;
+	border-radius: 20px;
+	cursor: default;
+	left: 50%;
+	background: #333E;
+	width: calc(100vw - 32px);
+	height: calc(100vh - 32px);
+	transform: translate(-50%, -54px);
+	box-shadow: 3px 3px 12px#1119;
+}
+.notif_button.expanded > .icon {
+	font-size: 128px;
+	opacity: 0;
+	transition: opacity .4s .4s, font-size .4s .4s;
+}
+.notif_button.expanded > .notifications {
+	opacity: 1;
+	transform: none;
+	transition: opacity .4s .8s, transform .4s .8s;
+}
+.notifications .back {
+	border: 1px solid #444;
+	cursor: pointer;
+	transition: background .3s;
+	margin: 0 auto 10px;
+}
+.notifications .back:hover {
+	background-color: #444;
+}
+#notifications > div {
+	display: flex;
+	align-items: center;
+	padding: 12px 0;
+	text-align: left;
+}
+#notifications .icon {
+	margin-right: 4px;
+	padding: 0 20px;
+}
+#notifications .title {
+	font-size: 16px;
+}
+#notifications .text > .text {
+	color: #AAA;
 }
 @media (max-width: 420px) {
 	.circ {
