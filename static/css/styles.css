@@ -1153,8 +1153,8 @@ iframe {
 	text-align: left;
 }
 #notifications .icon {
-	margin-right: 4px;
-	padding: 0 24px;
+	margin-right: 6px;
+	padding: 0 16px;
 	margin-left: 8px;
 }
 #notifications .title {
@@ -1178,7 +1178,8 @@ iframe {
 	border: 1px solid #444;
 	cursor: pointer;
 	transition: background .3s;
-	margin: 2px 12px 2px 6px;'
+	margin: 2px 12px 2px 6px;
+	min-width: 40px;
 }
 .notifications .subheader {
 	margin: 0;

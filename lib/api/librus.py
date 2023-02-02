@@ -357,7 +357,7 @@ class Librus:
 	def check_period(self, date, period):
 		return (datetime.now() - self.parseAddDate(date)).days <= period
 
-	async def get_notifications(self, days=10):
+	async def get_notifications(self, days=14):
 		cache = []
 		try:
 			_grades = await self.get_grades()
