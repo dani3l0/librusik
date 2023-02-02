@@ -87,9 +87,11 @@ function indexpage() {
 		if (data.status == 200) {
 			let resp = JSON.parse(data.responseText);
 			let n = resp["notifications"]
+			resp["new"] = 20
 			getByID("notifications").innerHTML = ""
 			let counter = 0;
 			if (resp["new"]) {
+				getByID("notifier").classList.add("notifing");
 				getByID("notifications").innerHTML += `<p class="separator">New notifications</p>`
 				for (let i = counter; i < resp["new"]; i++) {
 					getByID("notifications").innerHTML += parse_notification(n[i])
@@ -117,6 +119,7 @@ var NOTIFS_SHOWN = false;
 function toggle_notifications(show) {
 	btn = document.getElementsByClassName("notif_button")[0];
 	btn.scrollTo(0,0);
+	getByID("notifier").classList.remove("notifing");
 	if (show && !NOTIFS_SHOWN) {
 		darken(true);
 		btn.classList.add("expanded");
@@ -130,7 +133,6 @@ function toggle_notifications(show) {
 }
 
 function parse_notification(item, i, unread) {
-	console.log(item.type);
 	let icon, title, text = "";
 	if (item.type == "message") {
 		icon = "email";
