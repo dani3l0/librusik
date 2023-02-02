@@ -87,7 +87,6 @@ function indexpage() {
 		if (data.status == 200) {
 			let resp = JSON.parse(data.responseText);
 			let n = resp["notifications"]
-			resp["new"] = 20
 			getByID("notifications").innerHTML = ""
 			let counter = 0;
 			if (resp["new"]) {
