@@ -29,6 +29,8 @@
 
 🌙 Dark theme
 
+🔔 Custom Notification Center (does not send PUSH notifications, but has most important events listed with details from last 21 days)
+
 🍪 Cookies (you won't be logged out each time you close the browser)
 
 🧹 Grades cleanup (removes subjects without grades from Grades page)
@@ -106,24 +108,6 @@ Go to [localhost:7777/panel](http://localhost:7777/panel) to manage your Librusi
 
 `debug` - enables/disables some verbose information (like aiohttp exceptions) and stuff related to debugging.
 
-
------
-
-## Tiers
-
-Tiers is a per-user feature management system that can be used to prevent random people from using your instance. Well, I'm not sure why did I implement this.
-
-With this, users can be classed in a different categories:
-
-- `DEMO` - Default for new users. Has access to all features available in `PRO` for 7 days. After this period, all features become unavailable and tier upgrade is required to continue using Librusik.
-
-- `FREE` - all basic features are available like grades, timetable, free days etc. It has no time limit.
-
-- `PLUS` - includes some extra features, like per-subject average calculation, countdowns in Exams & Free days and a possibility to list & read messages.
-
-- `PRO` - has access to all implemented features available in Librusik. Those include final average calculation, AttendancesExtendedUI and message attachments.
-
------
 
 ## Querying the API
 
