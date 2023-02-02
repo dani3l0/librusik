@@ -29,7 +29,7 @@
 
 🌙 Dark theme
 
-🔔 Custom Notification Center (does not send PUSH notifications, but has most important events listed with details from last 21 days)
+🔔 Custom Notification Center (does not send PUSH notifications, but has most important events listed with details)
 
 🍪 Cookies (you won't be logged out each time you close the browser)
 

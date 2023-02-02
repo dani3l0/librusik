@@ -1107,6 +1107,7 @@ iframe {
 	opacity: 0;
 	padding-bottom: 24px;
 	min-height: 100%;
+	min-width: 360px;
 	transition: opacity .4s, transform .4s;
 }
 @keyframes notify {
@@ -1179,7 +1180,7 @@ iframe {
 }
 .notifications .subheader {
 	margin: 0;
-	padding: 0;
+	padding: 0 4px 0 0;
 }
 .notifications .header {
 	padding: 0;
