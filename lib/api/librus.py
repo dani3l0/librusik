@@ -352,11 +352,25 @@ class Librus:
 		return ptc["ParentTeacherConferences"]
 
 	async def get_notifications(self):
-		try:
-			k = await self.get_data("WhatsNew")
-			return k["WhatsNew"]
-		except:
-			return None
+		if True:
+			grades = (await self.get_data("Grades"))["Grades"]
+			timetable = (await self.get_data("Timetables"))["Timetable"]
+			exams = (await self.get_data("HomeWorks"))["HomeWorks"]
+			messages = await self.get_messages()
+			conferences = (await self.get_data("ParentTeacherConferences"))["ParentTeacherConferences"]
+			freedays = (await self.get_data("SchoolFreeDays"))["SchoolFreeDays"]
+			teacherfreedays = (await self.get_data("TeacherFreeDays"))["TeacherFreeDays"]
+			attendances = (await self.get_data("Attendances"))["Attendances"]
+			return {
+				"grades": len(grades),
+				"timetable": len(timetable),
+				"exams": len(exams),
+				"messages": len(messages),
+				"conferences": len(conferences),
+				"freedays": len(freedays),
+				"teacherfreedays": len(teacherfreedays),
+				"attendances": len(attendances)
+			}
 
 	async def get_unread_messages(self):
 		try:
