@@ -367,31 +367,44 @@ class Librus:
 						grade["type"] = "grade"
 						grade["Lesson"] = subj
 						cache.append(grade)
+		except:
+			pass
 
+		try:
 			_messages = await self.get_messages()
 			for message in _messages:
 				if self.check_period(message["date"], days):
 					message["type"] = "message"
 					message["AddDate"] = message["date"]
 					cache.append(message)
+		except:
+			pass
 
+		try:
 			_exams = await self.get_exams()
 			for exam in _exams:
 				if self.check_period(exam["AddDate"], days):
 					exam["type"] = "exam"
 					cache.append(exam)
+		except:
+			pass
 
+		try:
 			_attendances = await self.get_attendances()
 			for entry in _attendances:
 				if self.check_period(entry["Added"], days) and not entry["isPresence"]:
 					entry["type"] = "attendance"
 					entry["AddDate"] = entry["Added"]
 					cache.append(entry)
-
-			sorted_cache = sorted(cache, key=lambda x: self.parseAddDate(x["AddDate"]), reverse=True)
-			return sorted_cache
 		except:
-			return []
+			pass
+
+		try:
+			sorted_cache = sorted(cache, key=lambda x: self.parseAddDate(x["AddDate"]), reverse=True)
+			cache = sorted_cache
+		except:
+			pass
+		return cache
 
 	async def get_unread_messages(self):
 		try:
