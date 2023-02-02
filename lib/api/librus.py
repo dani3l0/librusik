@@ -357,34 +357,40 @@ class Librus:
 	def check_period(self, date, period):
 		return (datetime.now() - self.parseAddDate(date)).days <= period
 
-	async def get_notifications(self, cache=[]):
-		if True:
-			cache = []
+	async def get_notifications(self):
+		cache = []
+		try:
 			_grades = await self.get_grades()
 			for subj in _grades:
 				for grade in _grades[subj]:
 					if self.check_period(grade["AddDate"], 14):
+						grade["type"] = "grade"
 						cache.append(grade)
 
 			_messages = await self.get_messages()
 			for message in _messages:
 				if self.check_period(message["date"], 14):
+					message["type"] = "message"
 					message["AddDate"] = message["date"]
 					cache.append(message)
 
 			_exams = await self.get_exams()
 			for exam in _exams:
 				if self.check_period(exam["AddDate"], 14):
+					exam["type"] = "exam"
 					cache.append(exam)
 
 			_attendances = await self.get_attendances()
 			for entry in _attendances:
 				if self.check_period(entry["Added"], 14) and not entry["isPresence"]:
+					entry["type"] = "attendance"
 					entry["AddDate"] = entry["Added"]
 					cache.append(entry)
 
 			sorted_cache = sorted(cache, key=lambda x: self.parseAddDate(x["AddDate"]), reverse=True)
 			return sorted_cache
+		except:
+			return []
 
 	async def get_unread_messages(self):
 		try:

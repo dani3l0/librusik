@@ -190,7 +190,7 @@ async def api(request):
 	global database, LAST_SEEN_PEPS
 	try:
 		data = await request.json()
-		if "method" in data and data["method"] in ["mkaccount", "delaccount", "chgpasswd", "chglibrus", "chglibruspasswd", "getstuff", "grades_cleanup", "attendances_cleanup", "confetti", "get_me"]:
+		if "method" in data and data["method"] in ["mkaccount", "delaccount", "chgpasswd", "chglibrus", "chglibruspasswd", "getstuff", "grades_cleanup", "attendances_cleanup", "confetti", "get_me", "get_notifications"]:
 			method = data["method"]
 			if method == "mkaccount":
 				if not config["enable_registration"]:
@@ -235,6 +235,13 @@ async def api(request):
 						"demoleft": demoleft(data["username"]),
 						"contact": config["contact_uri"]
 					}, 200)
+				elif method == "get_notifications":
+					librus = Librus(SESSIONS.get(data["username"]))
+					if await librus.mktoken(database[data["username"]]["l_login"], decrypt(database[data["username"]]["l_passwd"])):
+						notifications = await librus.get_notifications()
+						return JSONresponse(SESSIONS.get_notifications(data["username"], notifications), 200)
+					else:
+						return response("", 403)
 				elif method == "confetti":
 					if "value" in data and isinstance(data["value"], bool):
 						database[data["username"]]["confetti"] = data["value"]
@@ -270,12 +277,8 @@ async def api(request):
 								updatedb()
 						except:
 							pass
-						if not check_tier(data["username"], "plus"):
-							mesgs = -1
-						else:
-							mesgs = await librus.get_messages()
 						return response(json.dumps({
-							"messages": mesgs,
+							"messages": 0,
 							"luckynum": lucky
 						}), 200)
 					return response("", 403)

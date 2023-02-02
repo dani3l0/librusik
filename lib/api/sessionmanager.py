@@ -1,16 +1,19 @@
 class SessionManager:
 	def __init__(self, database):
 		self.sessions = {}
+		self.notifications = {}
 		self.updatedb(database)
 
 	def updatedb(self, database):
 		for user in database:
 			if user not in self.sessions:
 				self.sessions[user] = None
+				self.notifications[user] = []
 		s_ = self.sessions.copy()
 		for user in s_:
 			if user not in database:
 				del self.sessions[user]
+				del self.notifications[user]
 
 	def get(self, user):
 		try:
@@ -23,3 +26,17 @@ class SessionManager:
 			self.sessions[user] = session
 		except:
 			pass
+
+	def get_notifications(self, user, notifs):
+		notifs_cached = []
+		for n in self.notifications[user]:
+			notifs_cached.append(str(n))
+		notifs_str = []
+		for n in notifs:
+			notifs_str.append(str(n))
+		n_count = len(notifs) - len(set(notifs_cached) & set(notifs_str))
+		self.notifications[user] = notifs
+		return {
+			"new": n_count,
+			"notifications": self.notifications
+		}

@@ -78,6 +78,18 @@ function indexpage() {
 			}
 		}
 	});
+	post("api", {
+		"username": cokie["username"],
+		"password": cokie["password"],
+		"method": "get_notifications"
+	}, function(data) {
+		if (data.status == 200) {
+			let resp = JSON.parse(data.responseText);
+		}
+		else {
+			
+		}
+	}, 15);
 }
 function loginpage() {
 	rminputs();
@@ -111,11 +123,11 @@ function rminputs() {
 	var inputs = document.getElementsByTagName("input");
 	for (let i = 0; i < inputs.length; i++) inputs[i].value = "";
 }
-function post(location, data, callback) {
+function post(location, data, callback, timeout = 5) {
 	var xhr = new XMLHttpRequest();
 	xhr.open("POST", location, true);
 	xhr.setRequestHeader("Content-Type", "application/json");
-	xhr.timeout = 3000;
+	xhr.timeout = timeout * 1000;
 	xhr.onreadystatechange = function() {
 		if (this.readyState === 4) {
 			callback(this);
@@ -405,23 +417,11 @@ function checkmsg(url) {
 	}, function(data) {
 		try {
 			getByID("datafetcher").classList.add("hidden");
-			var messages = getByID("messages");
-			var messagest = messages.getElementsByTagName("div")[1];
-			if (!messages) return;
 			var lucky = getByID("luckynum");
 			var luckyt = lucky.getElementsByTagName("div")[1];
 			if (data.status == 200) {
 				var k = JSON.parse(data.responseText);
-				if (k.messages > 0) {
-					let addon = "s";
-					if (k.messages == 1) addon = "";
-					messagest.innerText =  k.messages + " new message" + addon;
-					messages.classList.add("unread");
-				}
-				else if (k.messages == -1) messagest.innerHTML = `Messages are available in <div class="tier plus"></div> tier.`
-				else messagest.innerText = "No new messages";
-				messages.classList.remove("hidden");
-				if (k.luckynum == "None") luckyt.innerText = "It seems there is no lucky number at this moment.";
+				if (k.luckynum == -1) luckyt.innerText = "It seems there is no lucky number at this moment.";
 				else {
 					lucky.classList.add("yes");
 					luckyt.innerHTML = "Today's lucky number is <b>" + k.luckynum + "</b>";
