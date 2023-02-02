@@ -236,12 +236,16 @@ async def api(request):
 						"contact": config["contact_uri"]
 					}, 200)
 				elif method == "get_notifications":
-					librus = Librus(SESSIONS.get(data["username"]))
-					if await librus.mktoken(database[data["username"]]["l_login"], decrypt(database[data["username"]]["l_passwd"])):
-						notifications = await librus.get_notifications()
-						return JSONresponse(SESSIONS.get_notifications(data["username"], notifications), 200)
+					REQ_TIER = "pro"
+					if check_tier(data["username"], REQ_TIER):
+						librus = Librus(SESSIONS.get(data["username"]))
+						if await librus.mktoken(database[data["username"]]["l_login"], decrypt(database[data["username"]]["l_passwd"])):
+							notifications = await librus.get_notifications()
+							return JSONresponse(SESSIONS.get_notifications(data["username"], notifications), 200)
+						else:
+							return response({"new": 0, "notifications": []}, 403)
 					else:
-						return response("", 403)
+						return response(REQ_TIER, 700)
 				elif method == "confetti":
 					if "value" in data and isinstance(data["value"], bool):
 						database[data["username"]]["confetti"] = data["value"]

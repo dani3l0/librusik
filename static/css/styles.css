@@ -1190,9 +1190,14 @@ iframe {
 	background-color: #444;
 }
 .separator {
+	display: block;
 	color: #999;
 	margin: 24px 0 6px;
 	color: #FB0;
+}
+.separator.wider {
+	color: #AAA;
+	margin: 48px 0;
 }
 #darken {
 	z-index: 3000;

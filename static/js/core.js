@@ -84,10 +84,10 @@ function indexpage() {
 		"password": cokie["password"],
 		"method": "get_notifications"
 	}, function(data) {
+		getByID("notifications").innerHTML = ""
 		if (data.status == 200) {
 			let resp = JSON.parse(data.responseText);
 			let n = resp["notifications"]
-			getByID("notifications").innerHTML = ""
 			let counter = 0;
 			if (resp["new"]) {
 				getByID("notifier").classList.add("notifing");
@@ -102,9 +102,8 @@ function indexpage() {
 				getByID("notifications").innerHTML += parse_notification(n[i])
 			}
 		}
-		else {
-
-		}
+		else if (data.status == 700) getByID("notifications").innerHTML += `<b class="separator wider">This feature is available in <div class="tier ${data.responseText}"></div> tier.</b>`
+		else getByID("notifications").innerHTML += `<p class="separator wider">Couldn't fetch data.</p>`
 	}, 15);
 }
 
