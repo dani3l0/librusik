@@ -357,33 +357,33 @@ class Librus:
 	def check_period(self, date, period):
 		return (datetime.now() - self.parseAddDate(date)).days <= period
 
-	async def get_notifications(self):
+	async def get_notifications(self, days=21):
 		cache = []
 		try:
 			_grades = await self.get_grades()
 			for subj in _grades:
 				for grade in _grades[subj]:
-					if self.check_period(grade["AddDate"], 14):
+					if self.check_period(grade["AddDate"], days):
 						grade["type"] = "grade"
 						grade["Lesson"] = subj
 						cache.append(grade)
 
 			_messages = await self.get_messages()
 			for message in _messages:
-				if self.check_period(message["date"], 14):
+				if self.check_period(message["date"], days):
 					message["type"] = "message"
 					message["AddDate"] = message["date"]
 					cache.append(message)
 
 			_exams = await self.get_exams()
 			for exam in _exams:
-				if self.check_period(exam["AddDate"], 14):
+				if self.check_period(exam["AddDate"], days):
 					exam["type"] = "exam"
 					cache.append(exam)
 
 			_attendances = await self.get_attendances()
 			for entry in _attendances:
-				if self.check_period(entry["Added"], 14) and not entry["isPresence"]:
+				if self.check_period(entry["Added"], days) and not entry["isPresence"]:
 					entry["type"] = "attendance"
 					entry["AddDate"] = entry["Added"]
 					cache.append(entry)

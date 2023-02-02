@@ -104,7 +104,7 @@ function indexpage() {
 		}
 		else if (data.status == 700) getByID("notifications").innerHTML += `<b class="separator wider">This feature is available in <div class="tier ${data.responseText}"></div> tier.</b>`
 		else getByID("notifications").innerHTML += `<p class="separator wider">Couldn't fetch data.</p>`
-	}, 15);
+	}, 30);
 }
 
 function darken(y) {
@@ -135,7 +135,7 @@ function parse_notification(item, i, unread) {
 	if (item.type == "message") {
 		icon = "email";
 		title = `New message from ${item.from}`;
-		text = `${item.subject}<br>Sent ${item.date}`
+		text = `Subject: ${item.subject}<br>Sent ${item.date}`
 	}
 	else if (item.type == "grade") {
 		icon = "book";
@@ -153,7 +153,7 @@ function parse_notification(item, i, unread) {
 	else if (item.type == "exam") {
 		icon = "edit";
 		title = `New exam from ${item.Lesson}`;
-		text = `${item.AddedBy.FirstName} ${item.AddedBy.LastName} added a new exam on ${item.Date}.<br>Sent ${item.AddDate}`
+		text = `${item.AddedBy.FirstName} ${item.AddedBy.LastName} added a new exam on ${item.Date}.<br>Added ${item.AddDate}`
 	}
 	let highlight = ""
 	if (i < unread) highlight = ` class="unread"`
