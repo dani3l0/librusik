@@ -52,6 +52,7 @@ body {
 	overflow-x: hidden;
 	padding: 0 10px 0;
 	margin: 0 auto;
+	--blur: 8px;
 }
 .icon {
 	font-family: 'Material Symbols Rounded';
@@ -100,12 +101,13 @@ h1 {
 	font-size: 14px;
 }
 .top {
-	background: linear-gradient(to bottom, rgba(34, 34, 34, 0.9) 92.5%, transparent);
+	background: #222C;
 	position: sticky;
 	top: 0;
 	margin: 0 -10px;
 	padding: 18px 10px 8px;
 	z-index: 1;
+	backdrop-filter: blur(var(--blur));
 }
 button {
 	color: #48F;
@@ -1129,7 +1131,7 @@ iframe {
 	border-radius: 20px;
 	cursor: default;
 	left: 50%;
-	background: #222E;
+	background: #222C;
 	overflow-y: scroll;
 	width: calc(100vw - 32px);
 	height: calc(100vh - 32px);
@@ -1167,10 +1169,11 @@ iframe {
 	position: sticky;
 	padding: 18px 12px 14px;
 	top: -1px;
-	background: #2D2D2DEE;
+	background: #2B2B2BCC;
 	width: 100%;
 	z-index: 101;
 	display: flex;
+	backdrop-filter: blur(var(--blur));
 	align-items: center;
 	text-align: left;
 }
@@ -1209,7 +1212,8 @@ iframe {
 	left: 0;
 	width: 100%;
 	height: 100vh;
-	background: #1119;
+	background: #0006;
+	backdrop-filter: blur(var(--blur));
 	opacity: 0;
 	visibility: hidden;
 	transition: opacity .4s, visibility .4s;
