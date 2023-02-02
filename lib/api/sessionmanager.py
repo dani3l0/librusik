@@ -38,5 +38,5 @@ class SessionManager:
 		self.notifications[user] = notifs
 		return {
 			"new": n_count,
-			"notifications": self.notifications
+			"notifications": self.notifications[user]
 		}
