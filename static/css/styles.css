@@ -145,9 +145,9 @@ button.highlighted:hover {
 	margin-bottom: 12px;
 	width: 48px;
 	height: 48px;
-	background-image: url("../img/back.svg");
-	background-position: center;
-	background-repeat: no-repeat;
+	background-image: url("../img/back.svg") !important;
+	background-position: center !important;
+	background-repeat: no-repeat !important;
 	border-radius: 1000px;
 }
 .panelitem > * {
@@ -1172,7 +1172,7 @@ iframe {
 	align-items: center;
 	text-align: left;
 }
-.notifications .back {
+.notifications > .notify-header > .back {
 	border: 1px solid #444;
 	cursor: pointer;
 	transition: background .3s;
@@ -1186,7 +1186,7 @@ iframe {
 	padding: 0;
 	margin: 0;
 }
-.notifications .back:hover {
+.notifications > .notify-header > .back:hover {
 	background-color: #444;
 }
 .separator {
