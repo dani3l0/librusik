@@ -351,26 +351,40 @@ class Librus:
 		ptc = await self.get_data("ParentTeacherConferences")
 		return ptc["ParentTeacherConferences"]
 
-	async def get_notifications(self):
+	def parseAddDate(self, date):
+		return datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
+
+	def check_period(self, date, period):
+		return (datetime.now() - self.parseAddDate(date)).days <= period
+
+	async def get_notifications(self, cache=[]):
 		if True:
-			grades = (await self.get_data("Grades"))["Grades"]
-			timetable = (await self.get_data("Timetables"))["Timetable"]
-			exams = (await self.get_data("HomeWorks"))["HomeWorks"]
-			messages = await self.get_messages()
-			conferences = (await self.get_data("ParentTeacherConferences"))["ParentTeacherConferences"]
-			freedays = (await self.get_data("SchoolFreeDays"))["SchoolFreeDays"]
-			teacherfreedays = (await self.get_data("TeacherFreeDays"))["TeacherFreeDays"]
-			attendances = (await self.get_data("Attendances"))["Attendances"]
-			return {
-				"grades": len(grades),
-				"timetable": len(timetable),
-				"exams": len(exams),
-				"messages": len(messages),
-				"conferences": len(conferences),
-				"freedays": len(freedays),
-				"teacherfreedays": len(teacherfreedays),
-				"attendances": len(attendances)
-			}
+			cache = []
+			_grades = await self.get_grades()
+			for subj in _grades:
+				for grade in _grades[subj]:
+					if self.check_period(grade["AddDate"], 14):
+						cache.append(grade)
+
+			_messages = await self.get_messages()
+			for message in _messages:
+				if self.check_period(message["date"], 14):
+					message["AddDate"] = message["date"]
+					cache.append(message)
+
+			_exams = await self.get_exams()
+			for exam in _exams:
+				if self.check_period(exam["AddDate"], 14):
+					cache.append(exam)
+
+			_attendances = await self.get_attendances()
+			for entry in _attendances:
+				if self.check_period(entry["Added"], 14) and not entry["isPresence"]:
+					entry["AddDate"] = entry["Added"]
+					cache.append(entry)
+
+			sorted_cache = sorted(cache, key=lambda x: self.parseAddDate(x["AddDate"]), reverse=True)
+			return sorted_cache
 
 	async def get_unread_messages(self):
 		try:
