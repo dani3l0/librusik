@@ -717,7 +717,7 @@ function downloadMsgFile(elem, uri) {
 	dwbutton.innerText = "Download";
 	let filename = elem.innerText;
 	getByID('download-prompt').classList.add("shown");
-	let darken = getByID('darken');
+	let darken = getByID('darkenmsg');
 	darken.style.display = null;
 	setTimeout(function() {
 		darken.classList.remove("hidden");
@@ -740,7 +740,7 @@ function downloadMsgFileY(elem, uri) {
 }
 function closeFileDownload() {
 	getByID('download-prompt').classList.remove("shown");
-	let darken = getByID('darken');
+	let darken = getByID('darkenmsg');
 	darken.classList.add("hidden");
 	setTimeout(function() {
 		darken.style.display = "none";
