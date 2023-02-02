@@ -365,6 +365,7 @@ class Librus:
 				for grade in _grades[subj]:
 					if self.check_period(grade["AddDate"], 14):
 						grade["type"] = "grade"
+						grade["Lesson"] = subj
 						cache.append(grade)
 
 			_messages = await self.get_messages()

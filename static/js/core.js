@@ -88,7 +88,16 @@ function indexpage() {
 			let resp = JSON.parse(data.responseText);
 			let n = resp["notifications"]
 			getByID("notifications").innerHTML = ""
-			for (let i = 0; i < n.length; i++) {
+			let counter = 0;
+			if (resp["new"]) {
+				getByID("notifications").innerHTML += `<p class="separator">New notifications</p>`
+				for (let i = counter; i < resp["new"]; i++) {
+					getByID("notifications").innerHTML += parse_notification(n[i])
+					counter++;
+				}
+				if (resp["new"] < n.length) getByID("notifications").innerHTML += `<p class="separator">Old notifications</p>`
+			}
+			for (let i = counter; i < n.length; i++) {
 				getByID("notifications").innerHTML += parse_notification(n[i])
 			}
 		}
@@ -111,7 +120,7 @@ function toggle_notifications(show) {
 	}
 }
 
-function parse_notification(item) {
+function parse_notification(item, i, unread) {
 	console.log(item.type);
 	let icon, title, text = "";
 	if (item.type == "message") {
@@ -135,9 +144,11 @@ function parse_notification(item) {
 	else if (item.type == "exam") {
 		icon = "edit";
 		title = `New exam from ${item.Lesson}`;
-		text = `${item.AddedBy.FirstName} ${item.AddedBy.LastName} added a new exam on ${item.Date}<br>Sent ${item.AddDate}`
+		text = `${item.AddedBy.FirstName} ${item.AddedBy.LastName} added a new exam on ${item.Date}.<br>Sent ${item.AddDate}`
 	}
-	return `<div>
+	let highlight = ""
+	if (i < unread) highlight = ` class="unread"`
+	return `<div${highlight}>
 		<div class="icon">${icon}</div>
 		<div class="text">
 			<div class="title">${title}</div>

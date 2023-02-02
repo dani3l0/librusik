@@ -1084,6 +1084,7 @@ iframe {
 	max-height: 720px;
 	padding: 0;
 	color: inherit;
+	z-index: 5000;
 	transition: all .4s !important;
 }
 .notif_button::-webkit-scrollbar {
@@ -1100,9 +1101,8 @@ iframe {
 .notif_button > .notifications {
 	font-size: 13px;
 	opacity: 0;
-	padding: 16px 8px;
-	min-height: calc(100% - 32px);
-	transform: scale(0.9);
+	padding-bottom: 24px;
+	min-height: 100%;
 	transition: opacity .4s, transform .4s;
 }
 .notif_button.expanded {
@@ -1123,17 +1123,7 @@ iframe {
 }
 .notif_button.expanded > .notifications {
 	opacity: 1;
-	transform: none;
 	transition: opacity .4s .8s, transform .4s .8s;
-}
-.notifications .back {
-	border: 1px solid #444;
-	cursor: pointer;
-	transition: background .3s;
-	margin: 0 auto 10px;
-}
-.notifications .back:hover {
-	background-color: #444;
 }
 #notifications > div {
 	display: flex;
@@ -1143,13 +1133,47 @@ iframe {
 }
 #notifications .icon {
 	margin-right: 4px;
-	padding: 0 20px;
+	padding: 0 24px;
+	margin-left: 8px;
 }
 #notifications .title {
 	font-size: 16px;
 }
 #notifications .text > .text {
 	color: #AAA;
+}
+.notify-header {
+	position: sticky;
+	padding: 18px 12px 14px;
+	top: 0;
+	background: #333E;
+	width: 100%;
+	z-index: 101;
+	display: flex;
+	align-items: center;
+	text-align: left;
+}
+.notifications .back {
+	border: 1px solid #444;
+	cursor: pointer;
+	transition: background .3s;
+	margin: 2px 12px 2px 6px;'
+}
+.notifications .subheader {
+	margin: 0;
+	padding: 0;
+}
+.notifications .header {
+	padding: 0;
+	margin: 0;
+}
+.notifications .back:hover {
+	background-color: #444;
+}
+.separator {
+	color: #999;
+	margin: 24px 0 6px;
+	color: #FB0;
 }
 @media (max-width: 420px) {
 	.circ {

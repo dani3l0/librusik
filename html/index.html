@@ -23,10 +23,16 @@
 		<button class="notif_button" onclick="toggle_notifications(true)">
 			<div class="icon">notifications</div>
 			<div class="notifications">
-				<div class="back" onclick="toggle_notifications(false)"></div>
-				<div class="header">Notifications</div>
-				<div class="subheader">Activity from last 14 days</div>
-				<div id="notifications">Please wait while fetching notifications...</div>
+				<div class="notify-header">
+					<div class="back" onclick="toggle_notifications(false)"></div>
+					<div>
+						<div class="header">Notifications</div>
+						<div class="subheader">Activity from the last 14 days</div>
+					</div>
+				</div>
+				<div id="notifications">
+					<p class="separator" style="color: #AAA;">Please wait while loading notifications...</p>
+				</div>
 			</div>
 		</button>
 		<br>
