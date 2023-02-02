@@ -1166,7 +1166,7 @@ iframe {
 .notify-header {
 	position: sticky;
 	padding: 18px 12px 14px;
-	top: 0;
+	top: -1px;
 	background: #333E;
 	width: 100%;
 	z-index: 101;
