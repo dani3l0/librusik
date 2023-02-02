@@ -502,11 +502,8 @@ function checkmsg(url) {
 					luckyt.innerHTML = "Today's lucky number is <b>" + k.luckynum + "</b>";
 				}
 				setTimeout(function() {
-					messages.style.opacity = null;
-				}, 300);
-				setTimeout(function() {
 					lucky.classList.remove("hidden");
-				}, 1000);
+				}, 500);
 			}
 		}
 		catch (e) {}

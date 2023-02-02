@@ -272,7 +272,7 @@ async def api(request):
 						SESSIONS.save(data["username"], librus.headers)
 						lucky = await librus.get_lucky_number()
 						if not lucky:
-							lucky = "None"
+							lucky = -1
 						try:
 							m = (await librus.get_data("Classes"))["Class"]
 							if database[data["username"]]["year_ends"] != m["EndSchoolYear"] or database[data["username"]]["year_starts"] != m["BeginSchoolYear"]:
