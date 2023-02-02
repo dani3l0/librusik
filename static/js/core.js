@@ -107,14 +107,23 @@ function indexpage() {
 	}, 15);
 }
 
+function darken(y) {
+	let e = getByID("darken").classList;
+	if (y) e.add("shown");
+	else e.remove("shown");
+}
+
 var NOTIFS_SHOWN = false;
 function toggle_notifications(show) {
 	btn = document.getElementsByClassName("notif_button")[0];
+	btn.scrollTo(0,0);
 	if (show && !NOTIFS_SHOWN) {
+		darken(true);
 		btn.classList.add("expanded");
 		setTimeout(function() {NOTIFS_SHOWN = true}, 500);
 	}
 	else if (!show && NOTIFS_SHOWN) {
+		darken(false);
 		btn.classList.remove("expanded");
 		setTimeout(function() {NOTIFS_SHOWN = false}, 500);
 	}

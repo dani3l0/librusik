@@ -17,24 +17,24 @@
 		<b style="font-size: 16px;">This is a demo tier.</b>
 		<div id="demotext">Subscription ends in <b id="demodays"></b> days. Enjoy all features!</div>
 	</div>
+	<button class="notif_button" onclick="toggle_notifications(true)">
+		<div class="icon">notifications</div>
+		<div class="notifications">
+			<div class="notify-header">
+				<div class="back" onclick="toggle_notifications(false)"></div>
+				<div>
+					<div class="header">Notifications</div>
+					<div class="subheader">Activity from the last 14 days</div>
+				</div>
+			</div>
+			<div id="notifications">
+				<p class="separator" style="color: #AAA;">Please wait while loading notifications...</p>
+			</div>
+		</div>
+	</button>
 	<div class="top">
 		<h1>Librusik</h1><b id="tier" class="tiers tier"></b>
 		<button class="gotoapp" onclick="agou('panel')" style="display: none;">Panel</button>
-		<button class="notif_button" onclick="toggle_notifications(true)">
-			<div class="icon">notifications</div>
-			<div class="notifications">
-				<div class="notify-header">
-					<div class="back" onclick="toggle_notifications(false)"></div>
-					<div>
-						<div class="header">Notifications</div>
-						<div class="subheader">Activity from the last 14 days</div>
-					</div>
-				</div>
-				<div id="notifications">
-					<p class="separator" style="color: #AAA;">Please wait while loading notifications...</p>
-				</div>
-			</div>
-		</button>
 		<br>
 		<div id="panel">
 			<button onclick="goto('home', 0)" class="panelitem active">
@@ -57,5 +57,6 @@
 	</div>
 	<center>
 		<div id="content"></div>
+		<div id="darken" onclick="toggle_notifications(false)"></div>
 	</center>
 </body>
