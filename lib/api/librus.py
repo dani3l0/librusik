@@ -392,7 +392,7 @@ class Librus:
 		try:
 			_attendances = await self.get_attendances()
 			for entry in _attendances:
-				if self.check_period(entry["Added"], days) and not entry["isPresence"]:
+				if self.check_period(entry["Added"], days) and not entry["isPresence"] and entry["Short"] != "u":
 					entry["type"] = "attendance"
 					entry["AddDate"] = entry["Added"]
 					cache.append(entry)
