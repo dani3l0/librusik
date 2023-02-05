@@ -1146,6 +1146,9 @@ iframe {
 	opacity: 1;
 	transition: opacity .4s .8s, transform .4s .8s;
 }
+#notifications {
+	max-width: 638px;
+}
 #notifications > div {
 	display: flex;
 	align-items: center;
