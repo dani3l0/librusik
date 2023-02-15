@@ -674,7 +674,7 @@ async def attendances(request):
 				unexcused_total = 0
 				for x in result:
 					now = datetime.strptime(x["Date"], '%Y-%m-%d')
-					semestr = semesterEnds < now
+					semestr = semesterEnds <= now
 					if x["Lesson"] not in persub:
 						persub[x["Lesson"]] = {
 							"presences": [0, 0],
