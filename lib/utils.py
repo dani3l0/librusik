@@ -132,19 +132,26 @@ def getval(path, toInt = False):
 
 def gettemp():
 	d = 0
-	try:
-		path = "/sys/class/hwmon"
-		hwmon = [f"{path}/{x}" for x in os.listdir(path)]
-		for sensor in hwmon:
-			if getval(f"{sensor}/name") == "coretemp":
-				d = getval(f"{sensor}/temp1_input", True)
-	except:
-		try:
-			d = getval("/sys/class/thermal/thermal_zone0/temp", True)
-		except:
-			pass
+	sensors = ["coretemp", "cputhermal", "k10temp"]
+	path = "/sys/class/hwmon"
+	hwmon = [f"{path}/{x}" for x in os.listdir(path)]
+	for sensor in hwmon:
+		for name in sensors:
+			if name in open(f"{sensor}/name", "r").read():
+				contents = [f"{sensor}/{x}" for x in os.listdir(sensor)]
+				temps = [0]
+				for x in contents:
+					try:
+						if x.endswith("_input"):
+							temps.append(int(
+								open(f"{x}", "r").read()
+							))
+					except:
+						pass
+				d = max(temps)
+				break
 	if len(str(d)) > 3:
-		d = d / 1000
+		d /= 1000
 	return d
 
 def getloadavg():
