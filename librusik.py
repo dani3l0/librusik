@@ -569,6 +569,7 @@ async def timetable(request):
 				details = ""
 				lessons = 0
 				for day in result:
+					nc = [h for h in result[day] if not h["isCancelled"]]
 					changes = "koolredb"
 					lessons += len(result[day])
 					details += """<div id="%s" class="hidden" style="display:none"><button class="back" onclick="showdiv('%s', 'overview', true)"></button><div class="header">%s</div><div class="subheader">%s lessons</div>""" % (day.lower(), day.lower(), day, len(result[day]))
@@ -581,6 +582,7 @@ async def timetable(request):
 							changediv = "highlighted"
 							changes = "highlighted"
 						elif x["isCancelled"]:
+							lessons -= 1
 							teacher = "nobody"
 							change = " (Cancelled)"
 							changediv = "highlighted"
@@ -589,8 +591,8 @@ async def timetable(request):
 							details += """<button class="bubble unclickable wide %s"><div class="name">%s</div><div class="value">with %s</div><div class="value">Classroom %s</div><div class="value">%s - %s</div></button>""" % (changediv, x["Subject"] + change, teacher, x["Classroom"], x["HourFrom"], x["HourTo"])
 						else:
 							details += """<button class="bubble unclickable wide %s"><div class="name">%s</div><div class="value">with %s</div><div class="value">%s - %s</div></button>""" % (changediv, x["Subject"] + change, teacher, x["HourFrom"], x["HourTo"])
-					hours = len(result[day])
-					page += """<button class="bubble %s" onclick="showdiv('overview', '%s')"><div class="name">%s</div><div class="value">%s lesson%s</div><div class="value">%s - %s</div></button>""" % (changes, day.lower(), day, hours, "s" if (hours != 1) else "", result[day][0]["HourFrom"], result[day][hours - 1]["HourTo"])
+					hours = len(nc)
+					page += """<button class="bubble %s" onclick="showdiv('overview', '%s')"><div class="name">%s</div><div class="value">%s lesson%s</div><div class="value">%s - %s</div></button>""" % (changes, day.lower(), day, hours, "s" if (hours != 1) else "", nc[0]["HourFrom"], nc[hours - 1]["HourTo"])
 					details += "</div>"
 				return response(resources["timetable"] % (week, lessons, page, details), 200)
 			return response(resources["error"] % (mkbackbtn("/more", 2), "Error", ERR_403, mktryagainbtn("/timetable", 2)), 403)
