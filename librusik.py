@@ -507,7 +507,10 @@ async def more(request):
 		if auth(data):
 			demo = demo_err(data["username"])
 			if demo != False: return demo
-			return response(resources["more"], 200)
+			tierr = ""
+			if database[data["username"]]["tier"] != "pro":
+				tierr = """<button style="background: #FB0; color: #222" onclick="goto('settings', 3)">Upgrade your tier to access more cool features!</button><br>"""
+			return response(resources["more"] % (tierr), 200)
 		return response("", 401)
 	except:
 		tr = traceback.format_exc().replace(LIBRUSIK_PATH, "")
