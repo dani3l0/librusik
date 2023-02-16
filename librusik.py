@@ -508,7 +508,7 @@ async def more(request):
 			demo = demo_err(data["username"])
 			if demo != False: return demo
 			tierr = ""
-			if database[data["username"]]["tier"] != "pro":
+			if config["enable_tiers"] and database[data["username"]]["tier"] != "pro":
 				tierr = """<button style="background: #FB0; color: #222" onclick="goto('settings', 3)">Upgrade your tier to access more cool features!</button><br>"""
 			return response(resources["more"] % (tierr), 200)
 		return response("", 401)
