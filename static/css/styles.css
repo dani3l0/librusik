@@ -1222,6 +1222,18 @@ iframe {
 	opacity: 1;
 	transition: opacity .4s;
 }
+.traceback {
+	max-width: 480px;
+	background: #080808;
+	padding: 10px 12px;
+	text-align: left;
+	font-family: monospace;
+	font-size: 11px;
+	color: #0F8;
+	border-radius: 10px;
+	margin: 8px 0 0;
+	user-select: text;
+}
 @media (max-width: 420px) {
 	.circ {
 		width: 180px;

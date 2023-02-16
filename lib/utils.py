@@ -237,3 +237,6 @@ def tierror_(REQ_TIER, backpath, button, where):
 	else:
 		backpath = mkbackbtn(backpath, 2)
 	return (backpath, "Feature unavailable", "This feature is available in <div class=\"tier " + REQ_TIER + "\"></div> tier.", "<button onclick=\"goto('settings', 3, true)\" class=\"highlighted\">Upgrade tier</button>" + button)
+
+def copyable_tr(tr):
+	return """Server couldn't process your request. Here's what happened:<div class="traceback">%s</div>""" % parseDumbs(tr)

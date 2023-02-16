@@ -388,7 +388,7 @@ async def home(request):
 			return response(resources["home"] % (welcome, database[data["username"]]["first_name"], greeting, progbar, round(percent), daysleft, addon, dprogbar, round(dpercent), ddaysleft, daddon, progbar, dprogbar), 200)
 		return response("", 401)
 	except:
-		tr = traceback.format_exc().replace(LIBRUSIK_PATH, "")
+		tr = copyable_tr(traceback.format_exc().replace(LIBRUSIK_PATH, ""))
 		return response(resources["error"] % ("", "Internal server error", tr, mktryagainbtn("/home", 0)), 500)
 
 
@@ -497,7 +497,7 @@ async def grades(request):
 			return response(resources["error"] % ("", "Error", ERR_403, mktryagainbtn("/grades", 1)), 403)
 		return response("", 401)
 	except:
-		tr = traceback.format_exc().replace(LIBRUSIK_PATH, "")
+		tr = copyable_tr(traceback.format_exc().replace(LIBRUSIK_PATH, ""))
 		return response(resources["error"] % ("", "Internal server error", tr, mktryagainbtn("/grades", 1)), 500)
 
 
@@ -513,7 +513,7 @@ async def more(request):
 			return response(resources["more"] % (tierr), 200)
 		return response("", 401)
 	except:
-		tr = traceback.format_exc().replace(LIBRUSIK_PATH, "")
+		tr = copyable_tr(traceback.format_exc().replace(LIBRUSIK_PATH, ""))
 		return response(resources["error"] % ("", "Internal server error", tr, mktryagainbtn("/more", 2)), 500)
 
 
@@ -547,7 +547,7 @@ async def settings(request):
 			return response(resources["settings"] % (f + database[data["username"]]["profile_pic"], database[data["username"]]["first_name"], database[data["username"]]["last_name"], data["username"], showupgrade, resources["tiers"], resources["about"], imgs, parseDumbs(database[data["username"]]["l_login"]), parseDumbs(decrypt(database[data["username"]]["l_passwd"])), confeti, grades_cleanup, atends_cleanup), 200)
 		return response("", 401)
 	except:
-		tr = traceback.format_exc().replace(LIBRUSIK_PATH, "")
+		tr = copyable_tr(traceback.format_exc().replace(LIBRUSIK_PATH, ""))
 		return response(resources["error"] % ("", "Internal server error", tr, mktryagainbtn("/settings", 3)), 500)
 
 
@@ -598,7 +598,7 @@ async def timetable(request):
 			return response(resources["error"] % (mkbackbtn("/more", 2), "Error", ERR_403, mktryagainbtn("/timetable", 2)), 403)
 		return response("", 401)
 	except:
-		tr = traceback.format_exc().replace(LIBRUSIK_PATH, "")
+		tr = copyable_tr(traceback.format_exc().replace(LIBRUSIK_PATH, ""))
 		return response(resources["error"] % (mkbackbtn("/more", 2), "Internal server error", tr, mktryagainbtn("/timetable", 2)), 500)
 
 
@@ -653,7 +653,7 @@ async def attendances_old(request):
 			return response(resources["error"] % (mkbackbtn("/more", 2), "Error", ERR_403, mktryagainbtn("/attendancesold", 2)), 403)
 		return response("", 401)
 	except:
-		tr = traceback.format_exc().replace(LIBRUSIK_PATH, "")
+		tr = copyable_tr(traceback.format_exc().replace(LIBRUSIK_PATH, ""))
 		return response(resources["error"] % (mkbackbtn("/attendances", 2), "Internal server error", tr, mktryagainbtn("/attendancesold", 2)), 500)
 
 
@@ -774,7 +774,7 @@ async def attendances(request):
 			return response(resources["error"] % (mkbackbtn("/more", 2), "Error", ERR_403, mktryagainbtn("/attendances", 2)), 403)
 		return response("", 401)
 	except:
-		tr = traceback.format_exc().replace(LIBRUSIK_PATH, "")
+		tr = copyable_tr(traceback.format_exc().replace(LIBRUSIK_PATH, ""))
 		return response(resources["error"] % (mkbackbtn("/more", 2), "Internal server error", tr, mktryagainbtn("/attendances", 2)), 500)
 
 
@@ -819,7 +819,7 @@ async def exams(request):
 			return response(resources["error"] % (mkbackbtn("/more", 2), "Error", ERR_403, mktryagainbtn("/exams", 2)), 403)
 		return response("", 401)
 	except:
-		tr = traceback.format_exc().replace(LIBRUSIK_PATH, "")
+		tr = copyable_tr(traceback.format_exc().replace(LIBRUSIK_PATH, ""))
 		return response(resources["error"] % (mkbackbtn("/more", 2), "Internal server error", tr, mktryagainbtn("/exams", 2)), 500)
 
 
@@ -858,7 +858,7 @@ async def freedays(request):
 			return response(resources["error"] % (mkbackbtn("/more", 2), "Error", ERR_403, mktryagainbtn("/freedays", 2)), 403)
 		return response("", 401)
 	except:
-		tr = traceback.format_exc().replace(LIBRUSIK_PATH, "")
+		tr = copyable_tr(traceback.format_exc().replace(LIBRUSIK_PATH, ""))
 		return response(resources["error"] % (mkbackbtn("/more", 2), "Internal server error", tr, mktryagainbtn("/freedays", 2)), 500)
 
 
@@ -883,7 +883,7 @@ async def teacherfreedays(request):
 			return response(resources["error"] % (mkbackbtn("/more", 2), "Error", ERR_403, mktryagainbtn("/teacherfreedays", 2)), 403)
 		return response("", 401)
 	except:
-		tr = traceback.format_exc().replace(LIBRUSIK_PATH, "")
+		tr = copyable_tr(traceback.format_exc().replace(LIBRUSIK_PATH, ""))
 		return response(resources["error"] % (mkbackbtn("/more", 2), "Internal server error", tr, mktryagainbtn("/teacherfreedays", 2)), 500)
 
 
@@ -904,7 +904,7 @@ async def parentteacherconferences(request):
 			return response(resources["error"] % (mkbackbtn("/more", 2), "Error", ERR_403, mktryagainbtn("/parentteacherconferences", 2)), 403)
 		return response("", 401)
 	except:
-		tr = traceback.format_exc().replace(LIBRUSIK_PATH, "")
+		tr = copyable_tr(traceback.format_exc().replace(LIBRUSIK_PATH, ""))
 		return response(resources["error"] % (mkbackbtn("/more", 2), "Internal server error", tr, mktryagainbtn("/parentteacherconferences", 2)), 500)
 
 
@@ -933,7 +933,7 @@ async def school(request):
 			return response(resources["error"] % (mkbackbtn("/more", 2), "Error", ERR_403, mktryagainbtn("/school", 2)), 403)
 		return response("", 401)
 	except:
-		tr = traceback.format_exc().replace(LIBRUSIK_PATH, "")
+		tr = copyable_tr(traceback.format_exc().replace(LIBRUSIK_PATH, ""))
 		return response(resources["error"] % (mkbackbtn("/more", 2), "Internal server error", tr, mktryagainbtn("/school", 2)), 500)
 
 
@@ -958,7 +958,7 @@ async def messages(request):
 			return response(resources["error"] % (mkbackbtn("messages", 2), "Error", ERR_403, mktryagainbtn("/messages", 2)), 403)
 		return response("", 401)
 	except:
-		tr = traceback.format_exc().replace(LIBRUSIK_PATH, "")
+		tr = copyable_tr(traceback.format_exc().replace(LIBRUSIK_PATH, ""))
 		return response(resources["error"] % (mkbackbtn("messages", 2), "Internal server error", tr, mktryagainbtn("/messages", 2)), 500)
 
 
@@ -997,7 +997,7 @@ async def message(request):
 			return response(resources["error"] % (mkbackbtn(uri_full, 2), "Error", ERR_403, mktryagainbtn(uri_full, 2)), 403)
 		return response("", 401)
 	except:
-		tr = traceback.format_exc().replace(LIBRUSIK_PATH, "")
+		tr = copyable_tr(traceback.format_exc().replace(LIBRUSIK_PATH, ""))
 		return response(resources["error"] % (mkbackbtn(uri_full, 2), "Internal server error", tr, mktryagainbtn(uri_full, 2)), 500)
 
 
