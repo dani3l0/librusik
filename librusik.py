@@ -873,7 +873,8 @@ async def teacherfreedays(request):
 				SESSIONS.save(data["username"], librus.headers)
 				result = (await librus.get_teacher_free_days())[::-1]
 				page = ""
-				for x in result:
+				result_sorted = sorted(result, key=lambda x: librus.parseDate(x["DateFrom"]), reverse=True)
+				for x in result_sorted:
 					teacher = "%s %s" % (x["Teacher"]["FirstName"], x["Teacher"]["LastName"])
 					if "TimeTo" in x:
 						page += """<button class="bubble unclickable"><div class="name">%s</div><div class="value"><code>From &nbsp</code>%s, %s</div><div class="value"><code>To &nbsp&nbsp&nbsp</code>%s, %s</div></button>""" % (teacher, x["DateFrom"], x["TimeFrom"][:-3], x["DateTo"], x["TimeTo"][:-3])

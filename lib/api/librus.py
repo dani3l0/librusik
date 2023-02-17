@@ -354,6 +354,9 @@ class Librus:
 	def parseAddDate(self, date):
 		return datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
 
+	def parseDate(self, date):
+		return datetime.strptime(date, "%Y-%m-%d")
+
 	def check_period(self, date, period):
 		return (datetime.now() - self.parseAddDate(date)).days <= period
 
