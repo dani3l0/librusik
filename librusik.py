@@ -835,7 +835,8 @@ async def freedays(request):
 			librus = Librus(SESSIONS.get(data["username"]))
 			if await librus.mktoken(database[data["username"]]["l_login"], decrypt(database[data["username"]]["l_passwd"])):
 				SESSIONS.save(data["username"], librus.headers)
-				result = await librus.get_free_days()
+				res = await librus.get_free_days()
+				result = sorted(res, key=lambda x: librus.parseDate(x["DateFrom"]), reverse=True)
 				page = ""
 				free_closest = None
 				now = datetime.now()
