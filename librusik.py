@@ -466,11 +466,14 @@ async def grades(request):
 					divz += """<div id="%s" class="hidden" style="display: none"><button class="back" onclick="showdiv('%s', 'main', true)"></button><br><div class="header">%s</div><div class="subheader grades">Grades: %s%s</div>%s""" % (s.lower(), s.lower(), s, len(result[s]), savg, sdivz)
 				score = 0
 				if len(avgdict) >= 3:
-					avg = "%.02f" % round(sum(avgdict.values()) / len(avgdict), 2)
-					for x in avgdict:
-						score += avgdict[x]
-						fajnal = valueGrade(str(avgdict[x]))
-						averages += """<div class="item"><div class="name">%s</div><div class="value"><i>%s</i><input class="fgrade" oninput="calc(this)" value="%s"></div></div>""" % (x, fajnal, fajnal)
+					try:
+						avg = "%.02f" % round(sum(avgdict.values()) / len(avgdict), 2)
+						for x in avgdict:
+							score += avgdict[x]
+							fajnal = valueGrade(str(avgdict[x]))
+							averages += """<div class="item"><div class="name">%s</div><div class="value"><i>%s</i><input class="fgrade" oninput="calc(this)" value="%s"></div></div>""" % (x, fajnal, fajnal)
+					except:
+						pass
 				else:
 					avg = "Unavailable"
 				allocens.sort(key = lambda h: h["AddDate"], reverse = True)
