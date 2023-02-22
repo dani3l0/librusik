@@ -1,3 +1,4 @@
+import asyncio
 import base64
 import hashlib
 import json
@@ -6,6 +7,7 @@ import os
 import random
 import re
 import string
+from datetime import datetime
 from cryptography.fernet import Fernet
 from aiohttp import web
 
@@ -82,6 +84,29 @@ def load_html_resources(config):
         "error": open("html/error.html", "r").read(),
         "errorpage": open("html/geterror.html", "r").read(),
     }
+
+async def resources_watchdog(config):
+	print("--------------------------------------------")
+	print("WARNING: Dynamic html resources enabled")
+	print("Disable it if you don't do any related stuff")
+	print("--------------------------------------------")
+	obj_last = {}
+	while True:
+		res = os.listdir("html")
+		obj = {}
+		changes = False
+		for file in res:
+			obj[file] = os.path.getmtime(os.path.join("html", file))
+			if file not in obj_last:
+				obj_last[file] = obj[file]
+			if obj[file] != obj_last[file]:
+				changes = True
+		if changes:
+			timestamp = datetime.now().time()
+			print(f"{timestamp}  Resources have been changed. Reloading...")
+			load_html_resources(config)
+		obj_last = obj
+		await asyncio.sleep(1)
 
 
 # Encryption & passwords

@@ -37,7 +37,8 @@ CONFIG_DEFAULT = {
 		"plus": "To get, buy me a beer.",
 		"pro": "To get, solve the <a target='blank' href='https://www.youtube.com/watch?v=dQw4w9WgXcQ'>puzzle</a>."
 	},
-	"debug": False
+	"debug": False,
+	"devel": False
 }
 
 
@@ -60,8 +61,6 @@ async def updatetitles():
 		welcome = random.choice(welcomes)
 		greeting = random.choice(greetings)
 		await asyncio.sleep(60)
-
-asyncio.gather(updatetitles())
 
 
 def updatedb():
@@ -1222,13 +1221,21 @@ app.add_routes([
 	web.static('/', 'static')
 ])
 
-loop = asyncio.get_event_loop()
+tasks = []
 
 if config["ssl"]:
 	ssl_context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
 	ssl_context.load_cert_chain(config["pubkey"], config["privkey"])
-	loop.create_task(web._run_app(app, port = config["port"], ssl_context = ssl_context))
+	tasks.append(web._run_app(app, port = config["port"], ssl_context = ssl_context))
 else:
-	loop.create_task(web._run_app(app, port = config["port"]))
+	tasks.append(web._run_app(app, port = config["port"]))
 
-loop.run_forever()
+tasks.append(updatetitles())
+if config["devel"]:
+	tasks.append(resources_watchdog(config))
+
+async def main():
+	await asyncio.gather(*tasks)
+
+
+asyncio.run(main())
