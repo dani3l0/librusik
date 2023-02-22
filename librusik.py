@@ -473,7 +473,7 @@ async def grades(request):
 							fajnal = valueGrade(str(avgdict[x]))
 							averages += """<div class="item"><div class="name">%s</div><div class="value"><i>%s</i><input class="fgrade" oninput="calc(this)" value="%s"></div></div>""" % (x, fajnal, fajnal)
 					except:
-						pass
+						avg = "Broken"
 				else:
 					avg = "Unavailable"
 				allocens.sort(key = lambda h: h["AddDate"], reverse = True)
