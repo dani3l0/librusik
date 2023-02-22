@@ -180,7 +180,7 @@ def gradeValue(ocen):
 			return int(ocen[:1]) - 0.25
 		else:
 			return int(ocen)
-	return None
+	return 0
 
 def valueGrade(ocen):
 	if ".5" in ocen:

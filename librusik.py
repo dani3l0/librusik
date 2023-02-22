@@ -423,12 +423,12 @@ async def grades(request):
 					for x in result[s]:
 						grades += 1
 						weight = ", weight %s" % x["Weight"]
+						grd = gradeValue(x["Grade"])
 						if weight == ", weight none":
 							weight = ""
 						else:
-							grd = gradeValue(x["Grade"])
 							if grd:
-								for unusedshit in range(0, x["Weight"]):
+								for _ in range(0, x["Weight"]):
 									savgarr.append(grd)
 						ocenq = """<button class="bubble wide unclickable"><div class="name ocen">%s</div><div class="oceninfo"><div class="value"><b>%s</b>%s</div><div class="value">%s</div><div class="value"><i>%s</i></div><div class="value">Added by %s %s</div><div class="value">%s</div></div></button>""" % (x["Grade"], x["Category"].title(), weight, s, parseDumbs(x["Comment"]), x["AddedBy"]["FirstName"], x["AddedBy"]["LastName"], x["AddDate"])
 						ocenk = """<button class="bubble wide unclickable"><div class="name ocen">%s</div><div class="oceninfo"><div class="value"><b>%s</b>%s</div><div class="value"><i>%s</i></div><div class="value">Added by %s %s</div><div class="value">%s</div></div></button>%s""" % (x["Grade"], x["Category"].title(), weight, parseDumbs(x["Comment"]), x["AddedBy"]["FirstName"], x["AddedBy"]["LastName"], x["AddDate"], ocenk)
@@ -446,7 +446,8 @@ async def grades(request):
 							startnewsmstr = True
 						if (x["isSemester"] and (result[s].index(x) + 1) == len(result[s])) or x["isFinal"]:
 							koniec = True
-							avgdict[s] = gradeValue(x["Grade"])
+							if grd:
+								avgdict[s] = grd
 					if startnewsmstr:
 						ocenk = """<div class="marker">Current semester</div>%s""" % ocenk
 					sdivz += ocenk
