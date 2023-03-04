@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<link rel="shortcut icon" href="img/logo.png">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="lib/bootstrap-icons/bootstrap-icons.css">
+	<link rel="stylesheet" href="styles.css">
+	<script src="scripts.js"></script>
+	<title>Screenshots</title>
+</head>
+<body onload="prepareGallery()">
+	<div id="navbar">
+		<div class="row">
+			<img src="img/logo.png">
+			<div class="appname">Librusik</div>
+			<div style="width: 100%"></div>
+			<a class="page" href=".">
+				<i class="bi bi-house"></i>
+				<div>Home</div>
+			</a>
+			<a class="page this" href="screenshots.html">
+				<i class="bi bi-card-image"></i>
+				<div>Screenshots</div>
+			</a>
+			<a class="page" href="compare.html">
+				<i class="bi bi-ui-checks"></i>
+				<div>Comparison</div>
+			</a>
+		</div>
+	</div>
+	<img class="bg" src="img/background.jpg">
+	<div class="widetitle">Screenshots</div>
+	<div class="widedesc">Note: all people and places are fake to protect privacy.<br>
+	Note2: this gallery is to be improved</div>
+	<div class="wrapper">
+		<div class="gallery">
+			<img src="screenshots/00_login.png">
+			<img src="screenshots/01_home.png">
+			<img src="screenshots/02_grades.png">
+			<img src="screenshots/03_subject_grades.png">
+			<img src="screenshots/04_recent_grades.png">
+			<img src="screenshots/05_averages.png">
+			<img src="screenshots/06_more.png">
+			<img src="screenshots/07_timatable.png">
+			<img src="screenshots/08_timetable_day.png">
+			<img src="screenshots/09_messages.png">
+			<img src="screenshots/10_message_preview.png">
+			<img src="screenshots/11_message_attachment.png">
+			<img src="screenshots/12_attendances_extended.png">
+			<img src="screenshots/13_attendances_extended_subject.png">
+			<img src="screenshots/14_attendances_list.png">
+			<img src="screenshots/15_exams.png">
+			<img src="screenshots/16_free_days.png">
+			<img src="screenshots/17_teacher_free_days.png">
+			<img src="screenshots/18_conferences.png">
+			<img src="screenshots/19_about_school.png">
+			<img src="screenshots/20_notifications.png">
+			<img src="screenshots/21_settings_main.png">
+			<img src="screenshots/22_settings_features.png">
+			<img src="screenshots/23_settings_synergia.png">
+		</div>
+	</div>
+	<img id="preview" class="hidden" onclick="hidePhoto(this)">
+	<div id="photo_helper" class="hidden">
+		<i class="bi bi-arrow-left-short" onclick="photo_move(-1)"></i>
+		<div id="photo_name"></div>
+		<i class="bi bi-arrow-right-short" onclick="photo_move(1)"></i>
+	</div>
+</body>
+</html>
