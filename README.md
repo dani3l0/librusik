@@ -51,7 +51,7 @@
 
 __1. Clone the repo:__
 ```
-git clone https://gitlab.com/dani3l0/librusik Librusik
+https://github.com/dani3l0/librusik Librusik
 cd Librusik
 ```
 
