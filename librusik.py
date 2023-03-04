@@ -37,8 +37,7 @@ CONFIG_DEFAULT = {
 		"plus": "To get, buy me a beer.",
 		"pro": "To get, solve the <a target='blank' href='https://www.youtube.com/watch?v=dQw4w9WgXcQ'>puzzle</a>."
 	},
-	"debug": False,
-	"devel": False
+	"debug": False
 }
 
 
@@ -1227,8 +1226,7 @@ else:
 	tasks.append(web._run_app(app, port = config["port"]))
 
 tasks.append(updatetitles())
-if config["devel"]:
-	tasks.append(resources_watchdog(config))
+
 
 async def main():
 	await asyncio.gather(*tasks)

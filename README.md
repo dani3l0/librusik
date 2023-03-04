@@ -108,8 +108,6 @@ Go to [localhost:7777/panel](http://localhost:7777/panel) to manage your Librusi
 
 `debug` - enables/disables some verbose information (like aiohttp exceptions) and stuff related to debugging.
 
-`devel` - **It is strongly recommended to have this disabled.** Do not enable it unless you do something with 'html' dir resources. This dynamically reloads all 'html' templates to avoid rebooting the whole app.
-
 
 ## Querying the API
 
