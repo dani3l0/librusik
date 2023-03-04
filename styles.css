@@ -23,7 +23,8 @@ body {
 	overflow-x: hidden;
 	padding: 128px 0;
 	text-align: center;
-	--webkit-tap-highlight-color: transparent;
+		font-size: 14px;
+	-webkit-tap-highlight-color: #0000;
 }
 
 ::selection {
@@ -123,6 +124,7 @@ a {
 	display: flex;
 	overflow: hidden;
 	width: 100%;
+	background: #000;
 	max-width: 640px;
 	border-radius: 16px;
 	margin-bottom: 16px;
@@ -141,12 +143,13 @@ a {
 
 .main_title {
 	margin-top: 16px;
-	font-size: 42px;
+	font-size: 38px;
 }
 .main_desc {
 	margin: 4px 4px 24px;
 	max-width: 800px;
 	color: #BBB;
+	font-size: 16px;
 }
 
 .brief {
@@ -164,6 +167,8 @@ a {
 .box {
 	width: calc(50% - 16px);
 	margin: 14px 8px;
+	min-width: 240px;
+	flex: 1;
 }
 .box i {
 	display: block;
@@ -173,7 +178,7 @@ a {
 	text-shadow: 0 0 80px var(--color);
 }
 .box .title {
-	font-size: 28px;
+	font-size: 26px;
 	margin-bottom: 4px;
 }
 .box .desc {
@@ -220,7 +225,7 @@ a {
 	width: 100%;
 	height: 100%;
 	object-fit: contain;
-	transition: all .4s .2s;
+	transition: all .3s .2s;
 }
 #preview.hidden {
 	transform: scale(0.8);
@@ -228,7 +233,7 @@ a {
 	background: transparent;
 	backdrop-filter: blur(0);
 	visibility: hidden;
-	transition: all .4s;
+	transition: all .3s;
 }
 
 #photo_helper {
@@ -246,16 +251,16 @@ a {
 	padding: 5px;
 	overflow: hidden;
 	justify-content: space-between;
-	transition: all .4s .2s;
+	transition: all .3s .2s;
 }
 #photo_helper.hidden {
 	transform: translate(-50%, 100%);
 	bottom: 0;
-	transition: all .4s;
+	transition: all .3s;
 }
 #photo_helper i {
 	cursor: pointer;
-	padding: 12px 14px;;
+	padding: 12px 14px;
 	transition: all .2s;
 	font-size: 24px;
 	border-radius: 32px;
@@ -267,6 +272,7 @@ a {
 
 .proscons {
 	margin-top: -16px;
+	text-align: left;
 }
 .proscons > div {
 	display: flex;
@@ -284,4 +290,31 @@ a {
 }
 .con {
 	color: #F55;
+}
+
+@media (max-width: 599px) {
+	#navbar .page:not(.this) > div {
+		display: none;
+	}
+	#navbar .page:not(.this) > i {
+		margin: 0;
+	}
+	.screenshots {
+		max-width: 420px;
+	}
+	.screenshots img {
+		height: 316px;
+	}
+	.main_title {
+		font-size: 32px;
+	}
+	.main_desc {
+		font-size: 14px;
+	}
+}
+
+@media (max-width: 440px) {
+	#navbar .appname {
+		display: none;
+	}
 }
