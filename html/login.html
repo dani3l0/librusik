@@ -33,13 +33,6 @@
 					<div class="subtitle">What, why, when and where.</div>
 				</div>
 			</button>
-			<button class="option android-app" onclick="showdiv('login', 'app')">
-				<div class="icon">android</div>
-				<div>
-					<div class="title">Mobile app</div>
-					<div class="subtitle">Librusik runs on Android! For those who are annoyed using the app in a web browser.</div>
-				</div>
-			</button>
 		</div>
 		<div class="loginbox hidden" style="display: none" id="log_in">
 			<button class="back" onclick="showdiv('log_in', 'login', true)"></button>
@@ -81,20 +74,6 @@
 			<button id="registerbutton" onclick="register()" class="highlighted">Create account</button>
 		</div>
 		<div class="loginbox hidden" id="about" style="display: none"><button class="back" onclick="showdiv('about', 'login', true)"></button><br>%s</div>
-		<div class="loginbox hidden" id="app" style="display: none">
-			<button class="back" onclick="showdiv('app', 'login', true)"></button>
-			<div class="header">Mobile app</div>
-			<div class="subheader">v%s<code> | </code>%s</div>
-			<div class="box">
-				<div class="icon">android</div>
-				<div>5.0+</div>
-			</div>
-			<div class="box">
-				<div class="icon">sd_storage</div>
-				<div><2 MB</div>
-			</div><br>
-			<a style="padding: 0" href="app/Librusik-v%s.apk" download><button class="highlighted" style="margin-top: 16px;">Download</button></a>
-		</div>
 		<div class="hidden" id="err" style="display:none">
 			<div class="icon svge">priority_high</div>
 			<div class="error" id="errname"></div>

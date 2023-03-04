@@ -341,12 +341,8 @@ async def index(request):
 	return response(resources["index"], 200)
 
 async def login(request):
-	f = open("static/app/version")
-	c = f.read().split("\n")[0]
-	m = os.path.getctime("static/app/version")
-	m = datetime.fromtimestamp(m).strftime("%d %B %Y")
 	show_register = "" if config["enable_registration"] else "display:none"
-	return response(resources["login"] % (show_register, resources["about"], c, m, c), 200)
+	return response(resources["login"] % (show_register, resources["about"]), 200)
 
 
 ####################################################################################################################################################################################################
