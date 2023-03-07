@@ -381,7 +381,7 @@ async def home(request):
 			if ddaysleft == 1:
 				daddon = ""
 			showNotice = "" if config["notice"] else "display: none"
-			return response(resources["home"] % (showNotice, parseDumbs(config["notice"]), welcome, database[data["username"]]["first_name"], greeting, progbar, round(percent), daysleft, addon, dprogbar, round(dpercent), ddaysleft, daddon, progbar, dprogbar), 200)
+			return response(resources["home"] % (showNotice, parseDumbs(str(config["notice"])), welcome, database[data["username"]]["first_name"], greeting, progbar, round(percent), daysleft, addon, dprogbar, round(dpercent), ddaysleft, daddon, progbar, dprogbar), 200)
 		return response("", 401)
 	except:
 		tr = copyable_tr(traceback.format_exc().replace(LIBRUSIK_PATH, ""))
