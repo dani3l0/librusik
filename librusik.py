@@ -26,6 +26,7 @@ CONFIG_DEFAULT = {
 	"port": 7777,
 	"subdirectory": "/",
 	"readable_db": False,
+	"notice": None,
 	"ssl": False,
 	"pubkey": "/etc/letsencrypt/live/my.domain.com/fullchain.pem",
 	"privkey": "/etc/letsencrypt/live/my.domain.com/privkey.pem",
@@ -379,7 +380,8 @@ async def home(request):
 			daddon = "s"
 			if ddaysleft == 1:
 				daddon = ""
-			return response(resources["home"] % (welcome, database[data["username"]]["first_name"], greeting, progbar, round(percent), daysleft, addon, dprogbar, round(dpercent), ddaysleft, daddon, progbar, dprogbar), 200)
+			showNotice = "" if config["notice"] else "display: none"
+			return response(resources["home"] % (showNotice, parseDumbs(config["notice"]), welcome, database[data["username"]]["first_name"], greeting, progbar, round(percent), daysleft, addon, dprogbar, round(dpercent), ddaysleft, daddon, progbar, dprogbar), 200)
 		return response("", 401)
 	except:
 		tr = copyable_tr(traceback.format_exc().replace(LIBRUSIK_PATH, ""))

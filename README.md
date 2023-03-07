@@ -92,6 +92,8 @@ Go to [localhost:7777/panel](http://localhost:7777/panel) to manage your Librusi
 
 `readable_db` - if set to `true`, database contents will be stored as multi-line, human-readable JSON (results will appear upon first database change)
 
+`notice` - text, which is shown as admin notice on Home page, for all users. Set `null` or `false` to disable it.
+
 `ssl` - whether to enable HTTPS or not
 
 `pubkey` - path to public key used for HTTPS

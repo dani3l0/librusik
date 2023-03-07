@@ -1205,6 +1205,14 @@ iframe {
 	color: #AAA;
 	margin: 48px 0;
 }
+.notice {
+	background: #F803;
+	color: #F80;
+	padding: 10px;
+	border-radius: 12px;
+	font-weight: bold;
+	margin-bottom: 16px;
+}
 #darken {
 	z-index: 3000;
 	position: fixed;
