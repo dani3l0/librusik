@@ -77,7 +77,7 @@ def load_html_resources(config):
         "school": open("html/school.html", "r").read(),
         "settings": open("html/settings.html", "r").read(),
         "login": open("html/login.html", "r").read(),
-        "about": open("html/about.html", "r").read() % config["contact_uri"],
+        "about": open("html/about.html", "r").read(),
         "tiers": open("html/tiers.html", "r").read() % (config["tiers_requirements"]["free"], config["tiers_requirements"]["plus"], config["tiers_requirements"]["pro"], config["tiers_text"]),
         "panel": open("html/panel.html", "r").read() % (config["subdirectory"], hidetiers),
         "panellogin": open("html/panellogin.html", "r").read() % config["subdirectory"],

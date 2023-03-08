@@ -342,7 +342,7 @@ async def index(request):
 
 async def login(request):
 	show_register = "" if config["enable_registration"] else "display:none"
-	return response(resources["login"] % (show_register, resources["about"]), 200)
+	return response(resources["login"] % (show_register, resources["about"] % config["contact_uri"]), 200)
 
 
 ####################################################################################################################################################################################################
@@ -544,7 +544,7 @@ async def settings(request):
 			showupgrade = ""
 			if database[data["username"]]["tier"] == "pro":
 				showupgrade = "display:none"
-			return response(resources["settings"] % (f + database[data["username"]]["profile_pic"], database[data["username"]]["first_name"], database[data["username"]]["last_name"], data["username"], showupgrade, resources["tiers"], resources["about"], imgs, parseDumbs(database[data["username"]]["l_login"]), parseDumbs(decrypt(database[data["username"]]["l_passwd"])), confeti, grades_cleanup, atends_cleanup), 200)
+			return response(resources["settings"] % (f + database[data["username"]]["profile_pic"], database[data["username"]]["first_name"], database[data["username"]]["last_name"], data["username"], showupgrade, resources["tiers"], resources["about"] % config["contact_uri"], imgs, parseDumbs(database[data["username"]]["l_login"]), parseDumbs(decrypt(database[data["username"]]["l_passwd"])), confeti, grades_cleanup, atends_cleanup), 200)
 		return response("", 401)
 	except:
 		tr = copyable_tr(traceback.format_exc().replace(LIBRUSIK_PATH, ""))
@@ -1113,6 +1113,11 @@ async def panelapi(request):
 				elif data["method"] == "setnotice":
 					if "notice" in data and isinstance(data["notice"], str):
 						config["notice"] = data["notice"] if data["notice"] != "" else None
+						updateconf()
+						return response("", 200)
+				elif data["method"] == "setcontact":
+					if "contact_uri" in data and isinstance(data["contact_uri"], str):
+						config["contact_uri"] = data["contact_uri"]
 						updateconf()
 						return response("", 200)
 				return response("", 400)

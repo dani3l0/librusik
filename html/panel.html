@@ -112,7 +112,7 @@
 			<button class="option" onclick="showdiv('app-settings', 'setcontact')">
 				<div class="icon">chat</div>
 				<div>
-					<div class="title dev">Contact</div>
+					<div class="title">Contact</div>
 					<div class="subtitle">Set this so people on this instance will be able to reach you.</div>
 				</div>
 			</button>
@@ -155,8 +155,8 @@
 			<button class="back" onclick="showdiv('setcontact', 'app-settings', true)"></button>
 			<div class="header">Contact</div>
 			<div class="subheader">Set this so people on this instance will be able to reach you</div>
-			<input placeholder="Email/social link here"><br>
-			<button class="highlighted">Save</button>
+			<input placeholder="Email/social link here" id="contact"><br>
+			<button class="highlighted" onclick="setContact()">Save</button>
 		</div>
 		<div id="notice" class="hidden" style="display:none">
 			<button class="back" onclick="showdiv('notice', 'app-settings', true)"></button>

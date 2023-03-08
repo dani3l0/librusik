@@ -307,6 +307,7 @@ function index() {
 				if (data.status == 200) {
 					let conf = JSON.parse(data.responseText);
 					document.getElementById("mynotice").value = conf.notice;
+					document.getElementById("contact").value = conf.contact_uri;
 				}
 			});
 		}
@@ -569,4 +570,24 @@ function setNotice() {
 }
 function clearNotice() {
 	document.getElementById("mynotice").value = ""
+}
+
+function setContact() {
+	let cookie = getCookie();
+	let contact = document.getElementById("contact").value.trim();
+	post("panel/api", {
+		"method": "setcontact",
+		"name": cookie["name"],
+		"password": cookie["password"],
+		"contact_uri": contact
+	}, function(data) {
+		if (data.status == 200) {
+			mkerr("succ", "app-settings", "Successful.", `Your contact information has been updated.`);
+			showdiv("setcontact", "succ");
+		}
+		else {
+			mkerr("err", "setcontact", "Error", "Couldn't update your notice.");
+			showdiv("setcontact", "err");
+		}
+	});
 }
