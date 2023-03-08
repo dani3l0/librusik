@@ -247,7 +247,7 @@ function show_tiers(div) {
 	}
 	document.getElementById("tieruser").innerText = username;
 	document.getElementById("tieruser2").innerText = `(${fullname})`;
-	showdiv("userlist", "tiers");
+	showdiv("userlist", "utiers");
 }
 function select_tier(e) {
 	let tier = e.innerText;
