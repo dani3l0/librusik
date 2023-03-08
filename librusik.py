@@ -1108,6 +1108,8 @@ async def panelapi(request):
 							updatedb()
 							return response(newpassw, 200)
 						return response("", 403)
+				elif data["method"] == "getconf":
+						return JSONresponse(config, 200)
 				elif data["method"] == "setnotice":
 					if "notice" in data and isinstance(data["notice"], str):
 						config["notice"] = data["notice"] if data["notice"] != "" else None

@@ -299,6 +299,16 @@ function index() {
 				refresh();
 				autoupdate = setInterval(refresh, 4000);
 			}, 350);
+			post("panel/api", {
+				"method": "getconf",
+				"name": cokie["name"],
+				"password": cokie["password"]
+			}, function(data) {
+				if (data.status == 200) {
+					let conf = JSON.parse(data.responseText);
+					document.getElementById("mynotice").value = conf.notice;
+				}
+			});
 		}
 		else {
 			gou("panel/login");
@@ -544,11 +554,11 @@ function setNotice() {
 		"method": "setnotice",
 		"name": cookie["name"],
 		"password": cookie["password"],
-		"username": text
+		"notice": text
 	}, function(data) {
 		if (data.status == 200) {
 			let un = text == "" ? "" : "un";
-			mkerr("succ", "userlist", "Successful.", `Your notice has been ${un}set.`);
+			mkerr("succ", "app-settings", "Successful.", `Your notice has been ${un}set.`);
 			showdiv("notice", "succ");
 		}
 		else {
