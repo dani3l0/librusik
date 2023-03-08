@@ -47,8 +47,6 @@
 
 ## Installation
 
-**WARNING:** If you update your existing Librusik installation be careful, as our pseudo-database structure might change. Missing database entries will lead to app crash. So, **always do a backup before updating.**. Config changes won't crash the app.
-
 __1. Clone the repo:__
 ```
 git clone https://github.com/dani3l0/librusik Librusik
@@ -72,7 +70,7 @@ __4. Done! Librusik is now running at [localhost:7777](http://localhost:7777).__
 
 ## Configuration
 
-Librusik will generate `data` dir upon its first boot. You can edit `data/config.json` file and adjust the preferences to your liking. Some of them can be set from Panel.
+Librusik will generate `data` dir upon its first boot. You can edit `data/config.json` file and adjust the preferences to your liking. Most of them can be set from Panel.
 
 Go to [localhost:7777/panel](http://localhost:7777/panel) to manage your Librusik instance. Default user is `admin` and password is `admin`.
 
@@ -90,9 +88,9 @@ Go to [localhost:7777/panel](http://localhost:7777/panel) to manage your Librusi
 
 `subdirectory` - an absolute path for running under reverse proxy (like nginx), I guess it's still broken
 
-`readable_db` - if set to `true`, database contents will be stored as multi-line, human-readable JSON (results will appear upon first database change)
+`readable_db` - if set to `true`, database contents will be stored as multi-line, human-readable JSON (results will appear upon first database write)
 
-`notice` - text, which is shown as admin notice on Home page, for all users. Set `null` or `false` to disable it.
+`notice` - text, which is shown as admin notice on Home page, for all users. Set `null` or `false` to disable. Markdown-style links are supported. Be careful with HTML special chars like `<` and `>`
 
 `ssl` - whether to enable HTTPS or not
 
@@ -100,13 +98,13 @@ Go to [localhost:7777/panel](http://localhost:7777/panel) to manage your Librusi
 
 `privkey` - path to private key used for HTTPS
 
-`contact_uri` - URI (a link) where user can contact with you. As it's passed directly to `a` HTML element, values can be like `mailto:`, `tel:`, `https://`, `tg://`, `mumble://` etc. This will be shown in About page and Tiers (if enabled)
+`contact_uri` - URI where user can contact you. By default, it is parsed as email, but if you provide some social with `://` it will be treated as a standard link.
 
 `enable_tiers` - when `true`, Librusik will show a special UI for managing available features for each user.
 
-`tiers_text` - a bottom text shown below tier list in _Settings -> Upgrade tier_.
+`tiers_text` - a bottom text shown below tier list in _Settings -> Upgrade tier_. Be careful with HTML special chars like `<` and `>`
 
-`tiers_requirements` - a list of requirements for each tier. Those will be shown under _Settings -> Upgrade tier_.
+`tiers_requirements` - a list of requirements for each tier. Those will be shown under _Settings -> Upgrade tier_. Be careful with HTML special chars like `<` and `>`
 
 `debug` - enables/disables some verbose information (like aiohttp exceptions) and stuff related to debugging.
 
@@ -119,11 +117,11 @@ In `tools` dir there is a `dump_full_api.py` file. It queries the whole Librus A
 
 ## Reporting a bug
 
-Feel free to open new issues when something doesn't work or you want to ask for new features/improvements.
+**Feel free** to open new issues when something doesn't work or you want to ask for new features/improvements.
 
 If you encounter a bug, remember to attach some logs (exception traceback or just a detailed description).
 
-**After May 2023, only merge requests will be accepted.**
+**After May 2023, only pull requests will be accepted.**
 
 -----
 
@@ -131,4 +129,4 @@ If you encounter a bug, remember to attach some logs (exception traceback or jus
 
 Because this was my first app written in Python, code is a terrible mess. Don't expect it to be super readable and flexible.
 
-_It just works_ (It actually worked since 2020 xD)
+_It just works_ (It actually worked since 2019 xD)
