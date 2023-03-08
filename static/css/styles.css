@@ -789,7 +789,7 @@ a {
 	color: #0D0;
 }
 .darken {
-	opacity: 0.6;
+	color: #888;
 }
 #datafetcher.hidden {
 	height: 0;
