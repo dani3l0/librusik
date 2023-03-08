@@ -76,6 +76,7 @@
 		<div id="credentials" class="hidden" style="display:none">
 			<button class="back" onclick="showdiv('credentials', 'app-settings', true)"></button>
 			<div class="header">Panel credentials</div>
+			<div class="subheader">Manage your login & password for this administration page</div>
 			<button class="option" onclick="showdiv('credentials', 'chgname')">
 				<div class="icon">person</div>
 				<div>
@@ -175,6 +176,7 @@
 		<div id="chgname" class="hidden" style="display:none">
 			<button class="back" onclick="showdiv('chgname', 'credentials', true)"></button>
 			<div class="header">Change name</div>
+			<div class="subheader">Try to avoid common admin names</div>
 			<input type="text" id="newname" oninput="usernameit('newname')" placeholder="New name"><br>
 			<input type="password" id="namepasswd" placeholder="Password"><br>
 			<button onclick="changename()" class="highlighted">Proceed</button>
@@ -182,6 +184,7 @@
 		<div id="chgpasswd" class="hidden" style="display:none">
 			<button class="back" onclick="showdiv('chgpasswd', 'credentials', true)"></button>
 			<div class="header">Change password</div>
+			<div class="subheader">If you feel a bit insecure or never changed it before</div>
 			<input type="password" id="pass" placeholder="Current password"><br>
 			<input type="password" id="newpass" placeholder="New password"><br>
 			<input type="password" id="newpassconf" placeholder="New password (again)"><br>
@@ -190,7 +193,8 @@
 		<div id="dblimit" class="hidden" style="display:none">
 			<button class="back" onclick="showdiv('dblimit', 'userlist', true)"></button>
 			<div class="header">Database capacity</div>
-			<div id="userlimit">Current limit: N/A</div>
+			<div class="subheader">Set the maximum number of registered people here</div>
+			<div id="userlimit" class="bold">Current limit: N/A</div>
 			<button onclick="setmaxusers('-')" class="moreless">-</button>
 			<div id="maxusers">N/A</div>
 			<button onclick="setmaxusers('+')" class="moreless">+</button><br><br>
@@ -199,7 +203,8 @@
 		</div>
 		<div id="info" class="hidden" style="display:none">
 			<button class="back" onclick="showdiv('info', 'main', true)"></button>
-			<div class="header" style="margin-bottom: 12px">System</div>
+			<div class="header">System</div>
+			<div class="subheader">Some information about your host</div>
 			<button class="bubble unclickable">
 				<div class="name">App uptime</div>
 				<div id="suptime" class="value">N/A</div>
@@ -240,7 +245,7 @@
 		<div id="logout" class="hidden" style="display:none">
 			<button class="back" onclick="showdiv('logout', 'main', true)"></button>
 			<div class="header">Log out</div>
-			<div class="brighten">Are you sure?</div>
+			<div class="darken">Are you sure?</div>
 			<br>
 			<button onclick="rmCookie()" class="highlighted">Yes, end session</button>
 		</div>
@@ -267,21 +272,21 @@
 		<div id="deluserc" class="hidden" style="display:none">
 			<button class="back" onclick="showdiv('deluserc', 'userlist', true)"></button>
 			<div class="header">Delete account</div>
-			<div class="brighten">Do you really want to delete <b id="utbd"></b>?</div>
+			<div class="darken">Do you really want to delete <b id="utbd"></b>?</div>
 			<br>
 			<button onclick="delaccount()" class="highlighted danger">Yes, do it</button>
 		</div>
 		<div id="resetpassc" class="hidden" style="display:none">
 			<button class="back" onclick="showdiv('resetpassc', 'userlist', true)"></button>
 			<div class="header">Reset password</div>
-			<div class="brighten">Do you want to generate a new password for<br><b id="utbc"></b>?</div>
+			<div class="darken">Do you want to generate a new password for<br><b id="utbc"></b>?</div>
 			<br>
 			<button onclick="genpasswd()" class="highlighted">Yes, do it</button>
 		</div>
 		<div id="resetpasswd" class="hidden" style="display:none">
 			<button class="back" onclick="showdiv('resetpasswd', 'userlist', true);purgepass()"></button>
 			<div class="header">Reset password</div>
-			<div class="brighten">A new password for <b id="utbcr"></b> has been generated:</div><br>
+			<div class="darken">A new password for <b id="utbcr"></b> has been generated:</div><br>
 			<div id="passbox"></div>
 		</div>
 		<div class="hidden" id="err" style="display:none">
