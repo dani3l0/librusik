@@ -1076,6 +1076,7 @@ iframe {
 	font-size: 20px;
 	width: 48px;
 	border-radius: 100px;
+	background: #222E;
 	margin: 0;
 	z-index: 100;
 	overflow: hidden;
