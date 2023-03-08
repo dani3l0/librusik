@@ -119,7 +119,7 @@
 			<button class="option" onclick="showdiv('app-settings', 'tiers')">
 				<div class="icon">verified</div>
 				<div>
-					<div class="title dev">Tiers</div>
+					<div class="title">Tiers</div>
 					<div class="subtitle">Enable/disable Tiers and set your own list of requirements.</div>
 				</div>
 			</button>
@@ -135,21 +135,21 @@
 			<button class="back" onclick="showdiv('tiers', 'app-settings', true)"></button>
 			<div class="header">Tiers</div>
 			<div class="subheader">Enable/disable Tiers and set your own list of requirements</div>
-			<button class="option checkbox" onclick="featureTile(this, 'grades_cleanup')">
+			<button class="option checkbox" onclick="checkbox(this)">
 				<div class="icon">verified</div>
 				<div>
 					<div class="title">Enable tiers</div>
 					<div class="subtitle">This feature may help in preventing random people using this instance.</div>
 				</div>
-				<div class="check"></div>
+				<div id="enable_tiers" class="check"></div>
 			</button><br>
 			<div class="darken bold">Message how to get <div class="tier free"></div></div>
-			<textarea style="height: 5ch;"></textarea><br><br>
+			<textarea style="height: 5ch;" id="freereq"></textarea><br><br>
 			<div class="darken bold">Message how to get <div class="tier plus"></div></div>
-			<textarea style="height: 5ch;"></textarea><br><br>
+			<textarea style="height: 5ch;" id="plusreq"></textarea><br><br>
 			<div class="darken bold">Message how to get <div class="tier pro"></div></div>
-			<textarea style="height: 5ch;"></textarea><br><br>
-			<button class="highlighted">Save</button>
+			<textarea style="height: 5ch;" id="proreq"></textarea><br><br>
+			<button class="highlighted" onclick="setTiers()">Save</button>
 		</div>
 		<div id="setcontact" class="hidden" style="display:none">
 			<button class="back" onclick="showdiv('setcontact', 'app-settings', true)"></button>

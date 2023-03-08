@@ -308,6 +308,10 @@ function index() {
 					let conf = JSON.parse(data.responseText);
 					document.getElementById("mynotice").value = conf.notice;
 					document.getElementById("contact").value = conf.contact_uri;
+					if (conf.enable_tiers) document.getElementById("enable_tiers").classList.add("ed");
+					document.getElementById("freereq").value = conf.tiers_requirements.free;
+					document.getElementById("plusreq").value = conf.tiers_requirements.plus;
+					document.getElementById("proreq").value = conf.tiers_requirements.pro;
 				}
 			});
 		}
@@ -588,6 +592,34 @@ function setContact() {
 		else {
 			mkerr("err", "setcontact", "Error", "Couldn't update your notice.");
 			showdiv("setcontact", "err");
+		}
+	});
+}
+
+function checkbox(elem) {
+	elem = elem.getElementsByClassName("check")[0];
+	elem.classList.toggle("ed");
+}
+function setTiers() {
+	let cookie = getCookie();
+	let enable = document.getElementById("enable_tiers").classList.contains("ed")
+	let free = document.getElementById("freereq").value.trim();
+	let plus = document.getElementById("plusreq").value.trim();
+	let pro = document.getElementById("proreq").value.trim();
+	post("panel/api", {
+		"method": "settiers",
+		"name": cookie["name"],
+		"password": cookie["password"],
+		"enable_tiers": enable,
+		"tiers_requirements": {free, plus, pro}
+	}, function(data) {
+		if (data.status == 200) {
+			mkerr("succ", "app-settings", "Successful.", "Tiers preferences have been saved.");
+			showdiv("tiers", "succ");
+		}
+		else {
+			mkerr("err", "tiers", "Error", "Couldn't update your notice.");
+			showdiv("tiers", "err");
 		}
 	});
 }

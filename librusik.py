@@ -338,7 +338,8 @@ async def forgot_pass(request):
 
 
 async def index(request):
-	return response(resources["index"], 200)
+	hidetiers = "" if config["enable_tiers"] else ".tiers{display:none !important}"
+	return response(resources["index"] % (config["subdirectory"], hidetiers), 200)
 
 async def login(request):
 	show_register = "" if config["enable_registration"] else "display:none"
@@ -544,7 +545,7 @@ async def settings(request):
 			showupgrade = ""
 			if database[data["username"]]["tier"] == "pro":
 				showupgrade = "display:none"
-			return response(resources["settings"] % (f + database[data["username"]]["profile_pic"], database[data["username"]]["first_name"], database[data["username"]]["last_name"], data["username"], showupgrade, resources["tiers"], resources["about"] % config["contact_uri"], imgs, parseDumbs(database[data["username"]]["l_login"]), parseDumbs(decrypt(database[data["username"]]["l_passwd"])), confeti, grades_cleanup, atends_cleanup), 200)
+			return response(resources["settings"] % (f + database[data["username"]]["profile_pic"], database[data["username"]]["first_name"], database[data["username"]]["last_name"], data["username"], showupgrade, resources["tiers"] % (config["tiers_requirements"]["free"], config["tiers_requirements"]["plus"], config["tiers_requirements"]["pro"], config["tiers_text"]), resources["about"] % config["contact_uri"], imgs, parseDumbs(database[data["username"]]["l_login"]), parseDumbs(decrypt(database[data["username"]]["l_passwd"])), confeti, grades_cleanup, atends_cleanup), 200)
 		return response("", 401)
 	except:
 		tr = copyable_tr(traceback.format_exc().replace(LIBRUSIK_PATH, ""))
@@ -1120,6 +1121,12 @@ async def panelapi(request):
 						config["contact_uri"] = data["contact_uri"]
 						updateconf()
 						return response("", 200)
+				elif data["method"] == "settiers":
+					if "enable_tiers" in data and isinstance(data["enable_tiers"], bool) and "tiers_requirements" in data and isinstance(data["tiers_requirements"], dict):
+						config["enable_tiers"] = data["enable_tiers"]
+						config["tiers_requirements"] = data["tiers_requirements"]
+						updateconf()
+						return response("", 200)
 				return response("", 400)
 			return response("", 401)
 		return response("", 400)
@@ -1130,10 +1137,11 @@ async def panelapi(request):
 
 
 async def panel(request):
-	return response(resources["panel"], 200)
+	hidetiers = "" if config["enable_tiers"] else ".tiers{display:none !important}"
+	return response(resources["panel"] % (config["subdirectory"], hidetiers), 200)
 
 async def panell(request):
-	return response(resources["panellogin"], 200)
+	return response(resources["panellogin"] % (config["subdirectory"]), 200)
 
 
 async def upload_handler(request):

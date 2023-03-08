@@ -59,9 +59,8 @@ def setup(CONFIG_DEFAULT):
 	return (config, database)
 
 def load_html_resources(config):
-    hidetiers = "" if config["enable_tiers"] else ".tiers{display:none !important}"
     return {
-        "index": open("html/index.html", "r").read() % (config["subdirectory"], hidetiers),
+        "index": open("html/index.html", "r").read(),
         "home": open("html/home.html", "r").read(),
         "grades": open("html/grades.html", "r").read(),
         "more": open("html/more.html", "r").read(),
@@ -78,9 +77,9 @@ def load_html_resources(config):
         "settings": open("html/settings.html", "r").read(),
         "login": open("html/login.html", "r").read(),
         "about": open("html/about.html", "r").read(),
-        "tiers": open("html/tiers.html", "r").read() % (config["tiers_requirements"]["free"], config["tiers_requirements"]["plus"], config["tiers_requirements"]["pro"], config["tiers_text"]),
-        "panel": open("html/panel.html", "r").read() % (config["subdirectory"], hidetiers),
-        "panellogin": open("html/panellogin.html", "r").read() % config["subdirectory"],
+        "tiers": open("html/tiers.html", "r").read(),
+        "panel": open("html/panel.html", "r").read(),
+        "panellogin": open("html/panellogin.html", "r").read(),
         "error": open("html/error.html", "r").read(),
         "errorpage": open("html/geterror.html", "r").read(),
     }
