@@ -144,15 +144,17 @@
 				</div>
 				<div id="enable_tiers" class="check"></div>
 			</button><br>
-			<div class="darken bold">Message how to get <div class="tier free"></div></div>
-			<textarea style="height: 5ch;" id="freereq"></textarea><br><br>
-			<div class="darken bold">Message how to get <div class="tier plus"></div></div>
-			<textarea style="height: 5ch;" id="plusreq"></textarea><br><br>
-			<div class="darken bold">Message how to get <div class="tier pro"></div></div>
-			<textarea style="height: 5ch;" id="proreq"></textarea><br><br>
-			<div class="darken bold">Message below tier requirements</div>
-			<textarea style="height: 5ch;" id="tiers_text"></textarea><br><br>
-			<button class="highlighted" onclick="setTiers()">Save</button>
+			<div style="max-width: 500px;">
+				<div class="darken bold">Message how to get <div class="tier free"></div></div>
+				<textarea style="height: 5ch;" id="freereq"></textarea><br><br>
+				<div class="darken bold">Message how to get <div class="tier plus"></div></div>
+				<textarea style="height: 5ch;" id="plusreq"></textarea><br><br>
+				<div class="darken bold">Message how to get <div class="tier pro"></div></div>
+				<textarea style="height: 5ch;" id="proreq"></textarea><br><br>
+				<div class="darken bold">Message below tier requirements</div>
+				<textarea style="height: 5ch;" id="tiers_text"></textarea><br><br>
+				<button class="highlighted" onclick="setTiers()">Save</button>
+			</div>
 		</div>
 		<div id="setcontact" class="hidden" style="display:none">
 			<button class="back" onclick="showdiv('setcontact', 'app-settings', true)"></button>

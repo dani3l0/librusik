@@ -801,6 +801,8 @@ a {
 .option.checkbox > .check {
 	width: 24px;
 	height: 24px;
+	min-width: 24px;
+	min-height: 24px;
 	border-radius: 100px;
 	margin: 0 4px 0 auto;
 	background: #111;
