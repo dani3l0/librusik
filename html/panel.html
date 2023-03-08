@@ -130,6 +130,13 @@
 					<div class="subtitle">Set address and port Librusik is listening on.</div>
 				</div>
 			</button>
+			<button class="option" onclick="showdiv('app-settings', 'rebootc')">
+				<div class="icon">restart_alt</div>
+				<div>
+					<div class="title">Restart</div>
+					<div class="subtitle">Perform a full application restart.</div>
+				</div>
+			</button>
 		</div>
 		<div id="network" class="hidden" style="display:none">
 			<button class="back" onclick="showdiv('network', 'app-settings', true)"></button>
@@ -185,7 +192,6 @@
 		<div id="info" class="hidden" style="display:none">
 			<button class="back" onclick="showdiv('info', 'main', true)"></button>
 			<div class="header" style="margin-bottom: 12px">System</div>
-			<button onclick="showdiv('info', 'rebootc')">Reboot app</button><br>
 			<button class="bubble unclickable">
 				<div class="name">App uptime</div>
 				<div id="suptime" class="value">N/A</div>
@@ -217,9 +223,9 @@
 			<div class="progress"><div id="rebutstatus" class="bar"></div></div>
 		</div>
 		<div id="rebootc" class="hidden" style="display:none">
-			<button class="back" onclick="showdiv('rebootc', 'info', true)"></button>
-			<div class="header">Reboot</div>
-			<div class="brighten">Librusik will be down for a moment. Continue?</div>
+			<button class="back" onclick="showdiv('rebootc', 'app-settings', true)"></button>
+			<div class="header">Restart</div>
+			<div class="darken">Librusik will be stopped. Make sure your OS will automatically re-run it.<br><b>Continue?</b></div>
 			<br>
 			<button onclick="reboot(true)" class="highlighted danger">Yes, reboot</button>
 		</div>
