@@ -402,7 +402,7 @@ function changename() {
 		if (data.status == 200) {
 			setTimeout(rminputs, 350);
 			setCookie(newname, passwd);
-			mkerr("succ", "main", "Name changed", "Credentials for Panel updated successfully.");
+			mkerr("succ", "app-settings", "Name changed", "Credentials for Panel updated successfully.");
 			showdiv("chgname", "succ");
 		}
 		else if (data.status == 401) {
@@ -439,7 +439,7 @@ function changepass() {
 		if (data.status == 200) {
 			setTimeout(rminputs, 350);
 			setCookie(cookie["name"], newpass);
-			mkerr("succ", "main", "Password changed", "Credentials for Panel updated successfully.");
+			mkerr("succ", "app-settings", "Password changed", "Credentials for Panel updated successfully.");
 			showdiv("chgpasswd", "succ");
 		}
 		else if (data.status == 401) {
@@ -465,7 +465,7 @@ function sendmaxusers() {
 		if (data.status == 200) {
 			setTimeout(refresh, 350);
 			setTimeout(rminputs, 350);
-			mkerr("succ", "main", "Database limit changed", "Remember too many users can lead to temporary bans.");
+			mkerr("succ", "userlist", "Database limit changed", "Remember too many users may lead to unexpected results.");
 			showdiv("dblimit", "succ");
 		}
 		else {
