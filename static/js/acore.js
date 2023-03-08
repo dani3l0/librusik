@@ -312,6 +312,7 @@ function index() {
 					document.getElementById("freereq").value = conf.tiers_requirements.free;
 					document.getElementById("plusreq").value = conf.tiers_requirements.plus;
 					document.getElementById("proreq").value = conf.tiers_requirements.pro;
+					document.getElementById("tiers_text").value = conf.tiers_text;
 				}
 			});
 		}
@@ -606,11 +607,13 @@ function setTiers() {
 	let free = document.getElementById("freereq").value.trim();
 	let plus = document.getElementById("plusreq").value.trim();
 	let pro = document.getElementById("proreq").value.trim();
+	let text = document.getElementById("tiers_text").value.trim();
 	post("panel/api", {
 		"method": "settiers",
 		"name": cookie["name"],
 		"password": cookie["password"],
 		"enable_tiers": enable,
+		"tiers_text": text,
 		"tiers_requirements": {free, plus, pro}
 	}, function(data) {
 		if (data.status == 200) {

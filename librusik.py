@@ -1131,8 +1131,9 @@ async def panelapi(request):
 						updateconf()
 						return response("", 200)
 				elif data["method"] == "settiers":
-					if "enable_tiers" in data and isinstance(data["enable_tiers"], bool) and "tiers_requirements" in data and isinstance(data["tiers_requirements"], dict):
+					if "enable_tiers" in data and isinstance(data["enable_tiers"], bool) and "tiers_text" in data and isinstance(data["tiers_text"], str) and "tiers_requirements" in data and isinstance(data["tiers_requirements"], dict):
 						config["enable_tiers"] = data["enable_tiers"]
+						config["tiers_text"] = data["tiers_text"]
 						config["tiers_requirements"] = data["tiers_requirements"]
 						updateconf()
 						return response("", 200)
