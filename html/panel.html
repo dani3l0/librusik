@@ -123,13 +123,6 @@
 					<div class="subtitle">Enable/disable Tiers and set your own list of requirements.</div>
 				</div>
 			</button>
-			<button class="option" onclick="showdiv('app-settings', 'network')">
-				<div class="icon">lan</div>
-				<div>
-					<div class="title dev">Network</div>
-					<div class="subtitle">Set address and port Librusik is listening on.</div>
-				</div>
-			</button>
 			<button class="option" onclick="showdiv('app-settings', 'rebootc')">
 				<div class="icon">restart_alt</div>
 				<div>
@@ -138,25 +131,40 @@
 				</div>
 			</button>
 		</div>
-		<div id="network" class="hidden" style="display:none">
-			<button class="back" onclick="showdiv('network', 'app-settings', true)"></button>
-			<div class="header">Network</div>
-			<div class="subheader">Set address and port Librusik is listening on</div>
-		</div>
 		<div id="tiers" class="hidden" style="display:none">
 			<button class="back" onclick="showdiv('tiers', 'app-settings', true)"></button>
 			<div class="header">Tiers</div>
 			<div class="subheader">Enable/disable Tiers and set your own list of requirements</div>
+			<button class="option checkbox" onclick="featureTile(this, 'grades_cleanup')">
+				<div class="icon">verified</div>
+				<div>
+					<div class="title">Enable tiers</div>
+					<div class="subtitle">This feature may help in preventing random people using this instance.</div>
+				</div>
+				<div class="check"></div>
+			</button><br>
+			<div class="darken bold">Message how to get <div class="tier free"></div></div>
+			<textarea style="height: 5ch;"></textarea><br><br>
+			<div class="darken bold">Message how to get <div class="tier plus"></div></div>
+			<textarea style="height: 5ch;"></textarea><br><br>
+			<div class="darken bold">Message how to get <div class="tier pro"></div></div>
+			<textarea style="height: 5ch;"></textarea><br><br>
+			<button class="highlighted">Save</button>
 		</div>
 		<div id="setcontact" class="hidden" style="display:none">
 			<button class="back" onclick="showdiv('setcontact', 'app-settings', true)"></button>
 			<div class="header">Contact</div>
 			<div class="subheader">Set this so people on this instance will be able to reach you</div>
+			<input placeholder="Email/social link here"><br>
+			<button class="highlighted">Save</button>
 		</div>
 		<div id="notice" class="hidden" style="display:none">
 			<button class="back" onclick="showdiv('notice', 'app-settings', true)"></button>
 			<div class="header">Notice</div>
 			<div class="subheader">Pin an important notice on everyone's Home page</div>
+			<textarea id="mynotice" placeholder="Nothing here. Type some text and hit 'Save' to show your notice."></textarea><br>
+			<button class="danger">Clear</button>
+			<button class="highlighted">Save</button>
 		</div>
 		<div id="traffic" class="hidden" style="display:none">
 			<button class="back" onclick="showdiv('traffic', 'main', true)"></button>
