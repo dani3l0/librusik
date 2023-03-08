@@ -272,11 +272,11 @@ function set_tier() {
 	}, function(data) {
 		buttons();
 		if (data.status == 200) {
-			showdiv("tiers", "userlist");
+			showdiv("utiers", "userlist");
 		}
 		else {
 			mkerr("err", "userlist", "Error", "Couldn't change desired user's tier.");
-			showdiv("tiers", "err");
+			showdiv("utiers", "err");
 		}
 	});
 }
