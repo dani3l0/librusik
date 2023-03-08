@@ -105,7 +105,7 @@
 			<button class="option" onclick="showdiv('app-settings', 'notice')">
 				<div class="icon">notifications</div>
 				<div>
-					<div class="title dev">Notice</div>
+					<div class="title">Notice</div>
 					<div class="subtitle">Pin an important notice on everyone's Home page.</div>
 				</div>
 			</button>
@@ -163,8 +163,8 @@
 			<div class="header">Notice</div>
 			<div class="subheader">Pin an important notice on everyone's Home page</div>
 			<textarea id="mynotice" placeholder="Nothing here. Type some text and hit 'Save' to show your notice."></textarea><br>
-			<button class="danger">Clear</button>
-			<button class="highlighted">Save</button>
+			<button class="danger" onclick="clearNotice()">Clear</button>
+			<button class="highlighted" onclick="setNotice()">Save</button>
 		</div>
 		<div id="traffic" class="hidden" style="display:none">
 			<button class="back" onclick="showdiv('traffic', 'main', true)"></button>

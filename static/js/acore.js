@@ -536,3 +536,27 @@ function setBar(id, val) {
 	var v = 220 - map(val, 0, 100, 0, 220);
 	document.getElementById(id).style.strokeDashoffset = v;
 }
+
+function setNotice() {
+	let cookie = getCookie();
+	let text = document.getElementById("mynotice").value.trim();
+	post("panel/api", {
+		"method": "setnotice",
+		"name": cookie["name"],
+		"password": cookie["password"],
+		"username": text
+	}, function(data) {
+		if (data.status == 200) {
+			let un = text == "" ? "" : "un";
+			mkerr("succ", "userlist", "Successful.", `Your notice has been ${un}set.`);
+			showdiv("notice", "succ");
+		}
+		else {
+			mkerr("err", "notice", "Error", "Couldn't update your notice.");
+			showdiv("notice", "err");
+		}
+	});
+}
+function clearNotice() {
+	document.getElementById("mynotice").value = ""
+}
