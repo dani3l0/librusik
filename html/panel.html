@@ -48,34 +48,34 @@
 				<div class="icon">traffic</div>
 				<div>
 					<div class="title">Traffic</div>
-					<div class="subtitle">See how many times Librusik got connected to Synergia.</div>
-				</div>
-			</button>
-			<button class="option" onclick="showdiv('main', 'credentials')">
-				<div class="icon">key</div>
-				<div>
-					<div class="title">Credentials</div>
-					<div class="subtitle">These are used to log into Panel.</div>
+					<div class="subtitle">How many times Librusik got connected to Synergia.</div>
 				</div>
 			</button>
 			<button class="option" onclick="showdiv('main', 'userlist')">
 				<div class="icon">groups</div>
 				<div>
-					<div class="title">Accounts</div>
-					<div class="subtitle">List and manage accounts stored in database.</div>
+					<div class="title">People</div>
+					<div class="subtitle">List & manage registered people on this instance.</div>
+				</div>
+			</button>
+			<button class="option" onclick="showdiv('main', 'app-settings')">
+				<div class="icon">settings</div>
+				<div>
+					<div class="title">App settings</div>
+					<div class="subtitle">Tweak your Librusik installation.</div>
 				</div>
 			</button>
 			<button class="option" onclick="showdiv('main', 'info')">
-				<div class="icon">settings_system_daydream</div>
+				<div class="icon">memory</div>
 				<div>
 					<div class="title">System</div>
-					<div class="subtitle">A bit of information about application and host.</div>
+					<div class="subtitle">Some information about your host.</div>
 				</div>
 			</button>
 		</div>
 		<div id="credentials" class="hidden" style="display:none">
-			<button class="back" onclick="showdiv('credentials', 'main', true)"></button>
-			<div class="header">Credentials</div>
+			<button class="back" onclick="showdiv('credentials', 'app-settings', true)"></button>
+			<div class="header">Panel credentials</div>
 			<button class="option" onclick="showdiv('credentials', 'chgname')">
 				<div class="icon">person</div>
 				<div>
@@ -90,6 +90,66 @@
 					<div class="subtitle">If you feel a bit insecure or never changed it before.</div>
 				</div>
 			</button>
+		</div>
+		<div id="app-settings" class="hidden" style="display:none">
+			<button class="back" onclick="showdiv('app-settings', 'main', true)"></button>
+			<div class="header">App settings</div>
+			<div class="subheader">Tweak your Librusik installation</div>
+			<button class="option" onclick="showdiv('app-settings', 'credentials')">
+				<div class="icon">vpn_key</div>
+				<div>
+					<div class="title">Panel credentials</div>
+					<div class="subtitle">Manage your login & password for this administration page.</div>
+				</div>
+			</button>
+			<button class="option" onclick="showdiv('app-settings', 'notice')">
+				<div class="icon">notifications</div>
+				<div>
+					<div class="title dev">Notice</div>
+					<div class="subtitle">Pin an important notice on everyone's Home page.</div>
+				</div>
+			</button>
+			<button class="option" onclick="showdiv('app-settings', 'setcontact')">
+				<div class="icon">chat</div>
+				<div>
+					<div class="title dev">Contact</div>
+					<div class="subtitle">Set this so people on this instance will be able to reach you.</div>
+				</div>
+			</button>
+			<button class="option" onclick="showdiv('app-settings', 'tiers')">
+				<div class="icon">verified</div>
+				<div>
+					<div class="title dev">Tiers</div>
+					<div class="subtitle">Enable/disable Tiers and set your own list of requirements.</div>
+				</div>
+			</button>
+			<button class="option" onclick="showdiv('app-settings', 'network')">
+				<div class="icon">lan</div>
+				<div>
+					<div class="title dev">Network</div>
+					<div class="subtitle">Set address and port Librusik is listening on.</div>
+				</div>
+			</button>
+		</div>
+		<div id="network" class="hidden" style="display:none">
+			<button class="back" onclick="showdiv('network', 'app-settings', true)"></button>
+			<div class="header">Network</div>
+			<div class="subheader">Set address and port Librusik is listening on</div>
+		</div>
+		<div id="tiers" class="hidden" style="display:none">
+			<button class="back" onclick="showdiv('tiers', 'app-settings', true)"></button>
+			<div class="header">Tiers</div>
+			<div class="subheader">Enable/disable Tiers and set your own list of requirements</div>
+		</div>
+		<div id="setcontact" class="hidden" style="display:none">
+			<button class="back" onclick="showdiv('setcontact', 'app-settings', true)"></button>
+			<div class="header">Contact</div>
+			<div class="subheader">Set this so people on this instance will be able to reach you</div>
+		</div>
+		<div id="notice" class="hidden" style="display:none">
+			<button class="back" onclick="showdiv('notice', 'app-settings', true)"></button>
+			<div class="header">Notice</div>
+			<div class="subheader">Pin an important notice on everyone's Home page</div>
 		</div>
 		<div id="traffic" class="hidden" style="display:none">
 			<button class="back" onclick="showdiv('traffic', 'main', true)"></button>
