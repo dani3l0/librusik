@@ -343,7 +343,11 @@ async def index(request):
 
 async def login(request):
 	show_register = "" if config["enable_registration"] else "display:none"
-	return response(resources["login"] % (show_register, resources["about"] % config["contact_uri"]), 200)
+	eee = config["contact_uri"]
+	if "://" not in eee:
+		eee = "mailto:" + eee
+	abouts = resources["about"] % eee
+	return response(resources["login"] % (show_register, abouts), 200)
 
 
 ####################################################################################################################################################################################################
@@ -382,7 +386,7 @@ async def home(request):
 			if ddaysleft == 1:
 				daddon = ""
 			showNotice = "" if config["notice"] else "display: none"
-			return response(resources["home"] % (showNotice, parseDumbs(str(config["notice"])), welcome, database[data["username"]]["first_name"], greeting, progbar, round(percent), daysleft, addon, dprogbar, round(dpercent), ddaysleft, daddon, progbar, dprogbar), 200)
+			return response(resources["home"] % (showNotice, linkify(str(config["notice"])), welcome, database[data["username"]]["first_name"], greeting, progbar, round(percent), daysleft, addon, dprogbar, round(dpercent), ddaysleft, daddon, progbar, dprogbar), 200)
 		return response("", 401)
 	except:
 		tr = copyable_tr(traceback.format_exc().replace(LIBRUSIK_PATH, ""))
@@ -545,7 +549,12 @@ async def settings(request):
 			showupgrade = ""
 			if database[data["username"]]["tier"] == "pro":
 				showupgrade = "display:none"
-			return response(resources["settings"] % (f + database[data["username"]]["profile_pic"], database[data["username"]]["first_name"], database[data["username"]]["last_name"], data["username"], showupgrade, resources["tiers"] % (config["tiers_requirements"]["free"], config["tiers_requirements"]["plus"], config["tiers_requirements"]["pro"], config["tiers_text"]), resources["about"] % config["contact_uri"], imgs, parseDumbs(database[data["username"]]["l_login"]), parseDumbs(decrypt(database[data["username"]]["l_passwd"])), confeti, grades_cleanup, atends_cleanup), 200)
+			tiers = (linkify(config["tiers_requirements"]["free"]), linkify(config["tiers_requirements"]["plus"]), linkify(config["tiers_requirements"]["pro"]), config["tiers_text"])
+			eee = config["contact_uri"]
+			if "://" not in eee:
+				eee = "mailto:" + eee
+			abouts = resources["about"] % eee
+			return response(resources["settings"] % (f + database[data["username"]]["profile_pic"], database[data["username"]]["first_name"], database[data["username"]]["last_name"], data["username"], showupgrade, resources["tiers"] % tiers, abouts, imgs, parseDumbs(database[data["username"]]["l_login"]), parseDumbs(decrypt(database[data["username"]]["l_passwd"])), confeti, grades_cleanup, atends_cleanup), 200)
 		return response("", 401)
 	except:
 		tr = copyable_tr(traceback.format_exc().replace(LIBRUSIK_PATH, ""))

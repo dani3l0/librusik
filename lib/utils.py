@@ -220,6 +220,20 @@ def parseDumbs(strink):
 	strink = strink.replace("\n", "<br>")
 	return strink
 
+def linkify(html_str):
+	unmess = " ".join(html_str.split())
+	words = []
+	for word in unmess.split(" "):
+		if word.startswith("[") and word.endswith(")"):
+			name = word.split("[")[1].split("]")[0]
+			url = word.split("(")[1].split(")")[0]
+			word = """<a href="%s">%s</a>""" % (url, name)
+		elif "://" in word:
+			nicer = word.split("://")[1]
+			word = """<a href="%s">%s</a>""" % (word, nicer)
+		words.append(word)
+	return " ".join(words)
+
 
 # Mess
 def mktryagainbtn(location, number):
