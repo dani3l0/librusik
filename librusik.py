@@ -990,9 +990,9 @@ async def message(request):
 		if auth(data):
 			demo = demo_err(data["username"])
 			if demo != False: return demo
-			REQ_TIER = "plus"
+			REQ_TIER = "pro"
 			if not check_tier(data["username"], REQ_TIER):
-				return tierror_resp(REQ_TIER, "/more", False, False)
+				return tierror_resp(REQ_TIER, "/messages", False, False)
 			librus = Librus(SESSIONS.get(data["username"]))
 			if await librus.mktoken(database[data["username"]]["l_login"], decrypt(database[data["username"]]["l_passwd"])):
 				SESSIONS.save(data["username"], librus.headers)
@@ -1000,12 +1000,7 @@ async def message(request):
 				attachments = ""
 				for file in mesg["attachments"]:
 					attachments += """<div onclick="downloadMsgFile(this, '%s')">%s</div>""" % (file["nice"].replace("/", "-"), parseDumbs(file["name"]))
-				pro1 = ""
-				pro2 = ""
-				if not check_tier(data["username"], "pro"):
-					pro1 = "Available in <div class=\"tier pro\"></div>"
-					pro2 = "display:none"
-				return response(resources["message"] % (mesg["subject"], mesg["from"], mesg["date"], mesg["content"], attachments, mesg["read"], pro1, pro2), 200)
+				return response(resources["message"] % (mesg["subject"], mesg["from"], mesg["date"], mesg["content"], attachments, mesg["read"]), 200)
 			return response(resources["error"] % (mkbackbtn(uri_full, 2), "Error", ERR_403, mktryagainbtn(uri_full, 2)), 403)
 		return response("", 401)
 	except:
