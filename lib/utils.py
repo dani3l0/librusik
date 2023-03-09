@@ -222,6 +222,7 @@ def parseDumbs(strink):
 
 def linkify(html_str):
 	unmess = " ".join(html_str.split())
+	unmess = re.sub("\[[^]]*\]", lambda x: x.group(0).replace(' ','&nbsp;'), unmess)
 	words = []
 	for word in unmess.split(" "):
 		if word.startswith("[") and word.endswith(")"):
