@@ -280,6 +280,7 @@ function set_tier() {
 		}
 	});
 }
+let conf;
 function index() {
 	buttons(false);
 	var cokie = getCookie();
@@ -305,7 +306,7 @@ function index() {
 				"password": cokie["password"]
 			}, function(data) {
 				if (data.status == 200) {
-					let conf = JSON.parse(data.responseText);
+					conf = JSON.parse(data.responseText);
 					document.getElementById("mynotice").value = conf.notice;
 					document.getElementById("contact").value = conf.contact_uri;
 					if (conf.enable_tiers) document.getElementById("enable_tiers").classList.add("ed");
@@ -614,6 +615,10 @@ function setTiers() {
 		"tiers_text": text,
 		"tiers_requirements": {free, plus, pro}
 	}, function(data) {
+		if (conf.enable_tiers != enable) {
+			agou("panel");
+			return;
+		}
 		if (data.status == 200) {
 			mkerr("succ", "app-settings", "Successful.", "Tiers preferences have been saved.");
 			showdiv("tiers", "succ");
