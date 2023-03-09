@@ -7,6 +7,28 @@
 	max-width: 360px;
 	background: rgba(255, 34, 34, 0.25);
 	height: 4px;
+	overflow: hidden;
+	border-radius: 4px;
+}
+@keyframes wait {
+	0% {
+		width: 10%;
+		left: -10%;
+	}
+	100% {
+		width: 100%;
+		left: 100%;
+	}
+}
+#rebutstatus {
+	height: 100%;
+	background: #F33;
+	min-width: 0;
+	width: 0;
+	position: absolute;
+	left: 0;
+	animation: wait 2s infinite ease-in-out;
+	margin-right: auto;
 }
 .bar {
 	width: 0%;
@@ -32,9 +54,6 @@
 }
 #dbusagebar {
 	background: #08F;
-}
-.rebut {
-	transition: width 10s linear;
 }
 .moreless {
 	color: #FF0;
@@ -109,17 +128,6 @@
 	margin-top: -14px;
 	margin-bottom: 8px;
 	font-size: 11px;
-}
-.progress {
-	overflow: hidden;
-	border-radius: 4px;
-}
-#rebutstatus {
-	height: 100%;
-	background: #F33;
-	min-width: 0;
-	width: 0;
-	margin-right: auto;
 }
 .demos {
 	color: #666;

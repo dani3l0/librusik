@@ -369,21 +369,19 @@ function reboot(mhm) {
 		"name": cookie["name"],
 		"password": cookie["password"]
 	}, function(data) {});
-	var progress = document.getElementById("rebutstatus");
-	progress.classList.add("rebut");
-	setTimeout(function() {
-		progress.style.width = "100%";
-	}, 1000);
 	showdiv("rebootc", "reboot");
-	setTimeout(function() {
-		showdiv("reboot", "main");
-		refresh();
-		autoupdate = setInterval(refresh, 5000);
-	}, 11000);
-	setTimeout(function() {
-		progress.classList.remove("rebut");
-		progress.style.width = 0;
-	}, 12000);
+	let pinger = setInterval(function() {
+		post("panel/api", {
+			"method": "auth",
+			"name": cookie["name"],
+			"password": cookie["password"]
+		}, function(data) {
+			if (data.status == 200) {
+				showdiv("reboot", "main");
+				clearTimeout(pinger)
+			}
+		});
+	}, 1000);
 }
 function changename() {
 	var newname = document.getElementById("newname").value;
