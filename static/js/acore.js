@@ -362,8 +362,6 @@ function reboot(mhm) {
 	if (!mhm) {
 		return;
 	}
-	clearInterval(runningtimex);
-	clearInterval(autoupdate);
 	cookie = getCookie();
 	post("panel/api", {
 		"method": "reboot",
