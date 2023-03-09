@@ -211,6 +211,10 @@ function refresh() {
 						<div class="addition">${last_seen(USERS[i].last_seen)}</div>${addition}
 					</div>
 				</div>`;
+				let viewing_user = document.getElementById("user-name").innerText;
+				if (viewing_user == USERS[i].username) {
+					document.getElementById("user-lastseen").innerText = last_seen(USERS[i].last_seen)
+				}
 			}
 			if (accounts != accountlist.innerHTML) accountlist.innerHTML = accounts;
 			maxusers = resp.max_users;
