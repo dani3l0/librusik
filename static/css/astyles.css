@@ -68,38 +68,6 @@
 	color: #888;
 	margin-bottom: 6px;
 }
-#accountlist {
-	max-width: 960px;
-}
-.user {
-	border: 1px solid #333;
-	color: #F46;
-	font-weight: bold;
-	display: inline-block;
-	padding: 10px 12px 4px;
-	text-align: left;
-	width: calc(90% - 20px);
-	max-width: 360px;
-	font-size: 18px;
-	margin: 8px;
-	border-radius: 8px;
-}
-.user > .username {
-	color: #666;
-	margin: 6px 2px 10px;
-	font-size: 13px;
-	user-select: text;
-	display: flex;
-	align-items: center;
-	-moz-user-select: text;
-}
-.user > .username > div {
-	margin-right: 6px;
-}
-#accountnum {
-	color: #888 !important;
-	margin: -9px 0 12px;
-}
 #passbox {
 	font-size: 32px;
 	color: #222;
@@ -114,25 +82,6 @@
 }
 #passbox:hover {
 	box-shadow: 0 0 20px #F80B;
-}
-.last_seen {
-	color: #666;
-	margin: 4px -12px;
-	font-size: 14px;
-	padding: 14px 12px;
-	border-top: 1px solid #333;
-}
-.joined {
-	margin: 0;
-	color: #666;
-	margin-top: -14px;
-	margin-bottom: 8px;
-	font-size: 11px;
-}
-.demos {
-	color: #666;
-	margin-top: -6px;
-	font-size: 11px;
 }
 .selectos > div {
 	display: inline-block;
@@ -160,4 +109,66 @@
 }
 .forwho > b {
 	color: #EEE;
+}
+#accountlist {
+	max-width: 1080px;
+	flex-wrap: wrap;
+	display: flex;
+}
+.user {
+	display: flex;
+	min-width: 360px;
+	flex: 1;
+	margin: 8px;
+	align-items: center;
+	border: 1px solid #333;
+	padding: 12px 15px;
+	border-radius: 6px;
+	cursor: pointer;
+	transition: background .3s;
+}
+.user:hover {
+	background: #333;
+}
+.user img {
+	border-radius: 1000px;
+	object-fit: cover;
+	width: 80px;
+	height: 80px;
+}
+.user .info {
+	text-align: left;
+	margin-left: 16px;
+}
+.user .name {
+	font-size: 16px;
+	font-weight: bold;
+	margin-bottom: 1px;
+}
+.username {
+	margin: 3px 0 4px;
+	background: #6AF;
+	user-select: none;
+	display: inline-block;
+	padding: 2px 4px;
+	border-radius: 4px;
+	color: #222;
+}
+.user .addition {
+	color: #888;
+	font-weight: bold;
+}
+#user .pic {
+	display: flex;
+	margin: 12px 0 16px;
+}
+#user img {
+	margin: 0 auto;
+	border-radius: 1000px;
+	height: 240px;
+	width: 240px;
+	box-shadow: 2px 2px 10px #0008;
+}
+#user-fullname {
+	font-size: 32px;
 }

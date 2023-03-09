@@ -253,42 +253,57 @@
 			<br>
 			<button onclick="rmCookie()" class="highlighted">Yes, end session</button>
 		</div>
-		<div id="utiers" class="hidden" style="display:none">
-			<button class="back" onclick="showdiv('utiers', 'userlist', true)"></button>
-			<div class="header">Select tier</div>
-			<div class="subheader">Re-selecting demo tier will reset its countdown timer.</div>
-			<div class="forwho">For:&nbsp;&nbsp;&nbsp;<b id="tieruser"></b> <b id="tieruser2"></b></div>
-			<div class="selectos" id="selectos">
+		<div id="userlist" class="hidden" style="display:none">
+			<button class="back" onclick="showdiv('userlist', 'main', true)"></button>
+			<div class="header">Accounts</div>
+			<div id="accountnum" class="subheader">N/A</div>
+			<button onclick="showdiv('userlist', 'dblimit')">Database capacity</button>
+			<div id="accountlist"></div>
+		</div>
+		<div id="user" class="hidden" style="display:none">
+			<button class="back" onclick="showdiv('user', 'userlist', true)"></button>
+			<div class="pic"><img id="user-pic"></div>
+			<div id="user-fullname"></div>
+			<div id="user-name" class="username"></div>
+			<div id="user-lastseen" class="darken bold"></div>
+			<div id="user-joined" class="darken bold"></div><br>
+			<div class="selectos tiers" id="user-tier">
 				<div class="demo" onclick="select_tier(this)">demo</div>
 				<div class="free" onclick="select_tier(this)">free</div>
 				<div class="plus" onclick="select_tier(this)">plus</div>
 				<div class="pro" onclick="select_tier(this)">pro</div>
 			</div>
-			<button class="highlighted" onclick="set_tier()">Save & return</button><br>
-		</div>
-		<div id="userlist" class="hidden" style="display:none">
-			<button class="back" onclick="showdiv('userlist', 'main', true)"></button>
-			<div class="header" style="margin-bottom: 12px">Accounts</div>
-			<div id="accountnum">N/A</div>
-			<button onclick="showdiv('userlist', 'dblimit')">Database capacity</button>
-			<div id="accountlist"></div>
+			<button class="option" onclick="resetpass()">
+				<div class="icon">lock_reset</div>
+				<div>
+					<div class="title">Reset password</div>
+					<div class="subtitle">Generate a new password for this user.</div>
+				</div>
+			</button>
+			<button class="option" onclick="deluser()">
+				<div class="icon">delete</div>
+				<div>
+					<div class="title">Delete user</div>
+					<div class="subtitle">Drop this person from Librusik database.</div>
+				</div>
+			</button>
 		</div>
 		<div id="deluserc" class="hidden" style="display:none">
-			<button class="back" onclick="showdiv('deluserc', 'userlist', true)"></button>
+			<button class="back" onclick="showdiv('deluserc', 'user', true)"></button>
 			<div class="header">Delete account</div>
 			<div class="darken">Do you really want to delete <b id="utbd"></b>?</div>
 			<br>
 			<button onclick="delaccount()" class="highlighted danger">Yes, do it</button>
 		</div>
 		<div id="resetpassc" class="hidden" style="display:none">
-			<button class="back" onclick="showdiv('resetpassc', 'userlist', true)"></button>
+			<button class="back" onclick="showdiv('resetpassc', 'user', true)"></button>
 			<div class="header">Reset password</div>
 			<div class="darken">Do you want to generate a new password for<br><b id="utbc"></b>?</div>
 			<br>
 			<button onclick="genpasswd()" class="highlighted">Yes, do it</button>
 		</div>
 		<div id="resetpasswd" class="hidden" style="display:none">
-			<button class="back" onclick="showdiv('resetpasswd', 'userlist', true);purgepass()"></button>
+			<button class="back" onclick="showdiv('resetpasswd', 'user', true);purgepass()"></button>
 			<div class="header">Reset password</div>
 			<div class="darken">A new password for <b id="utbcr"></b> has been generated:</div><br>
 			<div id="passbox"></div>

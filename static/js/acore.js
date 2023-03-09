@@ -2,7 +2,6 @@ var donottouch = true;
 var autoupdate = null;
 var maxusers = 0;
 var maxuserset = 0;
-var users = 0;
 var runningtimex = null;
 var todelete;
 var tochange;
@@ -168,6 +167,7 @@ function login() {
 		}
 	});
 }
+let USERS = [];
 function refresh() {
 	var cookie = getCookie();
 	if (!cookie["name"] | !cookie["password"]) {
@@ -187,18 +187,30 @@ function refresh() {
 			var dbtext = document.getElementById("dbusage").getElementsByClassName("value")[0];
 			var loadtext2 = document.getElementById("loadavg").getElementsByClassName("tooltip")[0];
 			var dbtext2 = document.getElementById("dbusage").getElementsByClassName("tooltip")[0];
-			var sstatus = document.getElementById("sstatus");
 			var suptime = document.getElementById("suptime");
 			var cloadavg = document.getElementById("cloadavg");
 			var rss = document.getElementById("rss");
 			var accountlist = document.getElementById("accountlist");
 			var accountnum = document.getElementById("accountnum");
-			accountnum.innerText = resp.userscount + " in total";
+			USERS = resp.users;
+			accountnum.innerText = USERS.length + " in total";
 			var accounts = "";
-			for (var i = 0; i < resp.userscount; i++) {
-				let demos = '<p class="demos">' + resp.users[i].demotier + ' days left</p>'
-				if (resp.users[i].demotier == -1) demos = "";
-				accounts += '<div class="user"><div class="fullname">' + resp.users[i].first_name + ' ' + resp.users[i].last_name + '</div><div class="username"><div class="tiers tier ' + resp.users[i].tier + '"></div><div>' + resp.users[i].username + '</div></div><p class="last_seen">' + last_seen(resp.users[i].last_seen) + '</p><p class="joined">Joined ' + resp.users[i].joined + '</p>' + demos + '<button onclick="deluser(\'' + resp.users[i].username + '\', \'' + resp.users[i].first_name + ' ' + resp.users[i].last_name + '\')">Delete</button><button onclick="resetpass(\'' + resp.users[i].username + '\', \'' + resp.users[i].first_name + ' ' + resp.users[i].last_name + '\')">Reset password</button><button onclick="show_tiers(this)" class="tiers">Set tier</button></div>';
+			for (var i = 0; i < USERS.length; i++) {
+				let addition = `<div class="addition">Joined on ${USERS[i].joined}</div>`;
+				if (conf.enable_tiers && USERS[i].tier == "demo") {
+					addition = `<div class="addition">${USERS[i].demotier} days left</div>`
+					if (USERS[i].demotier == -1) addition = "";
+				}
+				accounts += `<div class="user" onclick="openUser(${i})">
+					<div class="pic">
+						<img src="img/profile/${USERS[i].pic}">
+					</div>
+					<div class="info">
+						<div class="name">${USERS[i].first_name} ${USERS[i].last_name}</div>
+						<div class="username">${USERS[i].username}</div><div class="tiers tier ${USERS[i].tier}"></div><br>
+						<div class="addition">${last_seen(USERS[i].last_seen)}</div>${addition}
+					</div>
+				</div>`;
 			}
 			if (accounts != accountlist.innerHTML) accountlist.innerHTML = accounts;
 			maxusers = resp.max_users;
@@ -207,18 +219,17 @@ function refresh() {
 				maxuserset = maxusers;
 				document.getElementById("maxusers").innerText = maxuserset;
 			}
-			users = resp["userscount"];
 			document.getElementById("userlimit").innerText = "Current limit: " + maxusers;
 			loadtext.innerHTML = resp.loadavg + "<b>%</b>";
 			loadtext2.innerHTML = "Temp.: " + resp.cpu_temp + "°";
 			dbtext.innerHTML = resp.db_usage + "<b>%</b>";
-			dbtext2.innerHTML = "Using " + resp.userscount + " of " + resp.max_users;
+			dbtext2.innerHTML = "Using " + resp.users.length + " of " + resp.max_users;
 			if (resp.loadavg > 100) setBar("loadavgp", 100);
 			else setBar("loadavgp", resp.loadavg);
 			if (resp.db_usage > 100) setBar("dbusagep", 100);
 			else setBar("dbusagep", resp.db_usage);
 			suptime.innerText = mktime(resp.uptime);
-			dbsize.innerText = resp.userscount + "/" + resp.max_users + " (" + resp.db_size + " KB)";
+			dbsize.innerText = resp.users.length + "/" + resp.max_users + " (" + resp.db_size + " KB)";
 			scpu.innerText = resp.cores + " core" + (resp.cores == 1 ? "" : "s");
 			sstorage.innerText = resp.storage + " GB";
 			rss.innerText = resp.rss ? (resp.rss + " MB") : "N/A";
@@ -236,18 +247,13 @@ function refresh() {
 		}
 	});
 }
-function show_tiers(div) {
-	let username = div.parentNode.getElementsByClassName("username")[0].innerText;
-	let fullname = div.parentNode.getElementsByClassName("fullname")[0].innerText;
-	let tier = div.parentNode.getElementsByClassName("tier")[0].className.split(" ")[2];
-	let x = document.getElementById("selectos").children;
+function show_tiers(u) {
+	let tier = u.tier
+	let x = document.getElementById("user-tier").children;
 	for (let i = 0; i < x.length; i++) {
 		if (x[i].innerText == tier) x[i].classList.add("selected");
 		else x[i].classList.remove("selected");
 	}
-	document.getElementById("tieruser").innerText = username;
-	document.getElementById("tieruser2").innerText = `(${fullname})`;
-	showdiv("userlist", "utiers");
 }
 function select_tier(e) {
 	let tier = e.innerText;
@@ -256,11 +262,12 @@ function select_tier(e) {
 		if (x[i].innerText == tier) x[i].classList.add("selected");
 		else x[i].classList.remove("selected");
 	}
+	set_tier();
 }
 function set_tier() {
-	let selected_tier = document.getElementById("selectos");
+	let selected_tier = document.getElementById("user-tier");
 	selected_tier = selected_tier.getElementsByClassName("selected")[0].innerText.toLowerCase();
-	let user = document.getElementById("tieruser").innerText;
+	let user = document.getElementById("user-name").innerText;
 	buttons(false);
 	let cookie = getCookie();
 	post("panel/api", {
@@ -272,11 +279,10 @@ function set_tier() {
 	}, function(data) {
 		buttons();
 		if (data.status == 200) {
-			showdiv("utiers", "userlist");
+			console.log("ok");
 		}
 		else {
-			mkerr("err", "userlist", "Error", "Couldn't change desired user's tier.");
-			showdiv("utiers", "err");
+			console.log("not ok");
 		}
 	});
 }
@@ -362,7 +368,7 @@ function reboot(mhm) {
 	if (!mhm) {
 		return;
 	}
-	cookie = getCookie();
+	let cookie = getCookie();
 	post("panel/api", {
 		"method": "reboot",
 		"name": cookie["name"],
@@ -472,17 +478,17 @@ function sendmaxusers() {
 		}
 	});
 }
-function deluser(victim, fullname) {
-	todelete = victim;
-	todeletefull = fullname;
-	document.getElementById("utbd").innerHTML = "<code>" + victim + "</code>" + " (" + fullname + ")";
-	showdiv("userlist", "deluserc");
+function deluser() {
+	todelete = document.getElementById("user-name").innerText;
+	todeletefull = document.getElementById("user-fullname").innerText;
+	document.getElementById("utbd").innerHTML = "<code>" + todelete + "</code>" + " (" + todeletefull + ")";
+	showdiv("user", "deluserc");
 }
-function resetpass(victim, fullname) {
-	tochange = victim;
-	tochangefull = fullname;
-	document.getElementById("utbc").innerHTML = "<code>" + victim + "</code>" + " (" + fullname + ")";
-	showdiv("userlist", "resetpassc");
+function resetpass() {
+	tochange = document.getElementById("user-name").innerText;
+	tochangefull = document.getElementById("user-fullname").innerText;
+	document.getElementById("utbc").innerHTML = "<code>" + tochange + "</code>" + " (" + tochangefull + ")";
+	showdiv("user", "resetpassc");
 }
 function delaccount() {
 	var cookie = getCookie();
@@ -501,7 +507,7 @@ function delaccount() {
 			showdiv("deluserc", "succ");
 		}
 		else {
-			mkerr("err", "userlist", "Error", "User couldn't be deleted.");
+			mkerr("err", "user", "Error", "User couldn't be deleted.");
 			showdiv("deluserc", "err");
 		}
 		todelete = null;
@@ -626,4 +632,14 @@ function setTiers() {
 			showdiv("tiers", "err");
 		}
 	});
+}
+function openUser(i) {
+	let u = USERS[i];
+	document.getElementById("user-pic").src = `img/profile/${u.pic}`;
+	document.getElementById("user-fullname").innerText = `${u.first_name} ${u.last_name}`;
+	document.getElementById("user-name").innerText = u.username;
+	document.getElementById("user-lastseen").innerText = last_seen(u.last_seen);
+	document.getElementById("user-joined").innerText = `Joined on ${u.joined}`;
+	show_tiers(u);
+	showdiv("userlist", "user");
 }

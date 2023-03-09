@@ -1049,7 +1049,19 @@ async def panelapi(request):
 						last_seen = -1
 						if x in LAST_SEEN_PEPS:
 							last_seen = LAST_SEEN_PEPS[x]
-						users.append({"first_name": database[x]["first_name"], "last_name": database[x]["last_name"], "username": x, "last_seen": last_seen, "joined": database[x]["joined"], "tier": database[x]["tier"], "demotier": demoleft(x)})
+						pic = database[x]["profile_pic"]
+						if database[x]["profile_pic"] == database[x]["custom_pic"]:
+							pic = f"custom/{pic}"
+						users.append({
+							"first_name": database[x]["first_name"],
+							"last_name": database[x]["last_name"],
+							"username": x,
+							"pic": pic,
+							"last_seen": last_seen,
+							"joined": database[x]["joined"],
+							"tier": database[x]["tier"],
+							"demotier": demoleft(x)
+						})
 					maxusers = config["max_users"]
 					db_usage = round(len(users) / maxusers * 100)
 					db_size = round(os.stat("%s/database.json" % DATA_DIR).st_size / 10) / 100
@@ -1061,7 +1073,6 @@ async def panelapi(request):
 						"loadavg": loadavg,
 						"cpu_temp": cpu_temp,
 						"users": users[::-1],
-						"userscount": len(users),
 						"max_users": maxusers,
 						"db_usage": db_usage,
 						"uptime": uptime,
