@@ -30,13 +30,13 @@ CONFIG_DEFAULT = {
 	"ssl": False,
 	"pubkey": "/etc/letsencrypt/live/my.domain.com/fullchain.pem",
 	"privkey": "/etc/letsencrypt/live/my.domain.com/privkey.pem",
-	"contact_uri": "mailto:librusik@my.domain",
+	"contact_uri": "librusik@my.domain",
 	"enable_tiers": False,
 	"tiers_text": "Tiers are enabled to prevent random people using this instance.",
 	"tiers_requirements": {
 		"free": "To get, say thank you.",
 		"plus": "To get, buy me a beer.",
-		"pro": "To get, solve the <a target='blank' href='https://www.youtube.com/watch?v=dQw4w9WgXcQ'>puzzle</a>."
+		"pro": "To get, solve the [puzzle](https://www.youtube.com/watch?v=dQw4w9WgXcQ)."
 	},
 	"debug": False
 }
