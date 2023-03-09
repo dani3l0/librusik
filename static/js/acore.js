@@ -379,7 +379,7 @@ function reboot(mhm) {
 		}, function(data) {
 			if (data.status == 200) {
 				showdiv("reboot", "main");
-				clearTimeout(pinger)
+				clearInterval(pinger)
 			}
 		});
 	}, 1000);
