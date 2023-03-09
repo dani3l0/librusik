@@ -276,15 +276,7 @@ function set_tier() {
 		"tier": selected_tier,
 		"name": cookie["name"],
 		"password": cookie["password"]
-	}, function(data) {
-		buttons();
-		if (data.status == 200) {
-			console.log("ok");
-		}
-		else {
-			console.log("not ok");
-		}
-	});
+	}, function(data) {});
 }
 let conf;
 function index() {
