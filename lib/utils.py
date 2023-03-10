@@ -221,6 +221,7 @@ def parseDumbs(strink):
 	return strink
 
 def linkify(html_str):
+	html_str = html_str.replace("\n", "<br>")
 	unmess = " ".join(html_str.replace(").", ") .").split())
 	unmess = re.sub("\[[^]]*\]", lambda x: x.group(0).replace(' ','&nbsp;'), unmess)
 	words = []
