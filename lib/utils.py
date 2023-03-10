@@ -228,10 +228,10 @@ def linkify(html_str):
 		if word.startswith("[") and word.endswith(")"):
 			name = word.split("[")[1].split("]")[0]
 			url = word.split("(")[1].split(")")[0]
-			word = """<a href="%s">%s</a>""" % (url, name)
+			word = """<a href="%s" target="_blank">%s</a>""" % (url, name)
 		elif "://" in word:
 			nicer = word.split("://")[1]
-			word = """<a href="%s">%s</a>""" % (word, nicer)
+			word = """<a href="%s" target="_blank">%s</a>""" % (word, nicer)
 		words.append(word)
 	return " ".join(words).replace("</a> .", "</a>.")
 
