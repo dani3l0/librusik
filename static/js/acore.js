@@ -272,7 +272,6 @@ function set_tier() {
 	let selected_tier = document.getElementById("user-tier");
 	selected_tier = selected_tier.getElementsByClassName("selected")[0].innerText.toLowerCase();
 	let user = document.getElementById("user-name").innerText;
-	buttons(false);
 	let cookie = getCookie();
 	post("panel/api", {
 		"method": "changetier",
