@@ -1218,6 +1218,12 @@ async def error_middleware(request, handler):
 	except Exception as ex:
 		exc = traceback.format_exc().replace(LIBRUSIK_PATH, "")
 		status = ex.status
+		if status == 401:
+			exc = "Unauthorized: You are not authorized to view this resource."
+		if status == 403:
+			exc = "Forbidden: You are not permitted to view this resource."
+		if status == 404:
+			exc = "Not Found: The requested resource does not exist."
 		return response(resources["errorpage"] % (str(status), str(exc)), status)
 
 
