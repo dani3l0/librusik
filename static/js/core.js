@@ -607,7 +607,7 @@ function uploadPic(field) {
 	var filename = files[0].name;
 	if (files[0].size === 0 | files[0].size > 4000000) {
 		info.classList.add("err");
-		info.innerText = (files[0].size) ? "File is empty!" : "File is too big! (" + Math.round(files[0].size / 1000 / 10) / 100 + " MB / 4.00 MB)";
+		info.innerText = (!files[0].size) ? "File is empty!" : "File is too big! (" + Math.round(files[0].size / 1000 / 10) / 100 + " MB / 4.00 MB)";
 		return;
 	}
 	buttons(false);

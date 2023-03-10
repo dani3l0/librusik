@@ -1181,7 +1181,9 @@ async def upload_handler(request):
 		with open(os.path.join(PROFILE_PIC_DIR, filename), "wb") as f:
 			f.write(img.file.read())
 		if database[data["username"]]["custom_pic"]:
-			os.remove("%s/%s" % (PROFILE_PIC_DIR, database[data["username"]]["custom_pic"]))
+			oldpic = "%s/%s" % (PROFILE_PIC_DIR, database[data["username"]]["custom_pic"])
+			if os.path.isfile(oldpic):
+				os.remove(oldpic)
 		database[data["username"]]["custom_pic"] = filename
 		database[data["username"]]["profile_pic"] = filename
 		updatedb()
