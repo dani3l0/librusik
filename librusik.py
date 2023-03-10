@@ -1143,6 +1143,11 @@ async def panelapi(request):
 						config["tiers_requirements"] = data["tiers_requirements"]
 						updateconf()
 						return response("", 200)
+				elif data["method"] == "setregistration":
+					if "enabled" in data and isinstance(data["enabled"], bool):
+						config["enable_registration"] = data["enabled"]
+						updateconf()
+						return response("", 200)
 				return response("", 400)
 			return response("", 401)
 		return response("", 400)

@@ -8,6 +8,7 @@ var tochange;
 var todeletefull;
 var tochangefull;
 var newpasswd;
+var regenabled;
 function gou(where) {
 	window.location.href = where;
 }
@@ -315,6 +316,7 @@ function index() {
 					document.getElementById("plusreq").value = conf.tiers_requirements.plus;
 					document.getElementById("proreq").value = conf.tiers_requirements.pro;
 					document.getElementById("tiers_text").value = conf.tiers_text;
+					setregistration(conf.enable_registration, true);
 				}
 			});
 		}
@@ -464,7 +466,7 @@ function sendmaxusers() {
 		if (data.status == 200) {
 			setTimeout(refresh, 350);
 			setTimeout(rminputs, 350);
-			mkerr("succ", "userlist", "Database limit changed", "Remember too many users may lead to unexpected results.");
+			mkerr("succ", "database", "Database limit changed", "Remember too many users may lead to unexpected results.");
 			showdiv("dblimit", "succ");
 		}
 		else {
@@ -562,7 +564,7 @@ function setNotice() {
 	}, function(data) {
 		if (data.status == 200) {
 			let un = text == "" ? "" : "un";
-			mkerr("succ", "app-settings", "Successful.", `Your notice has been ${un}set.`);
+			mkerr("succ", "app-settings", "Success", `Your notice has been ${un}set.`);
 			showdiv("notice", "succ");
 		}
 		else {
@@ -637,4 +639,20 @@ function openUser(i) {
 	document.getElementById("user-joined").innerText = `Joined on ${u.joined}`;
 	show_tiers(u);
 	showdiv("userlist", "user");
+}
+function setregistration(enabled, drop) {
+	regenabled = enabled;
+	let b = document.getElementById("registration_status");
+	b.style.color = (enabled) ? "#0F4" : "#F44";
+	let e = (enabled) ? "enabled" : "disabled";
+	b.innerText = e;
+	let cookie = getCookie();
+	if (drop) return;
+	buttons(false);
+	post("panel/api", {
+		"method": "setregistration",
+		"name": cookie["name"],
+		"password": cookie["password"],
+		"enabled": enabled
+	}, function(data) {buttons()});
 }

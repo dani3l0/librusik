@@ -124,6 +124,13 @@
 					<div class="subtitle">Enable/disable Tiers and set your own list of requirements.</div>
 				</div>
 			</button>
+			<button class="option" onclick="showdiv('app-settings', 'database')">
+				<div class="icon">database</div>
+				<div>
+					<div class="title">Users & database</div>
+					<div class="subtitle">Enable/disable registration and change the maximum number of stored users.</div>
+				</div>
+			</button>
 			<button class="option" onclick="showdiv('app-settings', 'rebootc')">
 				<div class="icon">restart_alt</div>
 				<div>
@@ -131,6 +138,33 @@
 					<div class="subtitle">Perform a full application restart.</div>
 				</div>
 			</button>
+		</div>
+		<div id="database" class="hidden" style="display:none">
+			<button class="back" onclick="showdiv('database', 'app-settings', true)"></button>
+			<div class="header">Users & database</div>
+			<div class="subheader">Registration and the maximum number of stored users</div>
+			<button class="option" onclick="showdiv('database', 'dblimit')">
+				<div class="icon">groups</div>
+				<div>
+					<div class="title">Database capacity</div>
+					<div class="subtitle">Set the maximum number of registered users.</div>
+				</div>
+			</button>
+			<button class="option" onclick="showdiv('database', 'registration')">
+				<div class="icon">person_add</div>
+				<div>
+					<div class="title">Registration</div>
+					<div class="subtitle">Set whether new accounts can be created.</div>
+				</div>
+			</button>
+		</div>
+		<div id="registration" class="hidden" style="display:none">
+			<button class="back" onclick="showdiv('registration', 'database', true)"></button>
+			<div class="header">Registration</div>
+			<div class="subheader">Set whether people are allowed to create new accounts or not</div>
+			<div class="bold">Registration is now <b id="registration_status"></b>.</div><br>
+			<button class="highlighted danger" onclick="setregistration(false)">Disable</button>
+			<button class="highlighted" onclick="setregistration(true)">Enable</button>
 		</div>
 		<div id="tiers" class="hidden" style="display:none">
 			<button class="back" onclick="showdiv('tiers', 'app-settings', true)"></button>
@@ -195,9 +229,9 @@
 			<button onclick="changepass()" class="highlighted">Change</button>
 		</div>
 		<div id="dblimit" class="hidden" style="display:none">
-			<button class="back" onclick="showdiv('dblimit', 'userlist', true)"></button>
+			<button class="back" onclick="showdiv('dblimit', 'database', true)"></button>
 			<div class="header">Database capacity</div>
-			<div class="subheader">Set the maximum number of registered people here</div>
+			<div class="subheader">Set the maximum number of registered people</div>
 			<div id="userlimit" class="bold">Current limit: N/A</div>
 			<button onclick="setmaxusers('-')" class="moreless">-</button>
 			<div id="maxusers">N/A</div>
@@ -255,9 +289,8 @@
 		</div>
 		<div id="userlist" class="hidden" style="display:none">
 			<button class="back" onclick="showdiv('userlist', 'main', true)"></button>
-			<div class="header">Accounts</div>
+			<div class="header">People</div>
 			<div id="accountnum" class="subheader">N/A</div>
-			<button onclick="showdiv('userlist', 'dblimit')">Database capacity</button>
 			<div id="accountlist"></div>
 		</div>
 		<div id="user" class="hidden" style="display:none">
