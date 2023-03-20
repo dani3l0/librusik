@@ -106,10 +106,13 @@ function showNotifications(obj) {
 	let iconMap = {
 		"grades": "book",
 		"exams": "history_edu",
-		"absences": "event_busy"
+		"absences": "event_busy",
+		"conferences": "groups"
 	}
 	for (let subj in obj) {
-		mkNotification(iconMap[subj], subj, obj[subj])
+		let icon = iconMap[subj]
+		if (!icon) icon = "notifications";
+		mkNotification(icon, subj, obj[subj])
 	}
 	let d = getByID("notifications");
 	d.style.height = `${d.scrollHeight}px`;

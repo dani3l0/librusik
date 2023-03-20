@@ -368,10 +368,12 @@ class Librus:
 		absences = 0
 		for attendance in attendances:
 			absences += not attendances_types[str(attendance["Type"]["Id"])]
+		conferences = len(await self.get_parent_teacher_conferences())
 		return {
 			"grades": grades,
 			"exams": exams,
-			"absences": absences
+			"absences": absences,
+			"conferences": conferences
 		}
 
 	async def get_unread_messages(self):
