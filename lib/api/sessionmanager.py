@@ -29,10 +29,8 @@ class SessionManager:
 
 	def get_notifications(self, user, notifs):
 		diff = notifs.copy()
-		count = True
 		if not self.notifications[user]:
 			self.notifications[user] = notifs
-		print(self.notifications[user])
 		for sub in self.notifications[user]:
 			diff[sub] -= self.notifications[user][sub]
 		self.notifications[user] = notifs
