@@ -1116,6 +1116,51 @@ iframe {
 	margin: 8px 0 0;
 	user-select: text;
 }
+#notifications {
+	height: 0;
+	overflow: hidden;
+	transition: all .5s;
+}
+#notifications > div {
+	display: flex;
+	align-items: center;
+	margin-top: 8px;
+	border-radius: 32px;
+	overflow: hidden;
+	font-weight: bold;
+	color: #BBB;
+	background: #080808;
+	transition: all .5s;
+	height: 48px;
+}
+#notifications > div.collapsed {
+	height: 0;
+	border-radius: 0;
+	transform: translateX(-100%);
+	margin: 0;
+}
+#notifications b {
+	color: #EEE
+}
+#notifications .icon {
+	background: #B8F;
+	margin: 4px;
+	font-size: 20px;
+	border-radius: inherit;
+	padding: 10px;
+	margin-right: 12px;
+	color: #222;
+}
+#notifications .close {
+	background: transparent;
+	color: #888;
+	cursor: pointer;
+	margin-left: auto;
+	margin-right: 4px;
+}
+#notifications .close:after {
+	content: "close";
+}
 @media (max-width: 420px) {
 	.circ {
 		width: 180px;

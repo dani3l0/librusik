@@ -87,9 +87,41 @@ function indexpage() {
 		getByID("notifications").innerHTML = ""
 		if (data.status == 200) {
 			let resp = JSON.parse(data.responseText);
-			console.log(resp)
+			showNotifications(resp)
 		}
 	}, 30);
+}
+
+function mkNotification(icon, text, value) {
+	if (value <= 0) return;
+	let html = `<div>
+		<div class="icon">${icon}</div>
+		<div class="text">New ${text}: <b>${value}</b></div>
+		<div class="icon close" onclick="closeNotification(this)"></div>
+	</div>`;
+	getByID("notifications").innerHTML += html;
+}
+
+function showNotifications(obj) {
+	let iconMap = {
+		"grades": "book",
+		"exams": "history_edu",
+		"absences": "event_busy"
+	}
+	for (let subj in obj) {
+		mkNotification(iconMap[subj], subj, obj[subj])
+	}
+	let d = getByID("notifications");
+	d.style.height = `${d.scrollHeight}px`;
+	console.log(d.scrollHeight)
+	setTimeout(function() {
+		d.style.height = "auto";
+	}, 550);
+}
+
+function closeNotification(node) {
+	let block = node.parentNode;
+	block.classList.add("collapsed");
 }
 
 function darken(y) {

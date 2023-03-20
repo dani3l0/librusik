@@ -361,12 +361,15 @@ class Librus:
 		return (datetime.now() - self.parseAddDate(date)).days <= period
 
 	async def get_notifications(self, days=14):
-		cache = []
-		# _grades = await self.get_grades()
-		# _messages = await self.get_messages()
-		# _exams = await self.get_exams()
-		# _attendances = await self.get_attendances()
-		return cache
+		grades = len((await self.get_data("Grades"))["Grades"])
+		exams = len((await self.get_data("HomeWorks"))["HomeWorks"])
+		attendances = len((await self.get_data("Attendances"))["Attendances"])
+		absences = attendances
+		return {
+			"grades": grades,
+			"exams": exams,
+			"absences": absences
+		}
 
 	async def get_unread_messages(self):
 		try:

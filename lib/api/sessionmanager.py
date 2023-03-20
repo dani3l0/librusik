@@ -28,24 +28,11 @@ class SessionManager:
 			pass
 
 	def get_notifications(self, user, notifs):
-		# try:
-		# 	notifs_cached = []
-		# 	count = True
-		# 	if not self.notifications[user]:
-		# 		count = False
-		# 	for n in self.notifications[user]:
-		# 		notifs_cached = n
-		# 	notifs_str = []
-		# 	for n in notifs:
-		# 		notifs_str.append(str(n))
-		# 	n_count = len(notifs) - len(set(notifs_cached) & set(notifs_str))
+		diff = notifs
+		count = True
+		# if not self.notifications[user]:
 		# 	self.notifications[user] = notifs
-		# 	return {
-		# 		"new": n_count * count,
-		# 		"notifications": self.notifications[user]
-		# 	}
-		# except:
-		# 	return {
-		# 	"new": 0,
-		# 	"notifications": self.notifications[user]
-		# }
+		for sub in self.notifications[user]:
+			diff[sub] -= self.notifications[user][sub]
+		#self.notifications[user] = notifs
+		return diff
