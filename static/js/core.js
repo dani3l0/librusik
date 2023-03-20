@@ -87,23 +87,8 @@ function indexpage() {
 		getByID("notifications").innerHTML = ""
 		if (data.status == 200) {
 			let resp = JSON.parse(data.responseText);
-			let n = resp["notifications"]
-			let counter = 0;
-			if (resp["new"]) {
-				getByID("notifier").classList.add("notifing");
-				getByID("notifications").innerHTML += `<p class="separator">New notifications</p>`
-				for (let i = counter; i < resp["new"]; i++) {
-					getByID("notifications").innerHTML += parse_notification(n[i])
-					counter++;
-				}
-				if (resp["new"] < n.length) getByID("notifications").innerHTML += `<p class="separator">Old notifications</p>`
-			}
-			for (let i = counter; i < n.length; i++) {
-				getByID("notifications").innerHTML += parse_notification(n[i])
-			}
+			console.log(resp)
 		}
-		else if (data.status == 700) getByID("notifications").innerHTML += `<b class="separator wider">This feature is available in <div class="tier ${data.responseText}"></div> tier.</b>`
-		else getByID("notifications").innerHTML += `<p class="separator wider">Couldn't fetch data.</p>`
 	}, 30);
 }
 
@@ -111,59 +96,6 @@ function darken(y) {
 	let e = getByID("darken").classList;
 	if (y) e.add("shown");
 	else e.remove("shown");
-}
-
-var NOTIFS_SHOWN = false;
-function toggle_notifications(show) {
-	btn = document.getElementsByClassName("notif_button")[0];
-	btn.scrollTo(0,0);
-	getByID("notifier").classList.remove("notifing");
-	if (show && !NOTIFS_SHOWN) {
-		darken(true);
-		btn.classList.add("expanded");
-		setTimeout(function() {NOTIFS_SHOWN = true}, 500);
-	}
-	else if (!show && NOTIFS_SHOWN) {
-		darken(false);
-		btn.classList.remove("expanded");
-		setTimeout(function() {NOTIFS_SHOWN = false}, 500);
-	}
-}
-
-function parse_notification(item, i, unread) {
-	let icon, title, text = "";
-	if (item.type == "message") {
-		icon = "email";
-		title = `New message from ${item.from}`;
-		text = `Subject: ${item.subject}<br>Sent ${item.date}`
-	}
-	else if (item.type == "grade") {
-		icon = "book";
-		title = `You got ${item.Grade} from ${item.Lesson}`;
-		let comment = item.Comment;
-		if (comment == "No comment") comment = "";
-		else comment = " for " + comment;
-		text = `${item.AddedBy.FirstName} ${item.AddedBy.LastName} added it with ${item.Weight} weight, as '${item.Category}${comment}'.<br>Added ${item.AddDate}`
-	}
-	else if (item.type == "attendance") {
-		icon = "person_remove";
-		title = `New absence on ${item.Lesson}`;
-		text = `${item.AddedBy.FirstName} ${item.AddedBy.LastName} marked you as absent on ${item.Date}.<br>Added ${item.AddDate}`
-	}
-	else if (item.type == "exam") {
-		icon = "edit";
-		title = `New exam from ${item.Lesson}`;
-		text = `${item.AddedBy.FirstName} ${item.AddedBy.LastName} added a new exam on ${item.Date}.<br>Added ${item.AddDate}`
-	}
-	let highlight = ""
-	if (i < unread) highlight = ` class="unread"`
-	return `<div${highlight}>
-		<div class="icon">${icon}</div>
-		<div class="text">
-			<div class="title">${title}</div>
-			<div class="text">${text}</div>
-		</div>
-	</div>`
 }
 
 function loginpage() {
