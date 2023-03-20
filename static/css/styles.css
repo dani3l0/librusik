@@ -1118,6 +1118,8 @@ iframe {
 }
 #notifications {
 	height: 0;
+	max-width: 640px;
+	margin: 0 auto;
 	overflow: hidden;
 	transition: all .5s;
 }
@@ -1130,7 +1132,7 @@ iframe {
 	font-weight: bold;
 	color: #BBB;
 	background: #080808;
-	transition: all .5s;
+	transition: all .5s .5s, transform .5s;
 	height: 48px;
 }
 #notifications > div.collapsed {
