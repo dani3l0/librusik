@@ -113,7 +113,6 @@ function showNotifications(obj) {
 	}
 	let d = getByID("notifications");
 	d.style.height = `${d.scrollHeight}px`;
-	console.log(d.scrollHeight)
 	setTimeout(function() {
 		d.style.height = "auto";
 	}, 550);
