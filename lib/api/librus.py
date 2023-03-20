@@ -363,8 +363,11 @@ class Librus:
 	async def get_notifications(self, days=14):
 		grades = len((await self.get_data("Grades"))["Grades"])
 		exams = len((await self.get_data("HomeWorks"))["HomeWorks"])
-		attendances = len((await self.get_data("Attendances"))["Attendances"])
-		absences = attendances
+		attendances = (await self.get_data("Attendances"))["Attendances"]
+		attendances_types = {str(x["Id"]): x["IsPresenceKind"] for x in (await self.get_data("Attendances/Types"))["Types"]}
+		absences = 0
+		for attendance in attendances:
+			absences += not attendances_types[str(attendance["Type"]["Id"])]
 		return {
 			"grades": grades,
 			"exams": exams,
