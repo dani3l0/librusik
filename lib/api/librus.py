@@ -199,14 +199,9 @@ class Librus:
 	async def get_teacher_free_days(self):
 		r = await self.get_data("TeacherFreeDays")
 		teachers = await self.get_teachers()
-#		teacherfreedaystypes = await self.get_data("TeacherFreeDays/Types")
-#		types = {
-#			i["Id"]: i["Name"] for i in teacherfreedaystypes["Types"]
-#		}
 		for i in r["TeacherFreeDays"]:
 			i.pop("Id")
 			i["Teacher"] = teachers[i["Teacher"]["Id"]]
-#			i["Type"] = types[i["Type"]["Id"]]
 		return r["TeacherFreeDays"]
 
 	async def get_lucky_number(self):
@@ -375,15 +370,6 @@ class Librus:
 			"absences": absences,
 			"conferences": conferences
 		}
-
-	async def get_unread_messages(self):
-		try:
-			k = await self.get_data("WhatsNew")
-			if k and "WhatsNew" in k:
-				return len(k["WhatsNew"]["Messages"])
-			return "-"
-		except:
-			return "-"
 
 	async def get_messages(self):
 		try:
