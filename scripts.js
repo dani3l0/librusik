@@ -1,5 +1,9 @@
+function getPhotos() {
+	return document.getElementsByClassName("gallery")[0].getElementsByTagName("img");
+}
+
 function prepareGallery() {
-	let g = document.getElementsByClassName("gallery")[0].children;
+	let g = getPhotos();
 	for (let item of g) {
 		item.onclick = function() {showPhoto(item)};
 	}
@@ -21,7 +25,7 @@ function showPhoto(e) {
 function hidePhoto(e) {
 	e.classList.add("hidden");
 	document.getElementById("photo_helper").classList.add("hidden");
-	let imgs = document.getElementsByClassName("gallery")[0].children;
+	let imgs = getPhotos();
 	for (let item of imgs) {
 		if (item.src == e.src) {
 			item.classList.remove("hidden");
@@ -31,7 +35,7 @@ function hidePhoto(e) {
 }
 
 function photo_move(n) {
-	let g = document.getElementsByClassName("gallery")[0].children;
+	let g = getPhotos();
 	for (let i = 0; i < g.length; i++) {
 		let current = g[i].classList.contains("hidden");
 		let target = i + n;
