@@ -1069,6 +1069,9 @@ iframe {
 	color: #222;
 	margin-top: 12px;
 }
+#demotext a {
+	font-weight: bold;
+}
 .separator {
 	display: block;
 	color: #999;
