@@ -27,6 +27,7 @@ CONFIG_DEFAULT = {
 	"subdirectory": "/",
 	"readable_db": False,
 	"notice": None,
+	"check_browser": True,
 	"ssl": False,
 	"pubkey": "/etc/letsencrypt/live/my.domain.com/fullchain.pem",
 	"privkey": "/etc/letsencrypt/live/my.domain.com/privkey.pem",
@@ -1212,17 +1213,28 @@ async def set_profile_pic(request):
 @web.middleware
 async def error_middleware(request, handler):
 	try:
+		useragent = request.headers["User-Agent"]
+		passed = False
+		if config["check_browser"]:
+			for check in ["Chrome", "Safari", "Firefox"]:
+				if check in useragent: passed = True
+		if not passed: raise Exception("VerificationError")
 		respons = await handler(request)
 		respons.headers["Cache-Control"] = "no-cache"
 		return respons
 	except Exception as ex:
 		exc = traceback.format_exc().replace(LIBRUSIK_PATH, "")
-		status = ex.status
-		if status == 401:
+		try:
+			status = ex.status
+		except AttributeError:
+			status = 400
+		if status == 400:
+			exc = "Bad Request"
+		elif status == 401:
 			exc = "Unauthorized: You are not authorized to view this resource."
-		if status == 403:
+		elif status == 403:
 			exc = "Forbidden: You are not permitted to view this resource."
-		if status == 404:
+		elif status == 404:
 			exc = "Not Found: The requested resource does not exist."
 		return response(resources["errorpage"] % (str(status), str(exc)), status)
 
