@@ -85,7 +85,7 @@ TIERS = ["demo", "free", "plus", "pro"]
 def check_tier(user, required_tier):
 	if config["enable_tiers"]:
 		if database[user]["tier"] == "demo":
-			return True
+			return demo_has_access(user)
 		required = TIERS.index(required_tier)
 		current = TIERS.index(database[user]["tier"])
 		return True if required <= current else False
