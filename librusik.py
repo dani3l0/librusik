@@ -233,7 +233,7 @@ async def api(request):
 						"confetti": database[data["username"]]["confetti"],
 						"tier": database[data["username"]]["tier"],
 						"demoleft": demoleft(data["username"]),
-						"contact": config["contact_uri"]
+						"contact": parseContact(config["contact_uri"])
 					}, 200)
 				elif method == "get_notifications":
 					REQ_TIER = "pro"
@@ -344,10 +344,7 @@ async def index(request):
 
 async def login(request):
 	show_register = "" if config["enable_registration"] else "display:none"
-	eee = config["contact_uri"]
-	if "://" not in eee:
-		eee = "mailto:" + eee
-	abouts = resources["about"] % eee
+	abouts = resources["about"] % parseContact(config["contact_uri"])
 	return response(resources["login"] % (show_register, abouts), 200)
 
 
@@ -551,10 +548,7 @@ async def settings(request):
 			if database[data["username"]]["tier"] == "pro":
 				showupgrade = "display:none"
 			tiers = (linkify(config["tiers_requirements"]["free"]), linkify(config["tiers_requirements"]["plus"]), linkify(config["tiers_requirements"]["pro"]), config["tiers_text"])
-			eee = config["contact_uri"]
-			if "://" not in eee:
-				eee = "mailto:" + eee
-			abouts = resources["about"] % eee
+			abouts = resources["about"] % parseContact(config["contact_uri"])
 			return response(resources["settings"] % (f + database[data["username"]]["profile_pic"], database[data["username"]]["first_name"], database[data["username"]]["last_name"], data["username"], showupgrade, resources["tiers"] % tiers, abouts, imgs, parseDumbs(database[data["username"]]["l_login"]), parseDumbs(decrypt(database[data["username"]]["l_passwd"])), confeti, grades_cleanup, atends_cleanup), 200)
 		return response("", 401)
 	except:

@@ -236,6 +236,11 @@ def linkify(html_str):
 		words.append(word)
 	return " ".join(words).replace("</a> .", "</a>.")
 
+def parseContact(contact):
+	if "://" not in contact:
+		contact = "mailto:" + contact
+	return contact
+
 
 # Mess
 def mktryagainbtn(location, number):
