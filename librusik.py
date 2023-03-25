@@ -243,7 +243,7 @@ async def api(request):
 							notifications = await librus.get_notifications()
 							return JSONresponse(SESSIONS.get_notifications(data["username"], notifications), 200)
 						else:
-							return response({"new": 0, "notifications": []}, 403)
+							return response({}, 403)
 					else:
 						return response(REQ_TIER, 700)
 				elif method == "confetti":
