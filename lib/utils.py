@@ -187,85 +187,85 @@ def validate_port_number(port) -> bool:
         return False
 
 def setup_wizard() -> tuple:
-		print("Welcome to the librusik setup wizard!")
-		print("Please select or enter the IP address you want to use.")
+	print("Welcome to the librusik setup wizard!")
+	print("Please select or enter the IP address you want to use.")
 
 
-		local_ip_adress = get_local_ip_adress()
-		localhost = '127.0.0.1'
+	local_ip_adress = get_local_ip_adress()
+	localhost = '127.0.0.1'
 
-		# Ask for IP address
-		print("1. LocalHost: " + localhost)
-		print("2. Local IP address: " + local_ip_adress)
-		print("3. Enter custom IP address")
-		
-		while True:
-			option = input("Select an option (1-3): ")
-			if option == "1":
-				ip_address = localhost
-				break
-			elif option == "2":
-				ip_address = local_ip_adress
-				break
-			elif option == "3":
-				ip_address = input("Enter custom IP address: ")
-				break
-
-			else:
-				print("Invalid option. Please try again.")
-		
-		# Validate input
-		while not validate_ip_address(ip_address):
-			print("Invalid IP address format. Please try again.")
+	# Ask for IP address
+	print("1. LocalHost: " + localhost)
+	print("2. Local IP address: " + local_ip_adress)
+	print("3. Enter custom IP address")
+	
+	while True:
+		option = input("Select an option (1-3): ")
+		if option == "1":
+			ip_address = localhost
+			break
+		elif option == "2":
+			ip_address = local_ip_adress
+			break
+		elif option == "3":
 			ip_address = input("Enter custom IP address: ")
+			break
 
-		print("Selected IP address:", ip_address)
+		else:
+			print("Invalid option. Please try again.")
+	
+	# Validate input
+	while not validate_ip_address(ip_address):
+		print("Invalid IP address format. Please try again.")
+		ip_address = input("Enter custom IP address: ")
 
-		# Ask for port
-		print("Please select or enter the port number you want to use.")
-		print("1. Default port: 7777")
-		print("2. Enter custom port number")
-		
+	print("Selected IP address:", ip_address)
+
+	# Ask for port
+	print("Please select or enter the port number you want to use.")
+	print("1. Default port: 7777")
+	print("2. Enter custom port number")
+	
+	while True:
+		option = input("Select an option (1-2): ")
+		if option == "1":
+			port = 7777
+			break
+		elif option == "2":
+			port = input("Enter custom port number: ")
+			break
+		else:
+			print("Invalid option. Please try again.")
+
+	# Validate input
+	while not validate_port_number(port):
+		print("Invalid port number. Please try again.")
+		port = input("Enter port number: ")
+
+	print("Selected port: ", port)
+	if platform.system() == "Windows":
+		print("Do you want librusik to start at startup? (y/n)")
 		while True:
-			option = input("Select an option (1-2): ")
-			if option == "1":
-				port = 7777
+			option = input("Select an option (y/n): ")
+			if option == "y":
+				startup = True
 				break
-			elif option == "2":
-				port = input("Enter custom port number: ")
+			elif option == "n":
+				startup = False
 				break
 			else:
 				print("Invalid option. Please try again.")
 
-		# Validate input
-		while not validate_port_number(port):
-			print("Invalid port number. Please try again.")
-			port = input("Enter port number: ")
-
-		print("Selected port: ", port)
-		if platform.system() == "Windows":
-			print("Do you want librusik to start at startup? (y/n)")
-			while True:
-				option = input("Select an option (y/n): ")
-				if option == "y":
-					startup = True
-					break
-				elif option == "n":
-					startup = False
-					break
-				else:
-					print("Invalid option. Please try again.")
-
-			if startup:
-				if platform.system() == "Windows":
-					with open("librusik.py", "r") as librusik_src:
-						with open("librusik.pyw", "w") as librusik_dest:
-							librusik_dest.write(librusik_src.read())
-					with open("librusik.bat", "w") as bat_script:
-						bat_script.write(f"@echo off\ncd {get_script_path()}\n{sys.executable.split()[-1].replace('python', 'pythonw')} librusik.pyw\ngoto :eof")
-					shutil.copyfile("librusik.bat", os.path.join(os.environ["APPDATA"], "Microsoft", "Windows", "Start Menu", "Programs", "Startup", "librusik.bat"))
-					print("After system restart Librusik will start at startup.")
-		return ip_address, port
+		if startup:
+			if platform.system() == "Windows":
+				with open("librusik.py", "r") as librusik_src:
+					with open("librusik.pyw", "w") as librusik_dest:
+						librusik_dest.write(librusik_src.read())
+				with open("librusik.bat", "w") as bat_script:
+					bat_script.write(f"@echo off\ncd {get_script_path()}\n{sys.executable.split()[-1].replace('python', 'pythonw')} librusik.pyw\ngoto :eof")
+				shutil.copyfile("librusik.bat", os.path.join(os.environ["APPDATA"], "Microsoft", "Windows", "Start Menu", "Programs", "Startup", "librusik.bat"))
+				print("After system restart Librusik will start at startup.")
+	return ip_address, port
 
 def get_script_path():
     return os.path.dirname(os.path.realpath(sys.argv[0]))
