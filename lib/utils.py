@@ -272,7 +272,6 @@ def setup_wizard() -> tuple:
 							librusik_dest.write(librusik_src.read())
 					with open("librusik.bat", "w") as bat_script:
 						bat_script.write(f"@echo off\ncd {get_script_path()}\n{sys.executable.split()[-1].replace('python', 'pythonw')} librusik.pyw\ngoto :eof")
-					print(os.path.join(os.environ["APPDATA"], "Microsoft", "Windows", "Start Menu", "Programs", "Startup", "librusik.bat"))
 					shutil.copyfile("librusik.bat", os.path.join(os.environ["APPDATA"], "Microsoft", "Windows", "Start Menu", "Programs", "Startup", "librusik.bat"))
 					print("After system restart Librusik will start at startup.")
 		return ip_address, port
