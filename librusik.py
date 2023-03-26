@@ -287,7 +287,7 @@ async def api(request):
 						}), 200)
 					return response("", 403)
 				elif method == "delaccount":
-					if database[data["username"]]["tier"] == "demo":
+					if config["enable_tiers"] and database[data["username"]]["tier"] == "demo":
 						return response("", 401)
 					demo = demo_err(data["username"])
 					if demo != False: return demo
