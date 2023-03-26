@@ -182,8 +182,10 @@ function refresh() {
 		if (data.status == 200) {
 			var resp = JSON.parse(data.responseText);
 			var dbsize = document.getElementById("dbsize");
-			var scpu = document.getElementById("scpu");
-			var sstorage = document.getElementById("sstorage");
+			var dev = document.getElementById("device");
+			var os = document.getElementById("os");
+			var cpus = document.getElementById("cpus");
+			var py = document.getElementById("python");
 			var dbtext = document.getElementById("dbusage").getElementsByClassName("value")[0];
 			var dbtext2 = document.getElementById("dbusage").getElementsByClassName("tooltip")[0];
 			var suptime = document.getElementById("suptime");
@@ -223,6 +225,10 @@ function refresh() {
 			document.getElementById("userlimit").innerText = "Current limit: " + maxusers;
 			dbtext.innerHTML = resp.db_usage + "<b>%</b>";
 			dbtext2.innerHTML = "Using " + resp.users.length + " of " + resp.max_users;
+			device.innerText = resp.host.node;
+			os.innerText = resp.host.os;
+			cpus.innerText = resp.host.cpus;
+			py.innerText = resp.host.version;
 			if (resp.db_usage > 100) setBar("dbusagep", 100);
 			else setBar("dbusagep", resp.db_usage);
 			suptime.innerText = mktime(resp.uptime);

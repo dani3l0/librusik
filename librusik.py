@@ -1063,7 +1063,8 @@ async def panelapi(request):
 						"max_users": maxusers,
 						"db_usage": db_usage,
 						"uptime": uptime,
-						"db_size": db_size
+						"db_size": db_size,
+						"host": host
 					}, 200)
 				elif data["method"] == "auth":
 					return response("", 200)

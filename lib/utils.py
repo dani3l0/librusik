@@ -4,6 +4,7 @@ import hashlib
 import json
 import math
 import os
+import platform
 import random
 import re
 import string
@@ -28,6 +29,16 @@ ERR_500 = "Server wasn't able to parse this request."
 
 # Some dynamic globals
 LAST_SEEN_PEPS = {}
+
+
+# Host information
+uname = platform.uname()
+host = {
+	"os": uname.system,
+	"node": uname.node,
+	"version": platform.python_version(),
+	"cpus": os.cpu_count()
+}
 
 
 # Core functions
