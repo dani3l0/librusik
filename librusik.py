@@ -1280,7 +1280,7 @@ if config["ssl"]:
 	ssl_context.load_cert_chain(config["pubkey"], config["privkey"])
 	tasks.append(web._run_app(app, port = config["port"], ssl_context = ssl_context))
 else:
-	tasks.append(web._run_app(app, port = config["port"]))
+	tasks.append(web._run_app(app, host = "127.0.0.1", port = config["port"]))
 
 tasks.append(updatetitles())
 

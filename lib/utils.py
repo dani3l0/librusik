@@ -7,6 +7,7 @@ import os
 import random
 import re
 import string
+import shutil
 from datetime import datetime
 from cryptography.fernet import Fernet
 from aiohttp import web
@@ -109,10 +110,10 @@ def randompasswd():
 
 
 # Host information
-statvfs = os.statvfs(".")
+total, used, free = shutil.disk_usage("/")
 
 host = {
-	"storage": round(statvfs.f_bsize * statvfs.f_blocks / 1000 / 1000 / 1000, 2),
+	"storage": round(total, 2),
 	"cpus": os.cpu_count()
 }
 
