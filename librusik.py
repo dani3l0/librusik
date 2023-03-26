@@ -24,6 +24,7 @@ CONFIG_DEFAULT = {
 	"name": "admin",
 	"passwd": "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918",
 	"port": 7777,
+	"listen_address": "0.0.0.0",
 	"subdirectory": "/",
 	"readable_db": False,
 	"notice": None,
@@ -1271,9 +1272,9 @@ tasks = []
 if config["ssl"]:
 	ssl_context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
 	ssl_context.load_cert_chain(config["pubkey"], config["privkey"])
-	tasks.append(web._run_app(app, port = config["port"], ssl_context = ssl_context))
+	tasks.append(web._run_app(app, host=config["listen_address"], port = config["port"], ssl_context = ssl_context))
 else:
-	tasks.append(web._run_app(app, port = config["port"]))
+	tasks.append(web._run_app(app, host=config["listen_address"], port = config["port"]))
 
 tasks.append(updatetitles())
 
