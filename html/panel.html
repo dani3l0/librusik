@@ -19,18 +19,6 @@
 	</div>
 	<center>
 		<div id="main">
-			<div class="circ" id="loadavg" style="color: #F46">
-				<svg class="cprog" viewBox="0 0 110 110">
-					<defs>
-						<path id="thePath" d="M40,90 A40,40 0 1,1 70,90" style="fill:none;"/>
-					</defs>
-					<use xlink:href="#thePath" style="stroke: #333;" />
-					<use xlink:href="#thePath" id="loadavgp" style="stroke: #F46;stroke-dasharray: 220.6;stroke-dashoffset: 220;transition: stroke-dashoffset 2s" />
-				</svg>
-				<div class="value">-<b>%%</b></div>
-				<div class="tooltip">Temp.: -°</div>
-				<div class="icon">speed</div>
-			</div>
 			<div class="circ" id="dbusage" style="color: #48F">
 				<svg class="cprog" viewBox="0 0 110 110">
 					<defs>
@@ -69,7 +57,7 @@
 				<div class="icon">memory</div>
 				<div>
 					<div class="title">System</div>
-					<div class="subtitle">Some information about your host.</div>
+					<div class="subtitle">Some information about your environment.</div>
 				</div>
 			</button>
 		</div>
@@ -242,30 +230,14 @@
 		<div id="info" class="hidden" style="display:none">
 			<button class="back" onclick="showdiv('info', 'main', true)"></button>
 			<div class="header">System</div>
-			<div class="subheader">Some information about your host</div>
+			<div class="subheader">Some information about your environment</div>
 			<button class="bubble unclickable">
 				<div class="name">App uptime</div>
 				<div id="suptime" class="value">N/A</div>
 			</button>
 			<button class="bubble unclickable">
-				<div class="name">App memory use</div>
-				<div id="rss" class="value">N/A</div>
-			</button><br>
-			<button class="bubble unclickable">
 				<div class="name">Database</div>
 				<div id="dbsize" class="value">N/A</div>
-			</button>
-			<button class="bubble unclickable">
-				<div class="name">CPUs</div>
-				<div id="scpu" class="value">N/A</div>
-			</button><br>
-			<button class="bubble unclickable">
-				<div class="name">Average load</div>
-				<div id="cloadavg" class="value">N/A</div>
-			</button>
-			<button class="bubble unclickable">
-				<div class="name">Storage</div>
-				<div id="sstorage" class="value">N/A</div>
 			</button><br>
 		</div>
 		<div id="reboot" class="hidden" style="display:none">

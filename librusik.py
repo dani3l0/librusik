@@ -156,7 +156,7 @@ async def mkaccount(data):
 			if not x.endswith("/custom"):
 				timg.append(x)
 		timg = random.choice(timg)
-		database[data["username"]]["profile_pic"] = timg[timg.rindex("/") + 1:]
+		database[data["username"]]["profile_pic"] = os.path.basename(timg)
 		updatedb()
 		SESSIONS.updatedb(database)
 		return True
@@ -529,7 +529,7 @@ async def settings(request):
 			if database[data["username"]]["custom_pic"]:
 				imgs += """<button onclick="setProfilePic('%s')"><img onload="loadimg(this)" src="img/profile/custom/%s"></button>""" % (database[data["username"]]["custom_pic"], database[data["username"]]["custom_pic"])
 			for img in timgs:
-				img = img[img.rindex("/") + 1:]
+				img = os.path.basename(img)
 				if img.endswith(".png"):
 					imgs += """<button onclick="setProfilePic('%s')"><img onload="loadimg(this)" src="img/profile/%s"></button>""" % (img, img)
 			f = ""
@@ -1036,9 +1036,7 @@ async def panelapi(request):
 		if "name" in data and "password" in data and "method" in data:
 			if data["name"] == config["name"] and sha(data["password"]) == config["passwd"]:
 				if data["method"] == "get_data":
-					loadavg = round(getloadavg() / host["cpus"] * 100)
 					uptime = round(time.time()) - BOOT
-					cpu_temp = gettemp()
 					users = list()
 					for x in database:
 						last_seen = -1
@@ -1061,12 +1059,6 @@ async def panelapi(request):
 					db_usage = round(len(users) / maxusers * 100)
 					db_size = round(os.stat("%s/database.json" % DATA_DIR).st_size / 10) / 100
 					return JSONresponse({
-						"cores": host["cpus"],
-						"rss": getRSS(),
-						"storage": host["storage"],
-						"loadavg_raw": getrawloadavg(),
-						"loadavg": loadavg,
-						"cpu_temp": cpu_temp,
 						"users": users[::-1],
 						"max_users": maxusers,
 						"db_usage": db_usage,

@@ -184,13 +184,9 @@ function refresh() {
 			var dbsize = document.getElementById("dbsize");
 			var scpu = document.getElementById("scpu");
 			var sstorage = document.getElementById("sstorage");
-			var loadtext = document.getElementById("loadavg").getElementsByClassName("value")[0];
 			var dbtext = document.getElementById("dbusage").getElementsByClassName("value")[0];
-			var loadtext2 = document.getElementById("loadavg").getElementsByClassName("tooltip")[0];
 			var dbtext2 = document.getElementById("dbusage").getElementsByClassName("tooltip")[0];
 			var suptime = document.getElementById("suptime");
-			var cloadavg = document.getElementById("cloadavg");
-			var rss = document.getElementById("rss");
 			var accountlist = document.getElementById("accountlist");
 			var accountnum = document.getElementById("accountnum");
 			USERS = resp.users;
@@ -225,19 +221,12 @@ function refresh() {
 				document.getElementById("maxusers").innerText = maxuserset;
 			}
 			document.getElementById("userlimit").innerText = "Current limit: " + maxusers;
-			loadtext.innerHTML = resp.loadavg + "<b>%</b>";
-			loadtext2.innerHTML = "Temp.: " + resp.cpu_temp + "°";
 			dbtext.innerHTML = resp.db_usage + "<b>%</b>";
 			dbtext2.innerHTML = "Using " + resp.users.length + " of " + resp.max_users;
-			if (resp.loadavg > 100) setBar("loadavgp", 100);
-			else setBar("loadavgp", resp.loadavg);
 			if (resp.db_usage > 100) setBar("dbusagep", 100);
 			else setBar("dbusagep", resp.db_usage);
 			suptime.innerText = mktime(resp.uptime);
 			dbsize.innerText = resp.users.length + "/" + resp.max_users + " (" + resp.db_size + " KB)";
-			scpu.innerText = resp.cores + " core" + (resp.cores == 1 ? "" : "s");
-			sstorage.innerText = resp.storage + " GB";
-			rss.innerText = resp.rss ? (resp.rss + " MB") : "N/A";
 			var lastref = new Date();
 			clearInterval(runningtimex);
 			runningtimex = setInterval(function() {
@@ -245,7 +234,6 @@ function refresh() {
 				var date = Math.round((ref.getTime() - lastref.getTime()) / 1000 + resp.uptime);
 				suptime.innerText = mktime(date);
 			}, 350);
-			cloadavg.innerText = resp.loadavg_raw;
 		}
 		else if (data.status == 401) {
 			rmCookie();
