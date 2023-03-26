@@ -171,11 +171,6 @@ def get_local_ip_adress() -> str:
 	local_ip_address = s.getsockname()[0]
 	return local_ip_address
 
-def get_external_ip_address() -> str:
-	# https://stackoverflow.com/questions/2311510/getting-a-machines-external-ip-address-with-python
-	external_ip = urllib.request.urlopen('https://ident.me').read().decode('utf8')
-	return external_ip
-
 def validate_ip_address(ip_address) -> bool:
     # This is a simple regex pattern to match a valid IPv4 address
     pattern = r"^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$"
@@ -197,14 +192,12 @@ def setup_wizard() -> tuple:
 
 
 		local_ip_adress = get_local_ip_adress()
-		external_ip_adress = get_external_ip_address()
 		localhost = '127.0.0.1'
 
 		# Ask for IP address
 		print("1. LocalHost: " + localhost)
 		print("2. Local IP address: " + local_ip_adress)
-		print("3. External IP address: " + external_ip_adress + ' Remember to set up port forwarding on your router!')
-		print("4. Enter custom IP address")
+		print("3. Enter custom IP address")
 		
 		while True:
 			option = input("Select an option (1-3): ")
@@ -215,11 +208,9 @@ def setup_wizard() -> tuple:
 				ip_address = local_ip_adress
 				break
 			elif option == "3":
-				ip_address = external_ip_adress
-				break
-			elif option == "4":
 				ip_address = input("Enter custom IP address: ")
 				break
+
 			else:
 				print("Invalid option. Please try again.")
 		
