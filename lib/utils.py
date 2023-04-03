@@ -7,7 +7,7 @@ import platform
 import random
 import re
 import string
-import sys
+import argparse
 from cryptography.fernet import Fernet
 from aiohttp import web
 from .wizard import setup_wizard
@@ -51,11 +51,18 @@ def setup(CONFIG_DEFAULT):
 				config[key] = CONFIG_DEFAULT[key]
 		database = json.loads(open("%s/database.json" % DATA_DIR, "r").read())
 	else:
-		# Start setup wizard
-		ip, port = setup_wizard()
+		parser = argparse.ArgumentParser()
+		parser.add_argument("--skip-wizard", action="store_true", default=False, help="Skip setup wizard on first run")
+		args = parser.parse_args()
 		new_config = CONFIG_DEFAULT
-		new_config["listen_address"] = ip
-		new_config["port"] = port
+
+		if not args.skip_wizard:
+			# Start setup wizard
+			ip, port = setup_wizard()
+			new_config["listen_address"] = ip
+			new_config["port"] = port
+		else:
+			print("Seems it is the first run. Initializing data...")
 
 		os.mkdir(DATA_DIR)
 		os.mkdir(PROFILE_PIC_DIR)

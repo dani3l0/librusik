@@ -6,7 +6,7 @@ Restart=always
 RestartSec=10
 User=myuser
 WorkingDirectory=/path/to/librusik
-ExecStart=python3 librusik.py
+ExecStart=python3 librusik.py --no-wizard
 
 [Install]
 WantedBy=multi-user.target
