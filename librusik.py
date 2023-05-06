@@ -1206,6 +1206,7 @@ async def error_middleware(request, handler):
 		if config["check_browser"]:
 			for check in ["Chrome", "Safari", "Firefox"]:
 				if check in useragent: passed = True
+		else: passed = True
 		if not passed: raise Exception("VerificationError")
 		respons = await handler(request)
 		respons.headers["Cache-Control"] = "no-cache"
