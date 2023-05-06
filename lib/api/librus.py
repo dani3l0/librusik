@@ -144,6 +144,13 @@ class Librus:
 			comment = "No comment"
 			if "Comments" in x:
 				comment = comments[x["Comments"][0]["Id"]]["Text"]
+			teacher = {
+				"FirstName": "unknown",
+				"LastName": "teacher"
+			}
+			if x["AddedBy"]["Id"] in teachers:
+				teacher["FirstName"] = teachers[x["AddedBy"]["Id"]]["FirstName"]
+				teacher["LastName"] = teachers[x["AddedBy"]["Id"]]["LastName"]
 			grades[subjects[x["Subject"]["Id"]]].append({
 				"Grade": x["Grade"],
 				"Weight": categories[x["Category"]["Id"]]["Weight"],
@@ -155,10 +162,7 @@ class Librus:
 				"underlined": x["IsSemester"] or x["IsFinal"],
 				"Semester": x["Semester"],
 				"AddDate": x["AddDate"],
-				"AddedBy": {
-					"FirstName": teachers[x["AddedBy"]["Id"]]["FirstName"],
-					"LastName": teachers[x["AddedBy"]["Id"]]["LastName"]
-				}
+				"AddedBy": teacher
 			})
 		return grades
 
