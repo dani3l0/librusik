@@ -64,7 +64,7 @@ Interface is friendly enough to painlessly configure your Librusik instance.
 
 If you encounter a bug, remember to attach some logs (exception traceback or just a detailed description).
 
-**Note: As I am graduating from school on May 2023, I will lose access to Librus.**
+Also, **[ping me somewhere](https://dani3l0.dev/#contact)** so we can test whether fixes work as intended as I have no access to Librus anymore.
 
 -----
 
