@@ -204,8 +204,11 @@ class Librus:
 		r = await self.get_data("TeacherFreeDays")
 		teachers = await self.get_teachers()
 		for i in r["TeacherFreeDays"]:
-			i.pop("Id")
-			i["Teacher"] = teachers[i["Teacher"]["Id"]]
+			try:
+				i.pop("Id")
+				i["Teacher"] = teachers[i["Teacher"]["Id"]]
+			except KeyError:
+				pass
 		return r["TeacherFreeDays"]
 
 	async def get_lucky_number(self):
