@@ -181,7 +181,7 @@ def parseDumbs(strink):
 def linkify(html_str):
 	html_str = html_str.replace("\n", "<br>")
 	unmess = " ".join(html_str.replace(").", ") .").split())
-	unmess = re.sub("\[[^]]*\]", lambda x: x.group(0).replace(' ','&nbsp;'), unmess)
+	unmess = re.sub(r"\[[^]]*\]", lambda x: x.group(0).replace(' ','&nbsp;'), unmess)
 	words = []
 	for word in unmess.split(" "):
 		if word.startswith("[") and word.endswith(")"):
