@@ -16,7 +16,15 @@ from lib.api import librus
 from lib.api import Librus
 from lib.api import SessionManager
 from lib.utils import *
+from distutils.dir_util import copy_tree
+import atexit
 
+cwd = os.getcwd()
+if (os.path.isdir("./data")):
+	copy_tree("./data", os.path.join(os.path.dirname(__file__), "data"))
+os.chdir(os.path.dirname(__file__))
+atexit.register(lambda: copy_tree("./data", os.path.join(cwd, "data")))
+# obejście tego że pyinstaller robi nieśmieszne (odpala w temp środowisku)
 
 CONFIG_DEFAULT = {
 	"enable_registration": True,

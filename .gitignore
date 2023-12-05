@@ -8,3 +8,6 @@ soupsieve
 static/app
 tools/api_dump.json
 api_dump.json
+build
+dist
+*.spec
