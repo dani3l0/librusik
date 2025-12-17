@@ -58,6 +58,60 @@ Interface is friendly enough to painlessly configure your Librusik instance.
 
 -----
 
+## Installation (Docker) 🐳
+
+If you prefer using Docker to keep your system clean, you can build and run Librusik using the included Dockerfile.
+
+__1. Build the image:__
+```bash
+docker build -t librusik .
+
+```
+
+**2. Run the container:**
+The default port is **7777**. You need to map it to your host machine.
+
+```bash
+docker run -d -p 7777:7777 --name librusik librusik
+
+```
+
+*Note: If you want to persist your data (config & database) so it survives container restarts, mount the `/app/data` volume:*
+
+```bash
+docker run -d -p 7777:7777 -v $(pwd)/data:/app/data --name librusik librusik
+
+```
+
+### Docker Compose
+
+Alternatively, you can use `docker-compose`. Create a `docker-compose.yml` file in the project directory:
+
+```yaml
+services:
+  librusik:
+    build: .
+    image: librusik:latest
+    container_name: librusik
+    ports:
+      - "7777:7777"
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped
+
+```
+
+Then simply run:
+
+```bash
+docker compose up -d
+
+```
+
+Librusik is now running at [localhost:7777](https://www.google.com/search?q=http://localhost:7777).
+
+-----
+
 ## Reporting a bug
 
 **Feel free** to open new issues when something doesn't work or you want to ask for new features/improvements.
