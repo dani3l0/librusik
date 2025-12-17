@@ -90,15 +90,17 @@ Alternatively, you can use `docker-compose`. Create a `docker-compose.yml` file 
 ```yaml
 services:
   librusik:
-    build: .
     image: librusik:latest
     container_name: librusik
     ports:
       - "7777:7777"
     volumes:
-      - ./data:/app/data
+        - ./data:/app/data
+    #   - librusik-data:/app/data
     restart: unless-stopped
 
+# volumes:
+#   librusik-data:
 ```
 
 Then simply run:
