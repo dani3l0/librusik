@@ -44,6 +44,7 @@ host = {
 # Core functions
 def setup(CONFIG_DEFAULT):
 	first_run = not os.path.exists(DATA_DIR)
+	folder_exists = os.path.exists(DATA_DIR)
 	first_run = first_run or not os.path.exists("%s/config.json" % DATA_DIR) or not os.path.exists("%s/database.json" % DATA_DIR) or not os.path.exists("%s/fernet.key" % DATA_DIR)
 	if not first_run:
 		config = json.loads(open("%s/config.json" % DATA_DIR, "r").read())
@@ -64,8 +65,8 @@ def setup(CONFIG_DEFAULT):
 			new_config["port"] = port
 		else:
 			print("Seems it is the first run. Initializing data...")
-
-		os.mkdir(DATA_DIR)
+		if not folder_exists:
+			os.mkdir(DATA_DIR)
 		os.mkdir(PROFILE_PIC_DIR)
 		conf = open("%s/config.json" % DATA_DIR, "w")
 		conf.write(json.dumps(new_config, indent = 4))
