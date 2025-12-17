@@ -243,48 +243,104 @@ class Librus:
 
 	async def get_timetable(self):
 		today = datetime.now()
-		weekStart = today + timedelta(days = 2)
-		weekStart = weekStart - timedelta(days = weekStart.weekday())
+		
+		start_pivot = today + timedelta(days=2)
+		weekStart = start_pivot - timedelta(days=start_pivot.weekday())
+		weekEnd = weekStart + timedelta(days=6)
+		
 		thisweek = today.isocalendar()[1]
 		autoweek = weekStart.isocalendar()[1]
-		days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
-		r = await self.get_data("Timetables?weekStart=%s-%s-%s" % (weekStart.year, weekStart.month, weekStart.day))
+		
+		date_from_str = weekStart.strftime('%Y-%m-%d')
+		date_to_str = weekEnd.strftime('%Y-%m-%d')
+		
+		r = await self.get_data(f"Timetables?weekStart={date_from_str}")
+		additional = await self.get_data(f"Timetables/OtherActivitiesRegister?dateFrom={date_from_str}&dateTo={date_to_str}&hideOutdatedEntries=false")
 		c = await self.get_classrooms()
-		if r == None or c == None:
+		
+		if r is None or c is None:
 			return None
-		timetable = {}
-		day = 0
-		for x in r["Timetable"]:
-			curr = r["Timetable"][x]
-			timetable[days[day]] = []
-			for i in curr:
-				if i:
-					if "Classroom" in i[0]:
-						try:
-							classroom = c[i[0]["Classroom"]["Id"]]
-						except KeyError:
-							classroom = "unknown"
-					else:
-						classroom = "unknown"
-					timetable[days[day]].append({
-						"Lesson": i[0]["LessonNo"],
-						"Subject": i[0]["Subject"]["Name"],
-						"isSubstitution": i[0]["IsSubstitutionClass"],
-						"isCancelled": i[0]["IsCanceled"],
-						"Teacher": {
-							"FirstName": i[0]["Teacher"]["FirstName"],
-							"LastName": i[0]["Teacher"]["LastName"]
-						},
-						"HourFrom": i[0]["HourFrom"],
-						"HourTo": i[0]["HourTo"],
-						"Classroom": classroom
-					})
-			if not timetable[days[day]]:
-				del timetable[days[day]]
-			day += 1
+
+		time_to_lesson = {}
+		if r and "Timetable" in r:
+			for date_key in r["Timetable"]:
+				for entry in r["Timetable"][date_key]:
+					if entry and len(entry) > 0:
+						time_to_lesson[entry[0]["HourFrom"]] = entry[0]["LessonNo"]
+
+		days_map = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+		timetable = {day: [] for day in days_map}
+
+		for date_str in r["Timetable"]:
+			if not r["Timetable"][date_str]: continue
+			
+			dt = datetime.strptime(date_str, "%Y-%m-%d")
+			day_name = days_map[dt.weekday()]
+			
+			for entry_list in r["Timetable"][date_str]:
+				if not entry_list: continue
+				lesson = entry_list[0]
+				
+				# Resolve Classroom
+				classroom_name = "unknown"
+				if "Classroom" in lesson:
+					try:
+						classroom_name = c[lesson["Classroom"]["Id"]]["Symbol"]
+					except (KeyError, TypeError):
+						classroom_name = "unknown"
+
+				timetable[day_name].append({
+					"Lesson": lesson["LessonNo"],
+					"Subject": lesson["Subject"]["Name"],
+					"isSubstitution": lesson["IsSubstitutionClass"],
+					"isCancelled": lesson["IsCanceled"],
+					"Teacher": {
+						"FirstName": lesson["Teacher"]["FirstName"],
+						"LastName": lesson["Teacher"]["LastName"]
+					},
+					"HourFrom": lesson["HourFrom"],
+					"HourTo": lesson["HourTo"],
+					"Classroom": classroom_name
+				})
+
+		if additional and 'data' in additional:
+			for item in additional['data']:
+				dt = datetime.strptime(item['date'], "%Y-%m-%d")
+				day_name = days_map[dt.weekday()]
+				
+				t_name_parts = item['teacherName'].split(' ')
+				t_last = t_name_parts[0] if len(t_name_parts) > 0 else ""
+				t_first = " ".join(t_name_parts[1:]) if len(t_name_parts) > 1 else ""
+
+				cls = "unknown"
+				if item.get('classroom') and item['classroom'].get('symbol'):
+					cls = item['classroom']['symbol']
+
+				lesson_num = time_to_lesson.get(item['startTime'], "-")
+
+				timetable[day_name].append({
+					"Lesson": lesson_num,
+					"Subject": item['title'],
+					"isSubstitution": False,
+					"isCancelled": False,
+					"Teacher": {
+						"FirstName": t_first,
+						"LastName": t_last
+					},
+					"HourFrom": item['startTime'],
+					"HourTo": item['endTime'],
+					"Classroom": cls
+				})
+
+		final_timetable = {}
+		for day in days_map:
+			if timetable[day]:
+				timetable[day].sort(key=lambda x: x['HourFrom'])
+				final_timetable[day] = timetable[day]
+
 		return {
 			"nextWeek": thisweek < autoweek,
-			"Timetable": timetable
+			"Timetable": final_timetable
 		}
 
 	async def get_exams(self):

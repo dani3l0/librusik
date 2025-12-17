@@ -1,12 +1,20 @@
-FROM ubuntu:24.04
+FROM python:3.13-alpine
 
-RUN apt-get update && apt-get install -y python3 pip python3-venv python3.12-venv git && rm -rf /var/lib/apt/lists/*
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
 
-RUN git clone https://github.com/dani3l0/librusik
-WORKDIR /librusik
+WORKDIR /app
 
-RUN python3 -m venv librusik-env
-RUN . librusik-env/bin/activate && pip install -r requirements.txt && pip install setuptools
+COPY requirements.txt .
+RUN pip install --no-cache-dir --upgrade pip setuptools && \
+    pip install --no-cache-dir -r requirements.txt
 
+COPY . .
 
-CMD ["librusik-env/bin/python", "librusik.py", "--skip-wizard"]
+# non-root user
+RUN adduser -D librusik && \
+    chown -R librusik:librusik /app
+
+USER librusik
+
+CMD ["python", "librusik.py", "--skip-wizard"]
