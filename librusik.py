@@ -576,7 +576,6 @@ async def timetable(request):
 			if await librus.mktoken(database[data["username"]]["l_login"], decrypt(database[data["username"]]["l_passwd"])):
 				SESSIONS.save(data["username"], librus.headers)
 				res = await librus.get_timetable()
-				print(res)
 				week = "This week"
 				if res["nextWeek"]:
 					week = "Next week"
