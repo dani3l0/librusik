@@ -110,7 +110,7 @@ docker compose up -d
 
 ```
 
-Librusik is now running at [localhost:7777](https://www.google.com/search?q=http://localhost:7777).
+Librusik is now running at [localhost:7777](http://localhost:7777).
 
 -----
 
