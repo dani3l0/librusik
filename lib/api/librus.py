@@ -1,12 +1,19 @@
 import aiohttp
 import json
 import os
+import time
 import traceback
+import yarl
 from bs4 import BeautifulSoup
 from datetime import datetime, timedelta
 
 REQUESTS = [0] * 7
 PATH_ = os.getcwd()
+
+# Librus serves the portal marketing page to clients it doesn't like the look of
+BROWSER_HEADERS = {
+	"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:130.0) Gecko/20100101 Firefox/130.0"
+}
 
 class Librus:
 	def __init__(self, session=None):
@@ -17,7 +24,7 @@ class Librus:
 	async def activate_api_access(self):
 		arr_index = datetime.now().weekday()
 		try:
-			async with aiohttp.ClientSession(cookies = self.headers) as session:
+			async with aiohttp.ClientSession(cookies = self.headers, headers = BROWSER_HEADERS) as session:
 				resp = await session.get(self.host + "Auth/TokenInfo", timeout = 5)
 				REQUESTS[arr_index] += 1
 				identifier = (await resp.json())["UserIdentifier"]
@@ -32,24 +39,36 @@ class Librus:
 		if (await self.get_data("Me")):
 			return True
 		try:
-			async with aiohttp.ClientSession() as session:
+			async with aiohttp.ClientSession(headers = BROWSER_HEADERS) as session:
 				arr_index = datetime.now().weekday()
 				REQUESTS[arr_index] += 1
-				resp = await session.get("https://api.librus.pl/OAuth/Authorization?client_id=46&response_type=code&scope=mydata")
+				# Synergia has to hand us a session before the OAuth grant has
+				# anything to bind to. Without this the login still reports "ok",
+				# but every later Synergia request comes back 403.
+				await session.get("https://synergia.librus.pl/loguj/portalRodzina?v=%d" % int(time.time()))
 				form = aiohttp.FormData()
 				form.add_field("action", "login")
 				form.add_field("login", login)
 				form.add_field("pass", passw)
 				REQUESTS[arr_index] += 1
 				resp = await session.post("https://api.librus.pl/OAuth/Authorization?client_id=46", data = form)
+				try:
+					payload = await resp.json(content_type = None)
+				except:
+					payload = None
+				if not isinstance(payload, dict) or payload.get("status") != "ok":
+					return False
 				REQUESTS[arr_index] += 1
-				resp = await session.get("https://api.librus.pl/OAuth/Authorization/Grant?client_id=46")
-				self.headers = resp.cookies
-				ok = resp.status == 200
-				res = False
-				if ok:
-					res = await self.activate_api_access()
-				return res
+				# the device check redirects onwards through Grant and back into
+				# Synergia, so asking for the grant ourselves is a second, rejected try
+				await session.get("https://api.librus.pl/OAuth/Authorization/2FA?client_id=46")
+				# those redirects drop cookies on three different domains, so scope
+				# them the way a browser would rather than flattening the whole jar
+				jar = session.cookie_jar.filter_cookies(yarl.URL("https://synergia.librus.pl"))
+				self.headers = {key: morsel.value for key, morsel in jar.items()}
+				if "DZIENNIKSID" not in self.headers or "SDZIENNIKSID" not in self.headers:
+					return False
+				return await self.activate_api_access()
 		except:
 			return False
 
@@ -58,7 +77,7 @@ class Librus:
 		status = 0
 		for i in range(5):
 			try:
-				async with aiohttp.ClientSession(cookies = self.headers) as session:
+				async with aiohttp.ClientSession(cookies = self.headers, headers = BROWSER_HEADERS) as session:
 					async with session.get(link, timeout = 5) as resp:
 						REQUESTS[arr_index] += 1
 						status = resp.status
@@ -434,7 +453,7 @@ class Librus:
 
 	async def get_messages(self):
 		try:
-			async with aiohttp.ClientSession(cookies = self.headers) as session:
+			async with aiohttp.ClientSession(cookies = self.headers, headers = BROWSER_HEADERS) as session:
 				arr_index = datetime.now().weekday()
 				REQUESTS[arr_index] += 1
 				resp = await session.get("%s/wiadomosci" % (self.msg_host))
@@ -461,7 +480,7 @@ class Librus:
 
 	async def get_message(self, link):
 		try:
-			async with aiohttp.ClientSession(cookies = self.headers) as session:
+			async with aiohttp.ClientSession(cookies = self.headers, headers = BROWSER_HEADERS) as session:
 				arr_index = datetime.now().weekday()
 				REQUESTS[arr_index] += 1
 				resp = await session.get("%s/wiadomosci/%s" % (self.msg_host, link.replace("-", "/")))
@@ -514,7 +533,7 @@ class Librus:
 
 	async def download_file(self, link):
 		try:
-			async with aiohttp.ClientSession(cookies = self.headers) as session:
+			async with aiohttp.ClientSession(cookies = self.headers, headers = BROWSER_HEADERS) as session:
 				arr_index = datetime.now().weekday()
 				REQUESTS[arr_index] += 1
 				resp = await session.get("%s/wiadomosci/pobierz_zalacznik/%s" % (self.msg_host, link))
