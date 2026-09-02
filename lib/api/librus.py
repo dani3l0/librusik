@@ -16,8 +16,6 @@ class Librus:
 
 	async def activate_api_access(self):
 		arr_index = datetime.now().weekday()
-		status = 0
-		text = None
 		try:
 			async with aiohttp.ClientSession(cookies = self.headers) as session:
 				resp = await session.get(self.host + "Auth/TokenInfo", timeout = 5)
@@ -25,10 +23,10 @@ class Librus:
 				identifier = (await resp.json())["UserIdentifier"]
 				resp2 = await session.get(self.host + "Auth/UserInfo/" + identifier, timeout = 5)
 				REQUESTS[arr_index] += 1
-				return await resp2.status == 200
+				return resp2.status == 200
 		except:
 			pass
-		return {"code": status, "text": text}
+		return False
 
 	async def mktoken(self, login, passw):
 		if (await self.get_data("Me")):
