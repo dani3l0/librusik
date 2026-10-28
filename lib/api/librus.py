@@ -6,6 +6,7 @@ import traceback
 import yarl
 from bs4 import BeautifulSoup
 from datetime import datetime, timedelta
+from http.cookies import SimpleCookie
 
 REQUESTS = [0] * 7
 PATH_ = os.getcwd()
@@ -14,17 +15,34 @@ PATH_ = os.getcwd()
 BROWSER_HEADERS = {
 	"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:130.0) Gecko/20100101 Firefox/130.0"
 }
+SYNERGIA_URL = yarl.URL("https://synergia.librus.pl/")
 
 class Librus:
 	def __init__(self, session=None):
 		self.host = "https://synergia.librus.pl/gateway/api/2.0/"
 		self.msg_host = "https://synergia.librus.pl"
 		self.headers = session
+		# set by mktoken(): True only when Librus itself turned the credentials down
+		self.credentials_rejected = False
+
+	def client(self):
+		# The session is stored as plain name/value pairs. Passed as cookies=,
+		# aiohttp would treat them as shared and send them to any host or plain
+		# HTTP URL a redirect lands on, so pin them to HTTPS librus.pl instead.
+		session = aiohttp.ClientSession(headers = BROWSER_HEADERS)
+		if self.headers:
+			cookies = SimpleCookie()
+			for name, value in self.headers.items():
+				cookies[name] = value
+				cookies[name]["domain"] = "librus.pl"
+				cookies[name]["secure"] = True
+			session.cookie_jar.update_cookies(cookies, SYNERGIA_URL)
+		return session
 
 	async def activate_api_access(self):
 		arr_index = datetime.now().weekday()
 		try:
-			async with aiohttp.ClientSession(cookies = self.headers, headers = BROWSER_HEADERS) as session:
+			async with self.client() as session:
 				resp = await session.get(self.host + "Auth/TokenInfo", timeout = 5)
 				REQUESTS[arr_index] += 1
 				identifier = (await resp.json())["UserIdentifier"]
@@ -36,6 +54,7 @@ class Librus:
 		return False
 
 	async def mktoken(self, login, passw):
+		self.credentials_rejected = False
 		if (await self.get_data("Me")):
 			return True
 		try:
@@ -56,7 +75,11 @@ class Librus:
 					payload = await resp.json(content_type = None)
 				except:
 					payload = None
-				if not isinstance(payload, dict) or payload.get("status") != "ok":
+				if not isinstance(payload, dict):
+					# not the JSON verdict at all (outage, captcha or maintenance page)
+					return False
+				if payload.get("status") != "ok":
+					self.credentials_rejected = True
 					return False
 				REQUESTS[arr_index] += 1
 				# the device check redirects onwards through Grant and back into
@@ -77,7 +100,7 @@ class Librus:
 		status = 0
 		for i in range(5):
 			try:
-				async with aiohttp.ClientSession(cookies = self.headers, headers = BROWSER_HEADERS) as session:
+				async with self.client() as session:
 					async with session.get(link, timeout = 5) as resp:
 						REQUESTS[arr_index] += 1
 						status = resp.status
@@ -453,7 +476,7 @@ class Librus:
 
 	async def get_messages(self):
 		try:
-			async with aiohttp.ClientSession(cookies = self.headers, headers = BROWSER_HEADERS) as session:
+			async with self.client() as session:
 				arr_index = datetime.now().weekday()
 				REQUESTS[arr_index] += 1
 				resp = await session.get("%s/wiadomosci" % (self.msg_host))
@@ -480,7 +503,7 @@ class Librus:
 
 	async def get_message(self, link):
 		try:
-			async with aiohttp.ClientSession(cookies = self.headers, headers = BROWSER_HEADERS) as session:
+			async with self.client() as session:
 				arr_index = datetime.now().weekday()
 				REQUESTS[arr_index] += 1
 				resp = await session.get("%s/wiadomosci/%s" % (self.msg_host, link.replace("-", "/")))
@@ -533,7 +556,7 @@ class Librus:
 
 	async def download_file(self, link):
 		try:
-			async with aiohttp.ClientSession(cookies = self.headers, headers = BROWSER_HEADERS) as session:
+			async with self.client() as session:
 				arr_index = datetime.now().weekday()
 				REQUESTS[arr_index] += 1
 				resp = await session.get("%s/wiadomosci/pobierz_zalacznik/%s" % (self.msg_host, link))
